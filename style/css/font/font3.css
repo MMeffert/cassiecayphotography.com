@@ -1,0 +1,345 @@
+body,
+.font-body,
+.map-info *,
+.meta,
+a.more,
+.cbp-filter-item,
+.swiper-slide .caption-bg p,
+.nav-tabs .nav-link,
+.tabs-wrapper.filtered .nav-tabs .nav-link,
+.countdown p,
+.counter p,
+.blockquote-footer {
+	font-family: 'Roboto', sans-serif;
+}
+.font-title,
+h1,
+h2,
+h3,
+h4,
+h5,
+h6,
+.lead,
+.lead2,
+.badge,
+blockquote p,
+.btn,
+.navbar,
+.tp-caption:not(.font-body):not(.font-title),
+.erinyen .tp-tab-title,
+.overlay-nav li a,
+.page-navi a,
+.pagination ul>li>a {
+    font-family: 'Roboto Slab', serif;
+}
+.erinyen .tp-tab-title {
+	font-weight: 400;
+}
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+    color: #303030;
+    font-weight: 400;
+    letter-spacing: normal;
+}
+h1 {
+    font-size: 28px;
+    line-height: 38px;
+}
+h2,
+.overlay-info figcaption h3,
+.swiper-col3-full h2.post-title {
+    font-size: 26px;
+    line-height: 36px;
+}
+h3 {
+    font-size: 24px;
+    line-height: 34px;
+}
+h4 {
+    font-size: 22px;
+    line-height: 32px;
+}
+h5 {
+    font-size: 20px;
+    line-height: 30px;
+}
+h6 {
+    font-size: 18px;
+    line-height: 28px;
+}
+h6.post-title {
+	font-size: 16px;
+	line-height: 26px;
+}
+h1.text-uppercase,
+h2.text-uppercase,
+h3.text-uppercase,
+h4.text-uppercase,
+h5.text-uppercase,
+h6.text-uppercase {
+    letter-spacing: 1px;
+}
+h1.text-uppercase {
+    font-size: 24px;
+    line-height: 34px;
+}
+h2.text-uppercase {
+    font-size: 22px;
+    line-height: 32px;
+}
+h3.text-uppercase {
+    font-size: 20px;
+    line-height: 30px;
+}
+h4.text-uppercase {
+    font-size: 18px;
+    line-height: 28px;
+}
+h5.text-uppercase {
+    font-size: 16px;
+    line-height: 26px;
+}
+h6.text-uppercase {
+    font-size: 14px;
+    line-height: 24px;
+}
+h1.post-title,
+.classic-view h2.post-title {
+    font-size: 32px;
+    line-height: 42px;
+}
+h2.post-title {
+    font-size: 20px;
+    line-height: 30px;
+}
+.section-title {
+    font-size: 26px;
+    line-height: 36px;
+}
+.section-title.larger {
+    font-size: 32px;
+    line-height: 42px;
+}
+.section-title-upper {
+    font-size: 18px;
+    line-height: 28px;
+    letter-spacing: 1px;
+}
+.section-title-upper.larger {
+    font-size: 22px;
+    line-height: 32px;
+    letter-spacing: 1px;
+}
+.title-color {
+    font-size: 13px;
+    line-height: 23px;
+    font-weight: 700;
+    letter-spacing: 3px;
+}
+.heading {
+    font-size: 40px;
+    line-height: 52px;
+}
+.sub-heading {
+    font-size: 32px;
+    line-height: 44px;
+    font-weight: 400;
+}
+.sub-heading2 {
+    font-weight: 300;
+    font-size: 28px;
+    line-height: 40px;
+}
+.lead {
+    font-size: 19px;
+    line-height: 31px;
+    font-weight: 300;
+}
+.lead.larger {
+    font-size: 22px;
+    line-height: 34px;
+    font-weight: 300;
+}
+.lead2 {
+    font-size: 17px;
+    line-height: 27px;
+    font-weight: normal;
+}
+.navbar-nav .nav-link {
+    font-size: 16px;
+    letter-spacing: normal;
+    color: #404040;
+}
+.dropdown-item,
+.mega-menu-content a {
+    font-size: 15px;
+    letter-spacing: normal;
+}
+.navbar.text-uppercase .navbar-nav .nav-link {
+    font-size: 13px;
+    letter-spacing: 2px;
+}
+.navbar.text-uppercase .dropdown-item,
+.navbar.text-uppercase .mega-menu-content a {
+    letter-spacing: 1px;
+}
+.meta,
+a.more,
+.text-muted,
+.meta span:after, 
+.meta * {   
+    color: #999;
+}
+.meta, 
+a.more {
+	font-weight: 500;
+	letter-spacing: 0.5px;
+}
+.meta.larger {
+	font-size: 17px;
+}
+.meta.price.price-l {
+    font-size: 20px;
+}
+.widget-title {
+    font-size: 13px;
+    line-height: 25px;
+    letter-spacing: 2px;
+    font-weight: 700;
+}
+::-moz-selection {
+    color: #303030;
+}
+::selection {
+    color: #303030;
+}
+.dropcap,
+.navbar .social-mute a i,
+.btn.btn-white,
+.btn.btn-white:hover,
+.btn.btn-white:focus,
+.btn.btn-white:active,
+.btn.btn-white.active,
+.btn.btn-border.btn-white:hover,
+.btn.btn-border.btn-white:focus,
+.btn.btn-border.btn-white:active,
+.btn.btn-border.btn-white.active,
+.btn-group .dropdown-menu .dropdown-item,
+.cocoen-drag::before,
+.social-mute a i,
+.accordion-wrapper .card-header a,
+.accordion-wrapper.lined .card-header a.collapsed,
+.nav-tabs .nav-link,
+.popover-header,
+label:not(.custom-control-label),
+.custom-select-wrapper:before,
+.pagination ul>li>a,
+.page-navi:not(.bg) a,
+.glyphs.css-mapping i:before {
+	color: #303030;
+}
+.swiper-slide .link-wrapper .link a,
+.swiper-slide .link-wrapper .link a:hover,
+.overlay.caption-dark *,
+.overlay.light figcaption *,
+.overlay-info a.btn-white,
+.color-dark,
+.list-dark>li:before,
+.list-dark i,
+.border-dark {
+    color: #303030 !important;
+}
+.hamburger:before,
+.hamburger span,
+.hamburger:after,
+.overlay1.light:before,
+.overlay1.light:after,
+.overlay2.light:before,
+.overlay2.light:after {
+	background-color: #303030;
+}
+.bg-dark {
+    background-color: #303030 !important
+}
+.progressbar.border.dark {
+	border-color: #303030 !important;
+}
+.dropcap,
+.cbp-filter-item,
+.icon .number,
+label:not(.custom-control-label) {
+	font-weight: 600;
+}
+.navbar-nav .nav-link,
+.navbar.text-uppercase .navbar-nav .nav-link,
+.dropdown-item,
+.mega-menu-content a,
+.overlay-nav li a,
+.btn,
+.badge,
+.page-navi a,
+.pagination ul>li>a, {
+	font-weight: 700;
+}
+.cbp-filter-item,
+.tabs-wrapper.filtered .nav-tabs .nav-link {
+    font-weight: 500;
+	letter-spacing: 0.5px;
+}
+.counter h3 {
+    font-size: 40px;
+}
+.counter p {
+	font-size: 17px;
+    line-height: 23px; 
+}
+blockquote p {
+    font-size: 19px;
+    line-height: 31px;
+    font-weight: 300;
+    font-style: normal;
+}
+.blockquote-footer {
+    letter-spacing: normal;
+    font-size: 16px;
+    line-height: 28px;
+    color: #606060;
+    font-weight: normal;
+}
+blockquote.larger p {
+    font-size: 28px;
+    line-height: 40px;
+    color: #606060;
+}
+.icon .number {
+    font-size: 26px;
+}
+.pagination ul>li>a {
+    font-size: 16px;
+}
+.btn,
+.page-navi a,
+.nav-tabs .nav-link,
+.accordion-wrapper .card-header>* {
+    font-size: 16px;
+    letter-spacing: normal;
+    text-transform: none;
+}
+.nav-tabs .nav-link {
+	font-weight: 500;
+}
+.tag-list .btn {
+    font-size: 14px;
+}
+.newsletter-wrapper input {
+    width: calc(100% - 100px) !important;
+}
+.badge {
+	text-transform: none;
+	font-weight: 700;
+	font-size: 12px;
+}

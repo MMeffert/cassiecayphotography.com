@@ -1,0 +1,92 @@
+{
+  "IcoMoonType": "selection",
+  "icons": [
+    {
+      "icon": {
+        "paths": [
+          "M68.267 341.333h-68.267l0-341.333h68.267l-0 341.333z",
+          "M68.267 0h273.067v68.267h-273.067v-68.267z",
+          "M955.733 682.667h68.267v341.333h-68.267v-341.333z",
+          "M955.733 1024h-273.067v-68.267h273.067v68.267z",
+          "M682.667 68.267v-68.267h341.333v68.267h-341.333z",
+          "M1024 68.267l-0 273.067h-68.267l0-273.067h68.267z",
+          "M341.333 955.733v68.267l-341.333-0v-68.267l341.333 0z",
+          "M0 955.733v-273.067h68.267v273.067h-68.267z"
+        ],
+        "attrs": [
+          {},
+          {},
+          {},
+          {},
+          {},
+          {},
+          {},
+          {}
+        ],
+        "isMulticolor": false,
+        "isMulticolor2": false,
+        "grid": 0,
+        "tags": [
+          "focus-icon"
+        ]
+      },
+      "attrs": [
+        {},
+        {},
+        {},
+        {},
+        {},
+        {},
+        {},
+        {}
+      ],
+      "properties": {
+        "order": 2,
+        "id": 0,
+        "name": "focus",
+        "prevSize": 32,
+        "code": 59648
+      },
+      "setIdx": 0,
+      "setId": 0,
+      "iconIdx": 0
+    }
+  ],
+  "height": 1024,
+  "metadata": {
+    "name": "elemis"
+  },
+  "preferences": {
+    "showGlyphs": true,
+    "showQuickUse": true,
+    "showQuickUse2": true,
+    "showSVGs": true,
+    "fontPref": {
+      "prefix": "icon-e-",
+      "metadata": {
+        "fontFamily": "elemis",
+        "majorVersion": 1,
+        "minorVersion": 0
+      },
+      "metrics": {
+        "emSize": 1024,
+        "baseline": 6.25,
+        "whitespace": 50
+      },
+      "embed": false,
+      "ie7": true,
+      "noie8": false
+    },
+    "imagePref": {
+      "prefix": "icon-",
+      "png": true,
+      "useClassSelector": true,
+      "color": 0,
+      "bgColor": 16777215,
+      "classSelector": ".icon"
+    },
+    "historySize": 50,
+    "showCodes": true,
+    "gridSize": 16
+  }
+}
