@@ -1,6 +1,75 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
+        <!-- Google reCAPTCHA-->
+    <script src="https://www.google.com/recaptcha/api.js" async defer></script>
+
+    <!-- Submit contact form through API-->
+    <script>
+        function submitToAPI(e) {
+            if (grecaptcha.getResponse() == "") {
+                e.preventDefault();
+                $("#message").css('color', 'red');
+                $("#message").text("You must check the CAPTCHA box before submitting.");
+            } else {
+                e.preventDefault();
+                var URL = "https://dji7iv5hei.execute-api.us-east-1.amazonaws.com/prod";
+
+                var Namere = /[A-Za-z]{1}[A-Za-z]/;
+                if (!Namere.test($("#name").val())) {
+                    alert("Name can not less than 2 char");
+                    return;
+                }
+                if ($("#mail").val() == "") {
+                    alert("Please enter your email id");
+                    return;
+                }
+
+                var reeamil = /^([\w-\.]+@([\w-]+\.)+[\w-]{2,6})?$/;
+                if (!reeamil.test($("#mail").val())) {
+                    alert("Please enter valid email address");
+                    return;
+                }
+
+                var name = $("#name").val();
+                var email = $("#mail").val();
+                var subject = $("#subject").val();
+                var message = $("#comment").val();
+                var data = {
+                    site: 'cassiecayphotography.com',
+                    name: name,
+                    email: email,
+                    subject: subject,
+                    message: message
+                };
+
+                $.ajax({
+                    type: "POST",
+                    url: "https://dji7iv5hei.execute-api.us-east-1.amazonaws.com/prod",
+                    dataType: "json",
+                    crossDomain: "true",
+                    contentType: "application/json; charset=utf-8",
+                    data: JSON.stringify(data),
+
+
+                    success: function () {
+                        // clear form and show a success message
+                        $("#message").css('color', 'green');
+                        $("#message").text("Message Sent Successfully");
+                        document.getElementById('name').value = ''
+                        document.getElementById('mail').value = ''
+                        document.getElementById('subject').value = ''
+                        document.getElementById('comment').value = ''
+                    },
+                    error: function () {
+                        // show an error message
+                        $("#message").css('color', 'red');
+                        $("#message").text("Error.  Your message was not sent.");
+                    }
+                });
+            }
+        }
+    </script>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <meta name="text" content="">
@@ -588,7 +657,7 @@
             <!--/.row -->
             <div class="space30"></div>
             <div class="form-container">
-              <form action="contact/vanilla-form.php" method="post" class="vanilla vanilla-form" novalidate>
+              <form action="post" class="vanilla vanilla-form" novalidate>
                 <div class="row text-center">
                   <div class="col-md-6 pr-10">
                     <div class="form-group">
@@ -599,19 +668,12 @@
                   <!--/column -->
                   <div class="col-md-6 pl-10">
                     <div class="form-group">
-                      <input type="email" class="form-control" name="email" placeholder="Your e-mail" required="required">
+                      <input type="email" class="form-control" name="mail" placeholder="Your e-mail" required="required">
                     </div>
                     <!--/.form-group --> 
                   </div>
                   <!--/column -->
-                  <div class="col-md-6 pr-10">
-                    <div class="form-group">
-                      <input type="tel" class="form-control" name="tel" placeholder="Phone">
-                    </div>
-                    <!--/.form-group --> 
-                  </div>
-                  <!--/column -->
-                  <div class="col-md-6 pl-10">
+                  <div class="col-12">
                     <div class="form-group">
                       <input type="text" class="form-control" name="subject" placeholder="Subject">
                     </div>
@@ -619,8 +681,11 @@
                   </div>
                   <!--/column -->
                   <div class="col-12">
-                    <textarea name="message" class="form-control" rows="3" placeholder="Type your message here..." required></textarea>
+                    <textarea name="comment" class="form-control" rows="3" placeholder="Type your message here..." required></textarea>
                     <div class="space20"></div>
+                      <div class="g-recaptcha" data-theme="dark" data-sitekey="6LcVbqsaAAAAAC5sbfwiK4hu_k0mYDyzx6PSr_rc"
+                                 style="width:100%;"></div>
+                      <div class="space20"></div>
                     <button style="background:#9A7A7D;" type="submit" class="btn btn-full-rounded" data-error="Fix errors" data-processing="Sending..." data-success="Thank you!">Submit</button>
                     <footer class="notification-box"></footer>
                   </div>
