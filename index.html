@@ -25,8 +25,8 @@
                     return;
                 }
 
-                var reeamil = /^([\w-\.]+@([\w-]+\.)+[\w-]{2,6})?$/;
-                if (!reeamil.test($("#mail").val())) {
+                var reemail = /^([\w-\.]+@([\w-]+\.)+[\w-]{2,6})?$/;
+                if (!reemail.test($("#mail").val())) {
                     alert("Please enter valid email address");
                     return;
                 }
@@ -658,30 +658,31 @@
             <div class="space30"></div>
             <div class="form-container">
               <form>
+                  <p id="message"></p>
                 <div class="row text-center">
                   <div class="col-md-6 pr-10">
                     <div class="form-group">
-                      <input type="text" class="form-control" name="name" placeholder="Your name" required="required">
+                      <input type="text" class="form-control" name="name" id="name" placeholder="Your name" required="required">
                     </div>
                     <!--/.form-group --> 
                   </div>
                   <!--/column -->
                   <div class="col-md-6 pl-10">
                     <div class="form-group">
-                      <input type="email" class="form-control" name="mail" placeholder="Your e-mail" required="required">
+                      <input type="email" class="form-control" name="mail" id="mail" placeholder="Your e-mail" required="required">
                     </div>
                     <!--/.form-group --> 
                   </div>
                   <!--/column -->
                   <div class="col-12">
                     <div class="form-group">
-                      <input type="text" class="form-control" name="subject" placeholder="Subject">
+                      <input type="text" class="form-control" name="subject" id="subject" placeholder="Subject">
                     </div>
                     <!--/.form-group --> 
                   </div>
                   <!--/column -->
                   <div class="col-12">
-                    <textarea name="comment" class="form-control" rows="3" placeholder="Type your message here..." required></textarea>
+                    <textarea name="comment" id="comment" class="form-control" rows="3" placeholder="Type your message here..." required></textarea>
                     <div class="space20"></div>
                       <div class="g-recaptcha" data-theme="dark" data-sitekey="6LeL1rsaAAAAAHSX6kLeFVS4GBV7Ei2E126EEQKc"
                                  style="width:100%;"></div>
