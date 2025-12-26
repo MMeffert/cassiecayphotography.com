@@ -1,0 +1,17 @@
+# macOS
+.DS_Store
+
+# Claude Code
+.claude/
+
+# CDK
+infrastructure/cdk.out/
+infrastructure/*.js
+infrastructure/*.d.ts
+!infrastructure/jest.config.js
+
+# Node
+node_modules/
+
+# Logs
+*.log
