@@ -10,6 +10,12 @@ import { Construct } from 'constructs';
 export interface StaticSiteStackProps extends cdk.StackProps {
   domainName: string;
   hostedZoneId?: string;
+  /**
+   * Skip domain setup (certificate, aliases, DNS records).
+   * Use this for initial deployment when migrating from existing infrastructure.
+   * After migration, set to false and redeploy to attach the domain.
+   */
+  skipDomainSetup?: boolean;
 }
 
 export class StaticSiteStack extends cdk.Stack {
@@ -25,8 +31,10 @@ export class StaticSiteStack extends cdk.Stack {
     cdk.Tags.of(this).add('ManagedBy', 'cdk');
     cdk.Tags.of(this).add('Repository', 'MMeffert/cassiecayphotography.com');
 
-    // Look up the hosted zone
-    const hostedZone = route53.HostedZone.fromLookup(this, 'HostedZone', {
+    const skipDomain = props.skipDomainSetup ?? false;
+
+    // Look up the hosted zone (only if setting up domain)
+    const hostedZone = skipDomain ? undefined : route53.HostedZone.fromLookup(this, 'HostedZone', {
       domainName: props.domainName,
     });
 
@@ -40,11 +48,11 @@ export class StaticSiteStack extends cdk.Stack {
       autoDeleteObjects: false,
     });
 
-    // Create ACM certificate for HTTPS
-    const certificate = new acm.Certificate(this, 'SiteCertificate', {
+    // Create ACM certificate for HTTPS (only if setting up domain)
+    const certificate = skipDomain ? undefined : new acm.Certificate(this, 'SiteCertificate', {
       domainName: props.domainName,
       subjectAlternativeNames: [`www.${props.domainName}`],
-      validation: acm.CertificateValidation.fromDns(hostedZone),
+      validation: acm.CertificateValidation.fromDns(hostedZone!),
     });
 
     // Create Origin Access Control for CloudFront -> S3
@@ -64,8 +72,11 @@ export class StaticSiteStack extends cdk.Stack {
         compress: true,
         cachePolicy: cloudfront.CachePolicy.CACHING_OPTIMIZED,
       },
-      domainNames: [props.domainName, `www.${props.domainName}`],
-      certificate,
+      // Only set domain names and certificate when not skipping domain setup
+      ...(skipDomain ? {} : {
+        domainNames: [props.domainName, `www.${props.domainName}`],
+        certificate,
+      }),
       defaultRootObject: 'index.html',
       errorResponses: [
         {
@@ -86,38 +97,41 @@ export class StaticSiteStack extends cdk.Stack {
       minimumProtocolVersion: cloudfront.SecurityPolicyProtocol.TLS_V1_2_2021,
     });
 
-    // Create Route 53 A record for apex domain
-    new route53.ARecord(this, 'SiteARecord', {
-      zone: hostedZone,
-      target: route53.RecordTarget.fromAlias(
-        new targets.CloudFrontTarget(this.distribution)
-      ),
-    });
+    // Create DNS records only when not skipping domain setup
+    if (!skipDomain && hostedZone) {
+      // Create Route 53 A record for apex domain
+      new route53.ARecord(this, 'SiteARecord', {
+        zone: hostedZone,
+        target: route53.RecordTarget.fromAlias(
+          new targets.CloudFrontTarget(this.distribution)
+        ),
+      });
 
-    // Create Route 53 A record for www subdomain
-    new route53.ARecord(this, 'SiteWwwARecord', {
-      zone: hostedZone,
-      recordName: 'www',
-      target: route53.RecordTarget.fromAlias(
-        new targets.CloudFrontTarget(this.distribution)
-      ),
-    });
+      // Create Route 53 A record for www subdomain
+      new route53.ARecord(this, 'SiteWwwARecord', {
+        zone: hostedZone,
+        recordName: 'www',
+        target: route53.RecordTarget.fromAlias(
+          new targets.CloudFrontTarget(this.distribution)
+        ),
+      });
 
-    // Create Route 53 AAAA records for IPv6
-    new route53.AaaaRecord(this, 'SiteAaaaRecord', {
-      zone: hostedZone,
-      target: route53.RecordTarget.fromAlias(
-        new targets.CloudFrontTarget(this.distribution)
-      ),
-    });
+      // Create Route 53 AAAA records for IPv6
+      new route53.AaaaRecord(this, 'SiteAaaaRecord', {
+        zone: hostedZone,
+        target: route53.RecordTarget.fromAlias(
+          new targets.CloudFrontTarget(this.distribution)
+        ),
+      });
 
-    new route53.AaaaRecord(this, 'SiteWwwAaaaRecord', {
-      zone: hostedZone,
-      recordName: 'www',
-      target: route53.RecordTarget.fromAlias(
-        new targets.CloudFrontTarget(this.distribution)
-      ),
-    });
+      new route53.AaaaRecord(this, 'SiteWwwAaaaRecord', {
+        zone: hostedZone,
+        recordName: 'www',
+        target: route53.RecordTarget.fromAlias(
+          new targets.CloudFrontTarget(this.distribution)
+        ),
+      });
+    }
 
     // Outputs
     new cdk.CfnOutput(this, 'BucketName', {

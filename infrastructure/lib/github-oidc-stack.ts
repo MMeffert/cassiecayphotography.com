@@ -19,17 +19,13 @@ export class GitHubOidcStack extends cdk.Stack {
     cdk.Tags.of(this).add('ManagedBy', 'cdk');
     cdk.Tags.of(this).add('Repository', `${props.repositoryOwner}/${props.repositoryName}`);
 
-    // Create or reference GitHub OIDC provider
-    // Using fromOpenIdConnectProviderArn to avoid duplicate provider errors
-    // If the provider doesn't exist, use the creation block below instead
-    const githubOidcProvider = new iam.OpenIdConnectProvider(this, 'GitHubOidcProvider', {
-      url: 'https://token.actions.githubusercontent.com',
-      clientIds: ['sts.amazonaws.com'],
-      thumbprints: [
-        '6938fd4d98bab03faadb97b34396831e3780aea1',
-        '1c58a3a8518e8759bf075b76b750d4f2df264fcd',
-      ],
-    });
+    // Reference existing GitHub OIDC provider (shared across all repos in this account)
+    // The provider was created previously - we only need one per AWS account
+    const githubOidcProvider = iam.OpenIdConnectProvider.fromOpenIdConnectProviderArn(
+      this,
+      'GitHubOidcProvider',
+      `arn:aws:iam::${cdk.Aws.ACCOUNT_ID}:oidc-provider/token.actions.githubusercontent.com`
+    );
 
     // Create IAM role for GitHub Actions
     this.deploymentRole = new iam.Role(this, 'GitHubActionsDeploymentRole', {
@@ -50,7 +46,7 @@ export class GitHubOidcStack extends cdk.Stack {
       maxSessionDuration: cdk.Duration.hours(1),
     });
 
-    // S3 permissions for deployment
+    // S3 permissions for deployment (both new CDK bucket and existing bucket for migration)
     this.deploymentRole.addToPolicy(
       new iam.PolicyStatement({
         sid: 'S3DeploymentPermissions',
@@ -63,8 +59,26 @@ export class GitHubOidcStack extends cdk.Stack {
           's3:GetBucketLocation',
         ],
         resources: [
+          // New CDK-managed bucket
           `arn:aws:s3:::cassiecayphotography.com-site-content`,
           `arn:aws:s3:::cassiecayphotography.com-site-content/*`,
+          // Existing bucket (for migration period)
+          `arn:aws:s3:::cassiecayphotography.com`,
+          `arn:aws:s3:::cassiecayphotography.com/*`,
+        ],
+      })
+    );
+
+    // CloudFormation permissions to read stack outputs
+    this.deploymentRole.addToPolicy(
+      new iam.PolicyStatement({
+        sid: 'CloudFormationReadPermissions',
+        effect: iam.Effect.ALLOW,
+        actions: [
+          'cloudformation:DescribeStacks',
+        ],
+        resources: [
+          `arn:aws:cloudformation:us-east-1:${cdk.Aws.ACCOUNT_ID}:stack/CassiePhoto*/*`,
         ],
       })
     );
@@ -91,8 +105,8 @@ export class GitHubOidcStack extends cdk.Stack {
     });
 
     new cdk.CfnOutput(this, 'OidcProviderArn', {
-      value: githubOidcProvider.openIdConnectProviderArn,
-      description: 'ARN of the GitHub OIDC provider',
+      value: `arn:aws:iam::${cdk.Aws.ACCOUNT_ID}:oidc-provider/token.actions.githubusercontent.com`,
+      description: 'ARN of the GitHub OIDC provider (shared)',
     });
   }
 }
