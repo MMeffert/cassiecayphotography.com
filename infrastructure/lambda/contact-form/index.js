@@ -49,10 +49,7 @@ exports.handler = async function (event, context) {
             console.log('reCAPTCHA verification failed:', recaptchaResult.reason);
             return {
                 statusCode: 400,
-                headers: {
-                    'Content-Type': 'application/json',
-                    'Access-Control-Allow-Origin': '*'
-                },
+                headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({ result: 'Failed', reason: 'reCAPTCHA verification failed' })
             };
         }
@@ -61,10 +58,7 @@ exports.handler = async function (event, context) {
             console.log('reCAPTCHA score too low:', recaptchaResult.score);
             return {
                 statusCode: 400,
-                headers: {
-                    'Content-Type': 'application/json',
-                    'Access-Control-Allow-Origin': '*'
-                },
+                headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({ result: 'Failed', reason: 'Submission blocked' })
             };
         }
@@ -75,33 +69,27 @@ exports.handler = async function (event, context) {
         console.error('reCAPTCHA error:', error);
         return {
             statusCode: 500,
-            headers: {
-                'Content-Type': 'application/json',
-                'Access-Control-Allow-Origin': '*'
-            },
+            headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({ result: 'Failed', reason: 'reCAPTCHA service error' })
         };
     }
 
     // Send email
     try {
-        await sendEmail(body);
+        console.log('Attempting to send email to:', RECEIVER);
+        const emailResult = await sendEmail(body);
+        console.log('Email sent successfully:', JSON.stringify(emailResult));
         return {
             statusCode: 200,
-            headers: {
-                'Content-Type': 'application/json',
-                'Access-Control-Allow-Origin': '*'
-            },
+            headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({ result: 'Success' })
         };
     } catch (error) {
-        console.error('Email error:', error);
+        console.error('Email error:', error.message);
+        console.error('Email error stack:', error.stack);
         return {
             statusCode: 500,
-            headers: {
-                'Content-Type': 'application/json',
-                'Access-Control-Allow-Origin': '*'
-            },
+            headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({ result: 'Failed', reason: 'Email service error' })
         };
     }
