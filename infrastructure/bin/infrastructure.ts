@@ -3,6 +3,7 @@ import 'source-map-support/register';
 import * as cdk from 'aws-cdk-lib';
 import { StaticSiteStack } from '../lib/static-site-stack';
 import { GitHubOidcStack } from '../lib/github-oidc-stack';
+import { ContactFormStack } from '../lib/contact-form-stack';
 
 const app = new cdk.App();
 
@@ -27,6 +28,13 @@ new StaticSiteStack(app, 'CassiePhotoStaticSiteStack', {
   description: 'Static site infrastructure for Cassie Cay Photography',
   domainName: 'cassiecayphotography.com',
   skipDomainSetup: true, // TODO: Set to false after migrating from old infrastructure
+});
+
+// Contact form Lambda with Function URL
+new ContactFormStack(app, 'CassiePhotoContactFormStack', {
+  env,
+  description: 'Contact form Lambda for Cassie Cay Photography',
+  domainName: 'cassiecayphotography.com',
 });
 
 app.synth();
