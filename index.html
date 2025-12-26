@@ -1,73 +1,76 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-        <!-- Google reCAPTCHA -->
-    <script src="https://www.google.com/recaptcha/api.js?theme=dark" async defer></script> 
+        <!-- Google reCAPTCHA Enterprise (invisible) -->
+    <script src="https://www.google.com/recaptcha/enterprise.js?render=6LchXjYsAAAAANiJ_B8AKMUp7vwsJx_8HnKLBzr2" async defer></script>
 
     <!-- Submit contact form through API -->
     <script>
         function submitToAPI(e) {
-            if (grecaptcha.getResponse() == "") {
-                e.preventDefault();
-                $("#message").css('color', 'red');
-                $("#message").text("You must check the CAPTCHA box before submitting.");
-            } else {
-                e.preventDefault();
-                var URL = "https://dji7iv5hei.execute-api.us-east-1.amazonaws.com/prod";
+            e.preventDefault();
 
-                var Namere = /[A-Za-z]{1}[A-Za-z]/;
-                if (!Namere.test($("#name").val())) {
-                    alert("Name can not less than 2 char");
-                    return;
-                }
-                if ($("#mail").val() == "") {
-                    alert("Please enter your email id");
-                    return;
-                }
-
-                var reemail = /^([\w-\.]+@([\w-]+\.)+[\w-]{2,6})?$/;
-                if (!reemail.test($("#mail").val())) {
-                    alert("Please enter valid email address");
-                    return;
-                }
-
-                var name = $("#name").val();
-                var email = $("#mail").val();
-                var subject = $("#subject").val();
-                var message = $("#comment").val();
-                var data = {
-                    site: 'cassiecayphotography.com',
-                    name: name,
-                    email: email,
-                    subject: subject,
-                    message: message
-                };
-
-                $.ajax({
-                    type: "POST",
-                    url: "https://dji7iv5hei.execute-api.us-east-1.amazonaws.com/prod",
-                    dataType: "json",
-                    crossDomain: "true",
-                    contentType: "application/json; charset=utf-8",
-                    data: JSON.stringify(data),
-
-
-                    success: function () {
-                        // clear form and show a success message
-                        $("#message").css('color', 'green');
-                        $("#message").text("Message Sent Successfully");
-                        document.getElementById('name').value = ''
-                        document.getElementById('mail').value = ''
-                        document.getElementById('subject').value = ''
-                        document.getElementById('comment').value = ''
-                    },
-                    error: function () {
-                        // show an error message
-                        $("#message").css('color', 'red');
-                        $("#message").text("Error.  Your message was not sent.");
-                    }
-                });
+            var Namere = /[A-Za-z]{1}[A-Za-z]/;
+            if (!Namere.test($("#name").val())) {
+                alert("Name can not less than 2 char");
+                return;
             }
+            if ($("#mail").val() == "") {
+                alert("Please enter your email id");
+                return;
+            }
+
+            var reemail = /^([\w-\.]+@([\w-]+\.)+[\w-]{2,6})?$/;
+            if (!reemail.test($("#mail").val())) {
+                alert("Please enter valid email address");
+                return;
+            }
+
+            // Disable button and show loading state
+            $("#submitmessage").prop('disabled', true).text('Sending...');
+
+            // Execute reCAPTCHA Enterprise and submit form
+            grecaptcha.enterprise.ready(function() {
+                grecaptcha.enterprise.execute('6LchXjYsAAAAANiJ_B8AKMUp7vwsJx_8HnKLBzr2', {action: 'contact_submit'})
+                    .then(function(token) {
+                        var data = {
+                            site: 'cassiecayphotography.com',
+                            name: $("#name").val(),
+                            email: $("#mail").val(),
+                            subject: $("#subject").val(),
+                            message: $("#comment").val(),
+                            recaptchaToken: token
+                        };
+
+                        $.ajax({
+                            type: "POST",
+                            url: "https://dji7iv5hei.execute-api.us-east-1.amazonaws.com/prod",
+                            dataType: "json",
+                            crossDomain: "true",
+                            contentType: "application/json; charset=utf-8",
+                            data: JSON.stringify(data),
+
+                            success: function () {
+                                $("#message").css('color', 'green');
+                                $("#message").text("Message Sent Successfully");
+                                document.getElementById('name').value = '';
+                                document.getElementById('mail').value = '';
+                                document.getElementById('subject').value = '';
+                                document.getElementById('comment').value = '';
+                                $("#submitmessage").prop('disabled', false).text('Send Message');
+                            },
+                            error: function () {
+                                $("#message").css('color', 'red');
+                                $("#message").text("Error. Your message was not sent.");
+                                $("#submitmessage").prop('disabled', false).text('Send Message');
+                            }
+                        });
+                    })
+                    .catch(function(error) {
+                        $("#message").css('color', 'red');
+                        $("#message").text("reCAPTCHA error. Please try again.");
+                        $("#submitmessage").prop('disabled', false).text('Send Message');
+                    });
+            });
         }
     </script>
 <meta charset="utf-8">
@@ -749,9 +752,6 @@
                   <div class="col-12">
                     <textarea name="comment" id="comment" class="form-control" rows="3" placeholder="Type your message here..." required></textarea>
                     <div class="space20"></div>
-                      <div class="g-recaptcha" data-theme="dark" data-sitekey="6LeL1rsaAAAAAHSX6kLeFVS4GBV7Ei2E126EEQKc"
-                                 style="width:100%;"></div>
-                      <div class="space20"></div>
                     <button style="background:#9A7A7D;" type="button" ID="submitmessage" class="btn btn-full-rounded" onClick="submitToAPI(event)">Send Message</button>
                     <footer class="notification-box"></footer>
                   </div>
@@ -776,7 +776,7 @@
     <div class="sub-footer">
       <div class="container inner text-center"> <img width="200px" src="#" srcset="images/cassiecaylogobw2.png 1x, images/cassiecaylogobw2.png 2x" alt="" />
         <div class="space25"></div>
-        <p>© 2022 Cassie Cay Photography. All rights reserved.</p>
+        <p>© 2025 Cassie Cay Photography. All rights reserved.</p>
         <div class="space30"></div>
         <ul class="social social-bg social-s">
           <li><a href="https://www.facebook.com/cassie.cay.photography"><i class="fa fa-facebook-f"></i></a></li>
