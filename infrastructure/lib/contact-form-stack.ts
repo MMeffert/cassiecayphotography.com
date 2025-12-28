@@ -30,7 +30,7 @@ export class ContactFormStack extends cdk.Stack {
     // Create Lambda function for contact form
     const contactFormFunction = new lambda.Function(this, 'ContactFormFunction', {
       functionName: 'cassiecayphotography-website-contact-form',
-      runtime: lambda.Runtime.NODEJS_20_X,
+      runtime: lambda.Runtime.NODEJS_24_X,
       handler: 'index.handler',
       code: lambda.Code.fromAsset('lambda/contact-form'),
       timeout: cdk.Duration.seconds(10),

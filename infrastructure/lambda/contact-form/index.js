@@ -1,6 +1,5 @@
 const { SESClient, SendEmailCommand } = require('@aws-sdk/client-ses');
 const { SecretsManagerClient, GetSecretValueCommand } = require('@aws-sdk/client-secrets-manager');
-const https = require('https');
 
 const ses = new SESClient({ region: 'us-east-1' });
 const secretsManager = new SecretsManagerClient({ region: 'us-east-1' });
@@ -95,83 +94,61 @@ exports.handler = async function (event, context) {
     }
 };
 
-function verifyRecaptcha(token, expectedAction, apiKey) {
-    return new Promise((resolve, reject) => {
-        const requestBody = JSON.stringify({
+async function verifyRecaptcha(token, expectedAction, apiKey) {
+    const url = `https://recaptchaenterprise.googleapis.com/v1/projects/${RECAPTCHA_PROJECT_ID}/assessments?key=${apiKey}`;
+
+    const response = await fetch(url, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
             event: {
-                token: token,
+                token,
                 siteKey: RECAPTCHA_SITE_KEY,
-                expectedAction: expectedAction
+                expectedAction
             }
-        });
-
-        const options = {
-            hostname: 'recaptchaenterprise.googleapis.com',
-            port: 443,
-            path: `/v1/projects/${RECAPTCHA_PROJECT_ID}/assessments?key=${apiKey}`,
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-                'Content-Length': Buffer.byteLength(requestBody)
-            }
-        };
-
-        const req = https.request(options, (res) => {
-            let data = '';
-            res.on('data', (chunk) => data += chunk);
-            res.on('end', () => {
-                try {
-                    const response = JSON.parse(data);
-                    console.log('reCAPTCHA response:', JSON.stringify(response));
-
-                    if (response.error) {
-                        resolve({ success: false, reason: response.error.message });
-                        return;
-                    }
-
-                    const tokenValid = response.tokenProperties?.valid === true;
-                    const actionMatch = response.tokenProperties?.action === expectedAction;
-                    const score = response.riskAnalysis?.score || 0;
-
-                    if (!tokenValid) {
-                        resolve({ success: false, reason: 'Invalid token', score: 0 });
-                    } else if (!actionMatch) {
-                        resolve({ success: false, reason: 'Action mismatch', score: score });
-                    } else {
-                        resolve({ success: true, score: score });
-                    }
-                } catch (e) {
-                    reject(e);
-                }
-            });
-        });
-
-        req.on('error', reject);
-        req.write(requestBody);
-        req.end();
+        })
     });
+
+    if (!response.ok) {
+        throw new Error(`reCAPTCHA API error: ${response.status} ${response.statusText}`);
+    }
+
+    const data = await response.json();
+    console.log('reCAPTCHA response:', JSON.stringify(data));
+
+    if (data.error) {
+        return { success: false, reason: data.error.message };
+    }
+
+    const tokenValid = data.tokenProperties?.valid === true;
+    const actionMatch = data.tokenProperties?.action === expectedAction;
+    const score = data.riskAnalysis?.score ?? 0;
+
+    if (!tokenValid) {
+        return { success: false, reason: 'Invalid token', score: 0 };
+    }
+
+    if (!actionMatch) {
+        return { success: false, reason: 'Action mismatch', score };
+    }
+
+    return { success: true, score };
 }
 
-async function sendEmail(event) {
-    const params = {
-        Destination: {
-            ToAddresses: [RECEIVER]
-        },
+async function sendEmail({ name, email, subject, message }) {
+    const command = new SendEmailCommand({
+        Destination: { ToAddresses: [RECEIVER] },
         Message: {
             Body: {
                 Text: {
-                    Data: 'From: ' + event.name + '\n\nEmail: ' + event.email + '\n\nSubject: ' + event.subject + '\n\nMessage: ' + event.message,
+                    Data: `From: ${name}\n\nEmail: ${email}\n\nSubject: ${subject}\n\nMessage: ${message}`,
                     Charset: 'UTF-8'
                 }
             },
-            Subject: {
-                Data: SUBJECT,
-                Charset: 'UTF-8'
-            }
+            Subject: { Data: SUBJECT, Charset: 'UTF-8' }
         },
         Source: SENDER
-    };
+    });
 
-    const command = new SendEmailCommand(params);
     return ses.send(command);
 }
