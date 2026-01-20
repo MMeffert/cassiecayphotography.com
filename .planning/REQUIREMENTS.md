@@ -75,8 +75,8 @@
 | INFRA-03 | Phase 1 | Complete ✓ |
 | INFRA-04 | Phase 1 | Complete ✓ |
 | AUTO-01 | Phase 2 | Complete ✓ |
-| PERF-01 | Phase 3 | Pending |
-| PERF-02 | Phase 3 | Pending |
+| PERF-01 | Phase 3 | Complete ✓ |
+| PERF-02 | Phase 3 | Complete ✓ |
 | AUTO-02 | Phase 4 | Pending |
 | AUTO-03 | Phase 4 | Pending |
 | AUTO-06 | Phase 4 | Pending |
