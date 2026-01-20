@@ -18,7 +18,7 @@ Decimal phases appear between their surrounding integers in numeric order.
 - [x] **Phase 4: CI Validation** ✓ Complete 2026-01-20 - HTML/image validation, Lighthouse checks
 - [x] **Phase 5: Notifications & Feedback** ✓ Complete 2026-01-20 - Deploy notifications and status for Mitchell
 - [x] **Phase 6: Pre-commit Hooks** ✓ Complete 2026-01-20 - Local validation before CI
-- [ ] **Phase 7: JavaScript Cleanup** - Remove unused code, reduce bundle size
+- [x] **Phase 7: JavaScript Cleanup** ✓ Complete 2026-01-20 - Remove unused code, reduce bundle size
 - [ ] **Phase 8: Library Modernization** - Replace Revolution Slider and heavy plugins (OPTIONAL)
 - [ ] **Phase 9: Workflow Enhancement** - Folder-based galleries (OPTIONAL)
 
@@ -140,7 +140,7 @@ Plans:
 **Plans**: 1 plan
 
 Plans:
-- [ ] 07-01-PLAN.md — Extract only used plugins and scripts, wire into build
+- [x] 07-01-PLAN.md — Extract only used plugins and scripts, wire into build ✓
 
 ### Phase 8: Library Modernization (OPTIONAL)
 **Goal**: Replace heavy jQuery plugins with modern lightweight alternatives
@@ -260,7 +260,7 @@ Phases 1-2 sequential, then parallel tracks possible per diagram above.
 | 4. CI Validation | 2/2 | Complete | 2026-01-20 |
 | 5. Notifications & Feedback | 1/1 | Complete | 2026-01-20 |
 | 6. Pre-commit Hooks | 1/1 | Complete | 2026-01-20 |
-| 7. JavaScript Cleanup | 0/1 | Planned | - |
+| 7. JavaScript Cleanup | 1/1 | Complete | 2026-01-20 |
 | 8. Library Modernization | 0/2 | Not started | - |
 | 9. Workflow Enhancement | 0/1 | Not started | - |
 
