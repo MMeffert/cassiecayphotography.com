@@ -59,12 +59,9 @@ export class GitHubOidcStack extends cdk.Stack {
           's3:GetBucketLocation',
         ],
         resources: [
-          // New CDK-managed bucket
+          // Site content bucket
           `arn:aws:s3:::cassiecayphotography.com-site-content`,
           `arn:aws:s3:::cassiecayphotography.com-site-content/*`,
-          // Existing bucket (for migration period)
-          `arn:aws:s3:::cassiecayphotography.com`,
-          `arn:aws:s3:::cassiecayphotography.com/*`,
         ],
       })
     );
