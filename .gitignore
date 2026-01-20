@@ -17,7 +17,7 @@ node_modules/
 dist/
 
 # Optimized images (generated from images/ by preprocess script)
-images-optimized/
+# images-optimized/ - Committed to repo for CI availability
 
 # Logs
 *.log
