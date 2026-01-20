@@ -105,9 +105,14 @@ export default defineConfig({
           src: 'style/type',
           dest: 'style'
         },
-        // Copy images directory
+        // Copy images directory (original - safety during migration)
         {
           src: 'images',
+          dest: '.'
+        },
+        // Copy optimized images directory (AVIF, WebP, JPEG in responsive widths)
+        {
+          src: 'images-optimized',
           dest: '.'
         },
         // Copy other static files
