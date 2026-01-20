@@ -5,23 +5,23 @@
 See: .planning/PROJECT.md (updated 2026-01-19)
 
 **Core value:** The site must remain fast, secure, and easy for Cassie to update.
-**Current focus:** Phase 8 - Library Modernization (OPTIONAL)
+**Current focus:** Phase 8 - Library Modernization COMPLETE
 
 ## Current Position
 
 Phase: 8 of 9 (Library Modernization)
-Plan: 1 of 2 in current phase
-Status: In progress - GLightbox migration complete
-Last activity: 2026-01-20 - Completed 08-01 GLightbox Migration
+Plan: 2 of 2 in current phase
+Status: Phase complete - Embla Carousel replaces Revolution Slider
+Last activity: 2026-01-20 - Completed 08-02 Embla Carousel Migration
 
-Progress: [================] 83%
+Progress: [================] 89%
 
 ## Performance Metrics
 
 **Velocity:**
-- Total plans completed: 15
+- Total plans completed: 16
 - Average duration: 5 min
-- Total execution time: 75 min
+- Total execution time: 78 min
 
 **By Phase:**
 
@@ -34,11 +34,11 @@ Progress: [================] 83%
 | 05-notifications-feedback | 1 | 8 min | 8 min |
 | 06-pre-commit-hooks | 1 | 4 min | 4 min |
 | 07-javascript-cleanup | 1 | 8 min | 8 min |
-| 08-library-modernization | 1 | 4 min | 4 min |
+| 08-library-modernization | 2 | 7 min | 3.5 min |
 
 **Recent Trend:**
-- Last 5 plans: 06-01 (4 min), 04-02 (3 min), 07-01 (8 min), 08-01 (4 min)
-- Trend: Phase 8 plan 1 complete - GLightbox replaces LightGallery
+- Last 5 plans: 04-02 (3 min), 07-01 (8 min), 08-01 (4 min), 08-02 (3 min)
+- Trend: Phase 8 complete - 530KB JS reduction from library modernization
 
 *Updated after each plan completion*
 
@@ -80,6 +80,9 @@ Recent decisions affecting current work:
 | 07-01 | Accept 316KB plugins vs 250KB target | Cube Portfolio (80KB) + Swiper (136KB) are required, 50% reduction achieved |
 | 08-01 | GLightbox loaded as separate script | Maintains consistency with vendor scripts; easier to update |
 | 08-01 | Use reload() on filter complete | Ensures lightbox works after Cubeportfolio filters images |
+| 08-02 | Embla as UMD scripts | Consistent with vendor script pattern, easier updates |
+| 08-02 | Static text overlay | Original animated text was overly complex; static achieves same effect |
+| 08-02 | stopOnMouseEnter: false | Fixes BUG-03 (slider pausing on hover) |
 
 ### Pending Todos
 
@@ -89,7 +92,7 @@ None.
 
 From research - critical pitfalls to monitor:
 
-- **Revolution Slider fragility**: Do NOT bundle Revolution Slider scripts or upgrade jQuery - ADDRESSED in 02-01 (copied as-is)
+- **Revolution Slider fragility**: RESOLVED in 08-02 - Revolution Slider completely removed, replaced by Embla
 - **Dreamweaver workflow**: Build step must enhance, not replace HTML editing
 - **Image quality**: Use conservative settings on photography portfolio (JPEG 85+, AVIF 60+) - ADDRESSED in 03-01 (AVIF 85, WebP 85, JPEG 90)
 - **CloudFront cache**: 1-year cache on assets requires content hashing or invalidation - ADDRESSED in 02-01 (content hashing enabled)
@@ -97,6 +100,6 @@ From research - critical pitfalls to monitor:
 
 ## Session Continuity
 
-Last session: 2026-01-20T23:02:44Z
-Stopped at: Completed 08-01-PLAN.md - GLightbox migration
+Last session: 2026-01-20T23:07:00Z
+Stopped at: Completed 08-02-PLAN.md - Embla Carousel migration
 Resume file: None
