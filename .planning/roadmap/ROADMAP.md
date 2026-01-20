@@ -14,7 +14,7 @@ Decimal phases appear between their surrounding integers in numeric order.
 
 - [x] **Phase 1: Quick Fixes** - Bug fixes and infrastructure cleanup (low risk, immediate value) ✓ Complete 2026-01-20
 - [x] **Phase 2: Build Foundation** - Vite setup with Revolution Slider exclusions ✓ Complete 2026-01-20
-- [ ] **Phase 3: Image Optimization** - Sharp pipeline, AVIF/WebP conversion, responsive images
+- [x] **Phase 3: Image Optimization** - Sharp pipeline, AVIF/WebP conversion, responsive images ✓ Complete 2026-01-20
 - [ ] **Phase 4: CI Validation** - HTML/image validation, Lighthouse checks
 - [ ] **Phase 5: Notifications & Feedback** - Deploy notifications and status for Cassie
 - [ ] **Phase 6: Pre-commit Hooks** - Local validation before CI
@@ -71,12 +71,13 @@ Plans:
   3. Below-fold images use native `loading="lazy"` attribute
   4. Total image payload reduced by at least 60% (81MB -> 32MB or less)
   5. No visible quality degradation on photography portfolio images
-**Plans**: 3 plans
+**Plans**: 4 plans
 
 Plans:
-- [ ] 03-01-PLAN.md — Install Sharp.js, create optimization script with conservative quality settings
-- [ ] 03-02-PLAN.md — Human quality verification checkpoint (Cassie approves image quality)
-- [ ] 03-03-PLAN.md — Update HTML with picture elements, wire optimized images into build
+- [x] 03-01-PLAN.md — Install Sharp.js, create optimization script with conservative quality settings ✓
+- [x] 03-02-PLAN.md — Human quality verification checkpoint (Cassie approves image quality) ✓
+- [x] 03-03-PLAN.md — Update HTML with picture elements, wire optimized images into build ✓
+- [x] 03-04-PLAN.md — Gap closure: fix srcset paths and logo fallback ✓
 
 ### Phase 4: CI Validation
 **Goal**: Catch broken links, malformed HTML, and image issues before deployment
@@ -89,11 +90,11 @@ Plans:
   3. CI warns if images exceed size threshold (e.g., >500KB)
   4. Lighthouse performance score visible in PR/deploy output
   5. All validation completes in under 2 minutes
-**Plans**: TBD
+**Plans**: 2 plans
 
 Plans:
-- [ ] 04-01: HTML and link validation
-- [ ] 04-02: Image validation and Lighthouse integration
+- [ ] 04-01-PLAN.md — HTML validation and reference checking
+- [ ] 04-02-PLAN.md — Image size warnings and Lighthouse integration
 
 ### Phase 5: Notifications & Feedback
 **Goal**: Cassie knows immediately when deploys succeed or fail without checking GitHub
@@ -255,8 +256,8 @@ Phases 1-2 sequential, then parallel tracks possible per diagram above.
 |-------|----------------|--------|-----------|
 | 1. Quick Fixes | 3/3 | Complete | 2026-01-20 |
 | 2. Build Foundation | 2/2 | Complete | 2026-01-20 |
-| 3. Image Optimization | 0/3 | Planning complete | - |
-| 4. CI Validation | 0/2 | Not started | - |
+| 3. Image Optimization | 4/4 | Complete | 2026-01-20 |
+| 4. CI Validation | 0/2 | Planning complete | - |
 | 5. Notifications & Feedback | 0/1 | Not started | - |
 | 6. Pre-commit Hooks | 0/1 | Not started | - |
 | 7. JavaScript Cleanup | 0/1 | Not started | - |
@@ -268,5 +269,6 @@ Phases 1-2 sequential, then parallel tracks possible per diagram above.
 *Phase 1 planned: 2026-01-19*
 *Phase 2 planned: 2026-01-20*
 *Phase 3 planned: 2026-01-20*
+*Phase 4 planned: 2026-01-20*
 *Depth: Comprehensive (9 phases)*
 *Mode: YOLO*
