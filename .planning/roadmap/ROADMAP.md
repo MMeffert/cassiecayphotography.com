@@ -145,20 +145,22 @@ Plans:
 ### Phase 8: Library Modernization (OPTIONAL)
 **Goal**: Replace heavy jQuery plugins with modern lightweight alternatives
 **Depends on**: Phase 7
-**Requirements**: FRONT-01, FRONT-02
+**Requirements**: FRONT-01, FRONT-02, BUG-03
 **Research needed**: Yes - Revolution Slider replacement requires understanding all current slider features
 **Risk level**: HIGH - potential to break existing functionality
 **Success Criteria** (what must be TRUE):
-  1. Hero slider uses Embla Carousel (6KB) instead of Revolution Slider (150KB+)
-  2. Lightbox uses GLightbox (11KB) instead of LightGallery (25KB)
-  3. All slider transitions and behaviors match current site
-  4. All gallery filtering works correctly
-  5. Total JavaScript reduced by 85%+ from original
-**Plans**: TBD
+  1. Hero slider uses Embla Carousel (~8KB) instead of Revolution Slider (~420KB)
+  2. Lightbox uses GLightbox (~11KB) instead of LightGallery (~25KB)
+  3. Slider auto-advances with smooth fade transitions
+  4. Slider does NOT pause on hover (BUG-03 fix)
+  5. All gallery filtering works correctly with lightbox
+  6. Total JavaScript reduced by >350KB
+**Plans**: 3 plans
 
 Plans:
-- [ ] 08-01: Revolution Slider replacement
-- [ ] 08-02: jQuery plugin modernization
+- [ ] 08-01-PLAN.md — Replace LightGallery with GLightbox
+- [ ] 08-02-PLAN.md — Replace Revolution Slider with Embla Carousel
+- [ ] 08-03-PLAN.md — Cleanup and human verification
 
 ### Phase 9: Workflow Enhancement (OPTIONAL)
 **Goal**: Cassie can add photos to galleries by dropping images in folders
@@ -261,7 +263,7 @@ Phases 1-2 sequential, then parallel tracks possible per diagram above.
 | 5. Notifications & Feedback | 1/1 | Complete | 2026-01-20 |
 | 6. Pre-commit Hooks | 1/1 | Complete | 2026-01-20 |
 | 7. JavaScript Cleanup | 1/1 | Complete | 2026-01-20 |
-| 8. Library Modernization | 0/2 | Not started | - |
+| 8. Library Modernization | 0/3 | Planned | - |
 | 9. Workflow Enhancement | 0/1 | Not started | - |
 
 ---
@@ -273,5 +275,6 @@ Phases 1-2 sequential, then parallel tracks possible per diagram above.
 *Phase 5 planned: 2026-01-20*
 *Phase 6 planned: 2026-01-20*
 *Phase 7 planned: 2026-01-20*
+*Phase 8 planned: 2026-01-20*
 *Depth: Comprehensive (9 phases)*
 *Mode: YOLO*
