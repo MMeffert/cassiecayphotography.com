@@ -16,5 +16,8 @@ node_modules/
 # Vite build output
 dist/
 
+# Optimized images (generated from images/ by preprocess script)
+images-optimized/
+
 # Logs
 *.log
