@@ -36,11 +36,12 @@ Decimal phases appear between their surrounding integers in numeric order.
   4. CDK and npm dependencies are current (no critical/high vulnerabilities)
   5. GitHub OIDC role has least-privilege S3 permissions (legacy bucket removed)
   6. Dependabot security alerts enabled on repository
-**Plans**: TBD
+**Plans**: 3 plans
 
 Plans:
-- [ ] 01-01: Bug fixes (image link, duplicate IDs)
-- [ ] 01-02: Domain migration and infrastructure cleanup
+- [ ] 01-01-bug-fixes-PLAN.md — Fix broken image link and duplicate element IDs
+- [ ] 01-02-domain-migration-PLAN.md — Update CDK deps, delete old CloudFront, enable domain
+- [ ] 01-03-post-migration-cleanup-PLAN.md — Remove legacy S3 permission, verify Dependabot
 
 ### Phase 2: Build Foundation
 **Goal**: Establish Vite build system that optimizes assets without breaking Revolution Slider or Dreamweaver workflow
@@ -249,7 +250,7 @@ Phases 1-2 sequential, then parallel tracks possible per diagram above.
 
 | Phase | Plans Complete | Status | Completed |
 |-------|----------------|--------|-----------|
-| 1. Quick Fixes | 0/2 | Not started | - |
+| 1. Quick Fixes | 0/3 | Planned | - |
 | 2. Build Foundation | 0/1 | Not started | - |
 | 3. Image Optimization | 0/2 | Not started | - |
 | 4. CI Validation | 0/2 | Not started | - |
@@ -261,5 +262,6 @@ Phases 1-2 sequential, then parallel tracks possible per diagram above.
 
 ---
 *Roadmap created: 2026-01-19*
+*Phase 1 planned: 2026-01-19*
 *Depth: Comprehensive (9 phases)*
 *Mode: YOLO*
