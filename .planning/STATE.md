@@ -10,18 +10,18 @@ See: .planning/PROJECT.md (updated 2026-01-19)
 ## Current Position
 
 Phase: 4 of 9 (CI Validation)
-Plan: 0 of 2 in current phase
-Status: Phase planning required
-Last activity: 2026-01-20 - Phase 3 complete (gap closure verified)
+Plan: 1 of 2 in current phase
+Status: In progress
+Last activity: 2026-01-20 - Completed 04-01-PLAN.md
 
-Progress: [=========-] 40%
+Progress: [==========-] 45%
 
 ## Performance Metrics
 
 **Velocity:**
-- Total plans completed: 9
+- Total plans completed: 10
 - Average duration: 5 min
-- Total execution time: 45 min
+- Total execution time: 48 min
 
 **By Phase:**
 
@@ -30,10 +30,11 @@ Progress: [=========-] 40%
 | 01-quick-fixes | 3 | 20 min | 7 min |
 | 02-build-foundation | 2 | 9 min | 4.5 min |
 | 03-image-optimization | 4 | 16 min | 4 min |
+| 04-ci-validation | 1 | 3 min | 3 min |
 
 **Recent Trend:**
-- Last 5 plans: 03-01 (5 min), 03-02 (2 min), 03-03 (6 min), 03-04 (3 min)
-- Trend: Gap closure plan executed efficiently
+- Last 5 plans: 03-02 (2 min), 03-03 (6 min), 03-04 (3 min), 04-01 (3 min)
+- Trend: CI validation completed quickly
 
 *Updated after each plan completion*
 
@@ -65,6 +66,8 @@ Recent decisions affecting current work:
 | 03-03 | Hero slider 1800w, no lazy loading | Above-fold content must load immediately |
 | 03-04 | Portfolio srcset reduced to 800w only | Source images <1200px, optimization skips upscaling |
 | 03-04 | Logo fallback uses WebP | PNG has alpha channel, JPEG doesn't support transparency |
+| 04-01 | HTML validation focuses on critical errors only | Trailing whitespace and accessibility deferred |
+| 04-01 | Deploy from dist/ not root | Proper Vite build deployment |
 
 ### Pending Todos
 
@@ -82,6 +85,6 @@ From research - critical pitfalls to monitor:
 
 ## Session Continuity
 
-Last session: 2026-01-20T15:03:00Z
-Stopped at: Completed 03-04-PLAN.md (Gap closure - srcset and logo fixes)
+Last session: 2026-01-20T18:41:03Z
+Stopped at: Completed 04-01-PLAN.md (CI validation scripts and workflow)
 Resume file: None

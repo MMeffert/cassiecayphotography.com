@@ -93,7 +93,7 @@ Plans:
 **Plans**: 2 plans
 
 Plans:
-- [ ] 04-01-PLAN.md — HTML validation and reference checking
+- [x] 04-01-PLAN.md — HTML validation and reference checking ✓
 - [ ] 04-02-PLAN.md — Image size warnings and Lighthouse integration
 
 ### Phase 5: Notifications & Feedback
@@ -257,7 +257,7 @@ Phases 1-2 sequential, then parallel tracks possible per diagram above.
 | 1. Quick Fixes | 3/3 | Complete | 2026-01-20 |
 | 2. Build Foundation | 2/2 | Complete | 2026-01-20 |
 | 3. Image Optimization | 4/4 | Complete | 2026-01-20 |
-| 4. CI Validation | 0/2 | Planning complete | - |
+| 4. CI Validation | 1/2 | In progress | - |
 | 5. Notifications & Feedback | 0/1 | Not started | - |
 | 6. Pre-commit Hooks | 0/1 | Not started | - |
 | 7. JavaScript Cleanup | 0/1 | Not started | - |
