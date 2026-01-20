@@ -5,23 +5,23 @@
 See: .planning/PROJECT.md (updated 2026-01-19)
 
 **Core value:** The site must remain fast, secure, and easy for Cassie to update.
-**Current focus:** Phase 3 Complete - Ready for Phase 4
+**Current focus:** Phase 3 Complete (with gaps closed) - Ready for Phase 4
 
 ## Current Position
 
 Phase: 3 of 9 (Image Optimization) - COMPLETE
-Plan: 3 of 3 in current phase
+Plan: 4 of 4 in current phase (gap closure complete)
 Status: Phase complete
-Last activity: 2026-01-20 - Completed 03-03 (HTML integration with picture elements)
+Last activity: 2026-01-20 - Completed 03-04 (Gap closure - srcset and logo fixes)
 
-Progress: [========--] 36%
+Progress: [=========-] 40%
 
 ## Performance Metrics
 
 **Velocity:**
-- Total plans completed: 8
-- Average duration: 5.25 min
-- Total execution time: 42 min
+- Total plans completed: 9
+- Average duration: 5 min
+- Total execution time: 45 min
 
 **By Phase:**
 
@@ -29,11 +29,11 @@ Progress: [========--] 36%
 |-------|-------|-------|----------|
 | 01-quick-fixes | 3 | 20 min | 7 min |
 | 02-build-foundation | 2 | 9 min | 4.5 min |
-| 03-image-optimization | 3 | 13 min | 4.3 min |
+| 03-image-optimization | 4 | 16 min | 4 min |
 
 **Recent Trend:**
-- Last 5 plans: 02-02 (5 min), 03-01 (5 min), 03-02 (2 min), 03-03 (6 min)
-- Trend: Consistent execution, image optimization phase efficient
+- Last 5 plans: 03-01 (5 min), 03-02 (2 min), 03-03 (6 min), 03-04 (3 min)
+- Trend: Gap closure plan executed efficiently
 
 *Updated after each plan completion*
 
@@ -63,6 +63,8 @@ Recent decisions affecting current work:
 | 03-03 | Lightbox uses JPEG-only | Format negotiation in JS is complex; JPEG has universal support |
 | 03-03 | Small thumbnails use full/ only | Images <800px don't need smaller variants |
 | 03-03 | Hero slider 1800w, no lazy loading | Above-fold content must load immediately |
+| 03-04 | Portfolio srcset reduced to 800w only | Source images <1200px, optimization skips upscaling |
+| 03-04 | Logo fallback uses WebP | PNG has alpha channel, JPEG doesn't support transparency |
 
 ### Pending Todos
 
@@ -80,6 +82,6 @@ From research - critical pitfalls to monitor:
 
 ## Session Continuity
 
-Last session: 2026-01-20T14:51:12Z
-Stopped at: Completed Phase 03 (Image Optimization), ready for Phase 04
+Last session: 2026-01-20T15:03:00Z
+Stopped at: Completed 03-04-PLAN.md (Gap closure - srcset and logo fixes)
 Resume file: None
