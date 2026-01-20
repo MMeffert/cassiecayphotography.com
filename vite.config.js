@@ -2,6 +2,23 @@ import { defineConfig } from 'vite'
 import { viteStaticCopy } from 'vite-plugin-static-copy'
 import { resolve } from 'path'
 
+// Custom plugin to preserve Revolution Slider CSS as link tags (not module scripts)
+function preserveRevolutionSliderCSS() {
+  return {
+    name: 'preserve-revolution-slider-css',
+    enforce: 'post',
+    transformIndexHtml(html) {
+      // Fix Revolution Slider CSS that Vite incorrectly converts to module scripts
+      // Convert: <script async type="module" crossorigin src="style/revolution/...css"></script>
+      // Back to: <link rel="stylesheet" type="text/css" href="style/revolution/...css">
+      return html.replace(
+        /<script async type="module" crossorigin src="(style\/revolution\/[^"]+\.css)"><\/script>/g,
+        '<link rel="stylesheet" type="text/css" href="$1">'
+      )
+    }
+  }
+}
+
 export default defineConfig({
   root: '.',
   publicDir: false, // Don't copy public folder (we manage assets explicitly)
@@ -9,18 +26,23 @@ export default defineConfig({
   build: {
     outDir: 'dist',
     emptyOutDir: true,
+    // Don't process Revolution Slider CSS - keep as external links
+    cssCodeSplit: false,
 
     rollupOptions: {
       input: {
         main: resolve(__dirname, 'index.html'),
       },
 
-      // Keep jQuery and Revolution Slider external - they're loaded via script tags
+      // Keep jQuery, Revolution Slider JS and CSS external - loaded via script/link tags
       external: [
         /^style\/js\/jquery\.min\.js$/,
         /^style\/js\/bootstrap\.min\.js$/,
         /^style\/js\/popper\.min\.js$/,
         /^style\/revolution\//,
+        // Exclude Revolution Slider CSS from processing
+        /style\/revolution\/css\/.*/,
+        /style\/revolution\/revolution-addons\/.*/,
       ],
 
       output: {
@@ -39,6 +61,8 @@ export default defineConfig({
   },
 
   plugins: [
+    // Fix Revolution Slider CSS links that Vite incorrectly converts to module scripts
+    preserveRevolutionSliderCSS(),
     // Copy Revolution Slider directory as-is (preserves internal references)
     viteStaticCopy({
       targets: [
