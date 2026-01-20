@@ -5,23 +5,23 @@
 See: .planning/PROJECT.md (updated 2026-01-19)
 
 **Core value:** The site must remain fast, secure, and easy for Cassie to update.
-**Current focus:** Phase 4 - CI Validation
+**Current focus:** Phase 5 - Notifications & Feedback
 
 ## Current Position
 
-Phase: 4 of 9 (CI Validation)
-Plan: 1 of 2 in current phase
-Status: In progress
-Last activity: 2026-01-20 - Completed 04-01-PLAN.md
+Phase: 5 of 9 (Notifications & Feedback)
+Plan: 1 of 1 in current phase
+Status: Phase complete
+Last activity: 2026-01-20 - Completed 05-01-PLAN.md
 
-Progress: [==========-] 45%
+Progress: [===========] 50%
 
 ## Performance Metrics
 
 **Velocity:**
-- Total plans completed: 10
+- Total plans completed: 11
 - Average duration: 5 min
-- Total execution time: 48 min
+- Total execution time: 56 min
 
 **By Phase:**
 
@@ -31,10 +31,11 @@ Progress: [==========-] 45%
 | 02-build-foundation | 2 | 9 min | 4.5 min |
 | 03-image-optimization | 4 | 16 min | 4 min |
 | 04-ci-validation | 1 | 3 min | 3 min |
+| 05-notifications-feedback | 1 | 8 min | 8 min |
 
 **Recent Trend:**
-- Last 5 plans: 03-02 (2 min), 03-03 (6 min), 03-04 (3 min), 04-01 (3 min)
-- Trend: CI validation completed quickly
+- Last 5 plans: 03-03 (6 min), 03-04 (3 min), 04-01 (3 min), 05-01 (8 min)
+- Trend: Notifications took longer due to YAML debugging
 
 *Updated after each plan completion*
 
@@ -68,6 +69,8 @@ Recent decisions affecting current work:
 | 03-04 | Logo fallback uses WebP | PNG has alpha channel, JPEG doesn't support transparency |
 | 04-01 | HTML validation focuses on critical errors only | Trailing whitespace and accessibility deferred |
 | 04-01 | Deploy from dist/ not root | Proper Vite build deployment |
+| 05-01 | Use env vars for workflow variables | Avoid YAML multiline parsing issues |
+| 05-01 | Output names use underscores not hyphens | GitHub expression syntax compatibility |
 
 ### Pending Todos
 
@@ -85,6 +88,6 @@ From research - critical pitfalls to monitor:
 
 ## Session Continuity
 
-Last session: 2026-01-20T18:41:03Z
-Stopped at: Completed 04-01-PLAN.md (CI validation scripts and workflow)
+Last session: 2026-01-20T19:53:00Z
+Stopped at: Completed 05-01-PLAN.md (Deploy notifications via SES)
 Resume file: None
