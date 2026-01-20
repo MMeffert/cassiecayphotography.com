@@ -13,7 +13,7 @@ This roadmap transforms a working but aging photography portfolio into a fast, m
 Decimal phases appear between their surrounding integers in numeric order.
 
 - [x] **Phase 1: Quick Fixes** - Bug fixes and infrastructure cleanup (low risk, immediate value) ✓ Complete 2026-01-20
-- [ ] **Phase 2: Build Foundation** - Vite setup with Revolution Slider exclusions
+- [x] **Phase 2: Build Foundation** - Vite setup with Revolution Slider exclusions ✓ Complete 2026-01-20
 - [ ] **Phase 3: Image Optimization** - Sharp pipeline, AVIF/WebP conversion, responsive images
 - [ ] **Phase 4: CI Validation** - HTML/image validation, Lighthouse checks
 - [ ] **Phase 5: Notifications & Feedback** - Deploy notifications and status for Cassie
@@ -57,8 +57,8 @@ Plans:
 **Plans**: 2 plans
 
 Plans:
-- [ ] 02-01-vite-setup-PLAN.md — Initialize npm, configure Vite with jQuery external, PostCSS setup
-- [ ] 02-02-verify-build-PLAN.md — Test build output, verify Revolution Slider works, human verification
+- [x] 02-01-vite-setup-PLAN.md — Initialize npm, configure Vite with jQuery external, PostCSS setup ✓
+- [x] 02-02-verify-build-PLAN.md — Test build output, verify Revolution Slider works, human verification ✓
 
 ### Phase 3: Image Optimization
 **Goal**: Reduce image payload from 81MB to ~25MB while maintaining photography portfolio quality
@@ -252,7 +252,7 @@ Phases 1-2 sequential, then parallel tracks possible per diagram above.
 | Phase | Plans Complete | Status | Completed |
 |-------|----------------|--------|-----------|
 | 1. Quick Fixes | 3/3 | Complete | 2026-01-20 |
-| 2. Build Foundation | 0/2 | Planned | - |
+| 2. Build Foundation | 2/2 | Complete | 2026-01-20 |
 | 3. Image Optimization | 0/2 | Not started | - |
 | 4. CI Validation | 0/2 | Not started | - |
 | 5. Notifications & Feedback | 0/1 | Not started | - |
