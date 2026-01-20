@@ -76,17 +76,16 @@ async function hasAlphaChannel(imagePath) {
 }
 
 /**
- * Check if output file exists and is newer than source
+ * Check if output file exists (skip if it does)
+ * Note: We check existence only, not mtime, because git checkout
+ * resets all file mtimes making mtime comparisons unreliable in CI.
  */
 async function shouldSkip(sourcePath, outputPath) {
   try {
-    const [sourceStats, outputStats] = await Promise.all([
-      fs.stat(sourcePath),
-      fs.stat(outputPath)
-    ]);
-    return outputStats.mtime > sourceStats.mtime;
+    await fs.access(outputPath);
+    return true; // Output exists, skip
   } catch {
-    return false; // Output doesn't exist, don't skip
+    return false; // Output doesn't exist, process it
   }
 }
 
