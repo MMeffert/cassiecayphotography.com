@@ -71,11 +71,12 @@ Plans:
   3. Below-fold images use native `loading="lazy"` attribute
   4. Total image payload reduced by at least 60% (81MB -> 32MB or less)
   5. No visible quality degradation on photography portfolio images
-**Plans**: TBD
+**Plans**: 3 plans
 
 Plans:
-- [ ] 03-01: Sharp image pipeline setup
-- [ ] 03-02: Image conversion and HTML updates
+- [ ] 03-01-PLAN.md — Install Sharp.js, create optimization script with conservative quality settings
+- [ ] 03-02-PLAN.md — Human quality verification checkpoint (Cassie approves image quality)
+- [ ] 03-03-PLAN.md — Update HTML with picture elements, wire optimized images into build
 
 ### Phase 4: CI Validation
 **Goal**: Catch broken links, malformed HTML, and image issues before deployment
@@ -254,7 +255,7 @@ Phases 1-2 sequential, then parallel tracks possible per diagram above.
 |-------|----------------|--------|-----------|
 | 1. Quick Fixes | 3/3 | Complete | 2026-01-20 |
 | 2. Build Foundation | 2/2 | Complete | 2026-01-20 |
-| 3. Image Optimization | 0/2 | Not started | - |
+| 3. Image Optimization | 0/3 | Planning complete | - |
 | 4. CI Validation | 0/2 | Not started | - |
 | 5. Notifications & Feedback | 0/1 | Not started | - |
 | 6. Pre-commit Hooks | 0/1 | Not started | - |
@@ -266,5 +267,6 @@ Phases 1-2 sequential, then parallel tracks possible per diagram above.
 *Roadmap created: 2026-01-19*
 *Phase 1 planned: 2026-01-19*
 *Phase 2 planned: 2026-01-20*
+*Phase 3 planned: 2026-01-20*
 *Depth: Comprehensive (9 phases)*
 *Mode: YOLO*
