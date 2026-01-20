@@ -7,7 +7,9 @@
   "scripts": {
     "dev": "vite",
     "build": "vite build",
-    "preview": "vite preview"
+    "preview": "vite preview",
+    "preprocess": "node scripts/optimize-images.js",
+    "prebuild": "npm run preprocess"
   },
   "repository": {
     "type": "git",
@@ -22,8 +24,13 @@
   "homepage": "https://github.com/MMeffert/cassiecayphotography.com#readme",
   "devDependencies": {
     "autoprefixer": "^10.4.23",
+    "cli-progress": "^3.12.0",
     "cssnano": "^7.1.2",
+    "fs-extra": "^11.3.3",
+    "glob": "^13.0.0",
+    "p-limit": "^7.2.0",
     "postcss": "^8.5.6",
+    "sharp": "^0.34.5",
     "vite": "^7.3.1",
     "vite-plugin-static-copy": "^3.1.5"
   }
