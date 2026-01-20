@@ -137,10 +137,10 @@ Plans:
   2. JavaScript bundle size reduced by at least 30%
   3. All existing site functionality preserved
   4. No console errors in browser
-**Plans**: TBD
+**Plans**: 1 plan
 
 Plans:
-- [ ] 07-01: JavaScript audit and cleanup
+- [ ] 07-01-PLAN.md — Extract only used plugins and scripts, wire into build
 
 ### Phase 8: Library Modernization (OPTIONAL)
 **Goal**: Replace heavy jQuery plugins with modern lightweight alternatives
@@ -260,7 +260,7 @@ Phases 1-2 sequential, then parallel tracks possible per diagram above.
 | 4. CI Validation | 2/2 | Complete | 2026-01-20 |
 | 5. Notifications & Feedback | 1/1 | Complete | 2026-01-20 |
 | 6. Pre-commit Hooks | 1/1 | Complete | 2026-01-20 |
-| 7. JavaScript Cleanup | 0/1 | Not started | - |
+| 7. JavaScript Cleanup | 0/1 | Planned | - |
 | 8. Library Modernization | 0/2 | Not started | - |
 | 9. Workflow Enhancement | 0/1 | Not started | - |
 
@@ -272,5 +272,6 @@ Phases 1-2 sequential, then parallel tracks possible per diagram above.
 *Phase 4 planned: 2026-01-20*
 *Phase 5 planned: 2026-01-20*
 *Phase 6 planned: 2026-01-20*
+*Phase 7 planned: 2026-01-20*
 *Depth: Comprehensive (9 phases)*
 *Mode: YOLO*
