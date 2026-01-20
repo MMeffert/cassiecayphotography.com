@@ -94,6 +94,21 @@ export class GitHubOidcStack extends cdk.Stack {
       })
     );
 
+    // SES permissions for deploy notifications
+    this.deploymentRole.addToPolicy(
+      new iam.PolicyStatement({
+        sid: 'SESNotificationPermissions',
+        effect: iam.Effect.ALLOW,
+        actions: ['ses:SendEmail'],
+        resources: ['*'],
+        conditions: {
+          StringEquals: {
+            'ses:FromAddress': 'no-reply@cassiecayphotography.com',
+          },
+        },
+      })
+    );
+
     // Outputs
     new cdk.CfnOutput(this, 'DeploymentRoleArn', {
       value: this.deploymentRole.roleArn,
