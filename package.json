@@ -12,7 +12,9 @@
     "prebuild": "npm run preprocess",
     "validate:html": "node scripts/validate-html.js",
     "validate:refs": "node scripts/check-references.js",
-    "validate:images": "node scripts/check-image-sizes.js"
+    "validate:images": "node scripts/check-image-sizes.js",
+    "validate:staged": "echo 'Placeholder - will be replaced with actual script'",
+    "prepare": "husky"
   },
   "repository": {
     "type": "git",
@@ -32,6 +34,7 @@
     "fs-extra": "^11.3.3",
     "glob": "^13.0.0",
     "html-validate": "^10.6.0",
+    "husky": "^9.1.7",
     "node-html-parser": "^7.0.2",
     "p-limit": "^7.2.0",
     "postcss": "^8.5.6",
