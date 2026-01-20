@@ -8,6 +8,7 @@
 |----|-------------|----------|
 | BUG-01 | Fix broken portfolio image link (`cassiecay-M4-fullpng` -> `cassiecay-M4-full.png`) | High |
 | BUG-02 | Fix duplicate `id="message"` elements in contact form HTML | Medium |
+| BUG-03 | Fix Revolution Slider pause-on-hover for full-page hero (should not pause when cursor over page) | Medium |
 
 ### Infrastructure & Security
 
@@ -73,7 +74,7 @@
 | INFRA-02 | Phase 1 | Complete ✓ |
 | INFRA-03 | Phase 1 | Complete ✓ |
 | INFRA-04 | Phase 1 | Complete ✓ |
-| AUTO-01 | Phase 2 | Pending |
+| AUTO-01 | Phase 2 | Complete ✓ |
 | PERF-01 | Phase 3 | Pending |
 | PERF-02 | Phase 3 | Pending |
 | AUTO-02 | Phase 4 | Pending |
@@ -87,8 +88,9 @@
 | FRONT-01 | Phase 8 | Pending |
 | FRONT-02 | Phase 8 | Pending |
 | WORK-01 | Phase 9 | Pending |
+| BUG-03 | Phase 8 | Pending |
 
-**Coverage:** 20/20 v1 requirements mapped to phases
+**Coverage:** 21/21 v1 requirements mapped to phases
 
 ---
 *Requirements extracted: 2026-01-19*

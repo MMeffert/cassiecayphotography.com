@@ -196,9 +196,10 @@ Plans:
 | FRONT-03 | 7 | Remove unused JavaScript |
 | FRONT-01 | 8 | Replace Revolution Slider |
 | FRONT-02 | 8 | Update jQuery plugins |
+| BUG-03 | 8 | Fix slider pause-on-hover behavior |
 | WORK-01 | 9 | Folder-based galleries |
 
-**Coverage:** 20/20 requirements mapped
+**Coverage:** 21/21 requirements mapped
 
 ## Parallelization Opportunities
 
