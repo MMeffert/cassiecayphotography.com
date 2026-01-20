@@ -13,5 +13,8 @@ infrastructure/*.d.ts
 # Node
 node_modules/
 
+# Vite build output
+dist/
+
 # Logs
 *.log
