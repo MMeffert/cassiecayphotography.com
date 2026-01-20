@@ -21,13 +21,11 @@ new GitHubOidcStack(app, 'CassiePhotoGitHubOidcStack', {
 });
 
 // Static site infrastructure (S3, CloudFront, Route53)
-// NOTE: skipDomainSetup=true for initial deployment alongside existing infrastructure
-// After migration, set to false (or remove) and redeploy to attach the domain
 new StaticSiteStack(app, 'CassiePhotoStaticSiteStack', {
   env,
   description: 'Static site infrastructure for Cassie Cay Photography',
   domainName: 'cassiecayphotography.com',
-  skipDomainSetup: true, // TODO: Set to false after migrating from old infrastructure
+  skipDomainSetup: false,
 });
 
 // Contact form Lambda with Function URL
