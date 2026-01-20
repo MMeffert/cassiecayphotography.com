@@ -109,7 +109,7 @@ Plans:
 **Plans**: 1 plan
 
 Plans:
-- [ ] 05-01-PLAN.md — Add SES permissions and workflow notification steps
+- [x] 05-01-PLAN.md — Add SES permissions and workflow notification steps ✓
 
 ### Phase 6: Pre-commit Hooks
 **Goal**: Catch errors locally before they reach CI, faster feedback loop
@@ -121,10 +121,10 @@ Plans:
   2. Git commit blocked if HTML has obvious errors (unclosed tags)
   3. Pre-commit runs in under 5 seconds for typical changes
   4. Clear error messages tell Cassie what to fix
-**Plans**: TBD
+**Plans**: 1 plan
 
 Plans:
-- [ ] 06-01: Husky pre-commit configuration
+- [ ] 06-01-PLAN.md — Install Husky, create staged validation script, test hook
 
 ### Phase 7: JavaScript Cleanup
 **Goal**: Reduce JavaScript bundle by removing unused code and plugins
@@ -271,5 +271,6 @@ Phases 1-2 sequential, then parallel tracks possible per diagram above.
 *Phase 3 planned: 2026-01-20*
 *Phase 4 planned: 2026-01-20*
 *Phase 5 planned: 2026-01-20*
+*Phase 6 planned: 2026-01-20*
 *Depth: Comprehensive (9 phases)*
 *Mode: YOLO*
