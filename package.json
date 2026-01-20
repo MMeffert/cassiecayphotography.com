@@ -10,7 +10,8 @@
     "preview": "vite preview",
     "preprocess": "node scripts/optimize-images.js",
     "prebuild": "npm run preprocess",
-    "validate:html": "node scripts/validate-html.js"
+    "validate:html": "node scripts/validate-html.js",
+    "validate:refs": "node scripts/check-references.js"
   },
   "repository": {
     "type": "git",
@@ -30,6 +31,7 @@
     "fs-extra": "^11.3.3",
     "glob": "^13.0.0",
     "html-validate": "^10.6.0",
+    "node-html-parser": "^7.0.2",
     "p-limit": "^7.2.0",
     "postcss": "^8.5.6",
     "sharp": "^0.34.5",
