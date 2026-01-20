@@ -16,7 +16,7 @@ Decimal phases appear between their surrounding integers in numeric order.
 - [x] **Phase 2: Build Foundation** - Vite setup with Revolution Slider exclusions ✓ Complete 2026-01-20
 - [x] **Phase 3: Image Optimization** - Sharp pipeline, AVIF/WebP conversion, responsive images ✓ Complete 2026-01-20
 - [ ] **Phase 4: CI Validation** - HTML/image validation, Lighthouse checks
-- [ ] **Phase 5: Notifications & Feedback** - Deploy notifications and status for Cassie
+- [ ] **Phase 5: Notifications & Feedback** - Deploy notifications and status for Mitchell
 - [ ] **Phase 6: Pre-commit Hooks** - Local validation before CI
 - [ ] **Phase 7: JavaScript Cleanup** - Remove unused code, reduce bundle size
 - [ ] **Phase 8: Library Modernization** - Replace Revolution Slider and heavy plugins (OPTIONAL)
@@ -97,19 +97,19 @@ Plans:
 - [ ] 04-02-PLAN.md — Image size warnings and Lighthouse integration
 
 ### Phase 5: Notifications & Feedback
-**Goal**: Cassie knows immediately when deploys succeed or fail without checking GitHub
+**Goal**: Mitchell knows immediately when deploys succeed or fail without checking GitHub
 **Depends on**: Phase 4
 **Requirements**: AUTO-05, WORK-02
-**Research needed**: No (email notification pattern well-documented)
+**Research needed**: No (uses existing AWS SES infrastructure)
 **Success Criteria** (what must be TRUE):
-  1. Cassie receives email when deploy succeeds (with link to site)
-  2. Cassie receives email when deploy fails (with error summary)
+  1. Mitchell receives email when deploy succeeds (with link to site)
+  2. Mitchell receives email when deploy fails (with error summary)
   3. Lighthouse score included in success notification
   4. Notifications arrive within 2 minutes of deploy completion
-**Plans**: TBD
+**Plans**: 1 plan
 
 Plans:
-- [ ] 05-01: Email notification setup
+- [ ] 05-01-PLAN.md — Add SES permissions and workflow notification steps
 
 ### Phase 6: Pre-commit Hooks
 **Goal**: Catch errors locally before they reach CI, faster feedback loop
@@ -192,7 +192,7 @@ Plans:
 | AUTO-03 | 4 | Image validation in CI |
 | AUTO-06 | 4 | Lighthouse performance check |
 | AUTO-05 | 5 | Deploy notifications |
-| WORK-02 | 5 | Deploy feedback for Cassie |
+| WORK-02 | 5 | Deploy feedback for Mitchell |
 | AUTO-04 | 6 | Pre-commit hooks |
 | PERF-03 | 7 | Reduce JS bundle size |
 | FRONT-03 | 7 | Remove unused JavaScript |
@@ -270,5 +270,6 @@ Phases 1-2 sequential, then parallel tracks possible per diagram above.
 *Phase 2 planned: 2026-01-20*
 *Phase 3 planned: 2026-01-20*
 *Phase 4 planned: 2026-01-20*
+*Phase 5 planned: 2026-01-20*
 *Depth: Comprehensive (9 phases)*
 *Mode: YOLO*
