@@ -82,7 +82,7 @@
 | AUTO-06 | Phase 4 | Pending |
 | AUTO-05 | Phase 5 | Complete ✓ |
 | WORK-02 | Phase 5 | Complete ✓ |
-| AUTO-04 | Phase 6 | Pending |
+| AUTO-04 | Phase 6 | Complete ✓ |
 | PERF-03 | Phase 7 | Pending |
 | FRONT-03 | Phase 7 | Pending |
 | FRONT-01 | Phase 8 | Pending |
