@@ -1,0 +1,30 @@
+{
+  "name": "cassiecayphotography",
+  "version": "1.0.0",
+  "description": "Cassie Cay Photography portfolio website",
+  "type": "module",
+  "private": true,
+  "scripts": {
+    "dev": "vite",
+    "build": "vite build",
+    "preview": "vite preview"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/MMeffert/cassiecayphotography.com.git"
+  },
+  "keywords": [],
+  "author": "Cassie Meffert",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/MMeffert/cassiecayphotography.com/issues"
+  },
+  "homepage": "https://github.com/MMeffert/cassiecayphotography.com#readme",
+  "devDependencies": {
+    "autoprefixer": "^10.4.23",
+    "cssnano": "^7.1.2",
+    "postcss": "^8.5.6",
+    "vite": "^7.3.1",
+    "vite-plugin-static-copy": "^3.1.5"
+  }
+}
