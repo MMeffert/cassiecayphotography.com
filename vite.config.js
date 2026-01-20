@@ -83,13 +83,13 @@ export default defineConfig({
           src: 'style/js/bootstrap.min.js',
           dest: 'style/js'
         },
-        // Copy other style JS files
+        // Copy custom JS files (Phase 7 - extracted from plugins.js and scripts.js)
         {
-          src: 'style/js/plugins.js',
+          src: 'style/js/custom-plugins.js',
           dest: 'style/js'
         },
         {
-          src: 'style/js/scripts.js',
+          src: 'style/js/custom-scripts.js',
           dest: 'style/js'
         },
         // Copy CSS files
