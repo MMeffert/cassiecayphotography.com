@@ -11,7 +11,8 @@
     "preprocess": "node scripts/optimize-images.js",
     "prebuild": "npm run preprocess",
     "validate:html": "node scripts/validate-html.js",
-    "validate:refs": "node scripts/check-references.js"
+    "validate:refs": "node scripts/check-references.js",
+    "validate:images": "node scripts/check-image-sizes.js"
   },
   "repository": {
     "type": "git",
