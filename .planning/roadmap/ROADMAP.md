@@ -12,7 +12,7 @@ This roadmap transforms a working but aging photography portfolio into a fast, m
 
 Decimal phases appear between their surrounding integers in numeric order.
 
-- [ ] **Phase 1: Quick Fixes** - Bug fixes and infrastructure cleanup (low risk, immediate value)
+- [x] **Phase 1: Quick Fixes** - Bug fixes and infrastructure cleanup (low risk, immediate value) ✓ Complete 2026-01-20
 - [ ] **Phase 2: Build Foundation** - Vite setup with Revolution Slider exclusions
 - [ ] **Phase 3: Image Optimization** - Sharp pipeline, AVIF/WebP conversion, responsive images
 - [ ] **Phase 4: CI Validation** - HTML/image validation, Lighthouse checks
@@ -39,9 +39,9 @@ Decimal phases appear between their surrounding integers in numeric order.
 **Plans**: 3 plans
 
 Plans:
-- [ ] 01-01-bug-fixes-PLAN.md — Fix broken image link and duplicate element IDs
-- [ ] 01-02-domain-migration-PLAN.md — Update CDK deps, delete old CloudFront, enable domain
-- [ ] 01-03-post-migration-cleanup-PLAN.md — Remove legacy S3 permission, verify Dependabot
+- [x] 01-01-bug-fixes-PLAN.md — Fix broken image link and duplicate element IDs ✓
+- [x] 01-02-domain-migration-PLAN.md — Update CDK deps, delete old CloudFront, enable domain ✓
+- [x] 01-03-post-migration-cleanup-PLAN.md — Remove legacy S3 permission, verify Dependabot ✓
 
 ### Phase 2: Build Foundation
 **Goal**: Establish Vite build system that optimizes assets without breaking Revolution Slider or Dreamweaver workflow
