@@ -15,7 +15,7 @@ Decimal phases appear between their surrounding integers in numeric order.
 - [x] **Phase 1: Quick Fixes** - Bug fixes and infrastructure cleanup (low risk, immediate value) ✓ Complete 2026-01-20
 - [x] **Phase 2: Build Foundation** - Vite setup with Revolution Slider exclusions ✓ Complete 2026-01-20
 - [x] **Phase 3: Image Optimization** - Sharp pipeline, AVIF/WebP conversion, responsive images ✓ Complete 2026-01-20
-- [ ] **Phase 4: CI Validation** - HTML/image validation, Lighthouse checks
+- [x] **Phase 4: CI Validation** ✓ Complete 2026-01-20 - HTML/image validation, Lighthouse checks
 - [x] **Phase 5: Notifications & Feedback** ✓ Complete 2026-01-20 - Deploy notifications and status for Mitchell
 - [x] **Phase 6: Pre-commit Hooks** ✓ Complete 2026-01-20 - Local validation before CI
 - [ ] **Phase 7: JavaScript Cleanup** - Remove unused code, reduce bundle size
@@ -94,7 +94,7 @@ Plans:
 
 Plans:
 - [x] 04-01-PLAN.md — HTML validation and reference checking ✓
-- [ ] 04-02-PLAN.md — Image size warnings and Lighthouse integration
+- [x] 04-02-PLAN.md — Image size warnings and Lighthouse integration ✓
 
 ### Phase 5: Notifications & Feedback
 **Goal**: Mitchell knows immediately when deploys succeed or fail without checking GitHub
@@ -124,7 +124,7 @@ Plans:
 **Plans**: 1 plan
 
 Plans:
-- [ ] 06-01-PLAN.md — Install Husky, create staged validation script, test hook
+- [x] 06-01-PLAN.md — Install Husky, create staged validation script, test hook ✓
 
 ### Phase 7: JavaScript Cleanup
 **Goal**: Reduce JavaScript bundle by removing unused code and plugins
@@ -257,7 +257,7 @@ Phases 1-2 sequential, then parallel tracks possible per diagram above.
 | 1. Quick Fixes | 3/3 | Complete | 2026-01-20 |
 | 2. Build Foundation | 2/2 | Complete | 2026-01-20 |
 | 3. Image Optimization | 4/4 | Complete | 2026-01-20 |
-| 4. CI Validation | 1/2 | In progress | - |
+| 4. CI Validation | 2/2 | Complete | 2026-01-20 |
 | 5. Notifications & Feedback | 1/1 | Complete | 2026-01-20 |
 | 6. Pre-commit Hooks | 1/1 | Complete | 2026-01-20 |
 | 7. JavaScript Cleanup | 0/1 | Not started | - |

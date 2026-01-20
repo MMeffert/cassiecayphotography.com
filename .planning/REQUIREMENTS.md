@@ -77,9 +77,9 @@
 | AUTO-01 | Phase 2 | Complete ✓ |
 | PERF-01 | Phase 3 | Complete ✓ |
 | PERF-02 | Phase 3 | Complete ✓ |
-| AUTO-02 | Phase 4 | Pending |
-| AUTO-03 | Phase 4 | Pending |
-| AUTO-06 | Phase 4 | Pending |
+| AUTO-02 | Phase 4 | Complete ✓ |
+| AUTO-03 | Phase 4 | Complete ✓ |
+| AUTO-06 | Phase 4 | Complete ✓ |
 | AUTO-05 | Phase 5 | Complete ✓ |
 | WORK-02 | Phase 5 | Complete ✓ |
 | AUTO-04 | Phase 6 | Complete ✓ |
