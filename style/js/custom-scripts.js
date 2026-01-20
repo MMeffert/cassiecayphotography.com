@@ -66,23 +66,15 @@ $(document).ready(function() {
     /*-----------------------------------------------------------------------------------*/
     $('.overlay > a, .overlay > span').prepend('<span class="bg"></span>');
     /*-----------------------------------------------------------------------------------*/
-    /*	LIGHTGALLERY
+    /*	GLIGHTBOX (replaced LightGallery - Phase 8)
     /*-----------------------------------------------------------------------------------*/
-    var $lg = $('.light-gallery');
-    $lg.lightGallery({
-        thumbnail: false,
-        selector: 'a',
-        mode: 'lg-fade',
-        download: false,
-        autoplayControls: false,
-        zoom: false,
-        fullScreen: false,
-        videoMaxWidth: '1000px',
-        loop: false,
-        hash: true,
-        mousewheel: true,
-        videojs: true,
-        share: false
+    var lightbox = GLightbox({
+        selector: '.light-gallery a',
+        touchNavigation: true,
+        loop: true,
+        closeOnOutsideClick: true,
+        keyboardNavigation: true,
+        slideEffect: 'fade'
     });
     /*-----------------------------------------------------------------------------------*/
     /*	CUBE PORTFOLIO (MOSAIC)
@@ -111,25 +103,12 @@ $(document).ready(function() {
     });
     $cubemosaic.on('onAfterLoadMore.cbp', function(event, newItemsAddedToGrid) {
         $('.cbp-item-load-more .overlay > a, .cbp-item-load-more .overlay > span').prepend('<span class="bg"></span>');
-        // first destroy the gallery
-        $lg.data('lightGallery').destroy(true);
-        // reinit the gallery
-        $lg.lightGallery({
-	        thumbnail: false,
-	        selector: 'a',
-	        mode: 'lg-fade',
-	        download: false,
-	        autoplayControls: false,
-	        zoom: false,
-	        fullScreen: false,
-	        videoMaxWidth: '1000px',
-	        loop: false,
-	        hash: true,
-	        mousewheel: true,
-	        videojs: true,
-	        share: false
-	    });
-
+        // Reload GLightbox to pick up new images
+        lightbox.reload();
+    });
+    $cubemosaic.on('onFilterComplete.cbp', function() {
+        // Reload GLightbox after filtering to ensure all visible images are included
+        lightbox.reload();
     });
     /*-----------------------------------------------------------------------------------*/
     /*	BACKGROUND IMAGE

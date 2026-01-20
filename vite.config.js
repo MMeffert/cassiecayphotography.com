@@ -83,6 +83,11 @@ export default defineConfig({
           src: 'style/js/bootstrap.min.js',
           dest: 'style/js'
         },
+        // Copy GLightbox (Phase 8 - replaced LightGallery)
+        {
+          src: 'style/js/glightbox.min.js',
+          dest: 'style/js'
+        },
         // Copy custom JS files (Phase 7 - extracted from plugins.js and scripts.js)
         {
           src: 'style/js/custom-plugins.js',
