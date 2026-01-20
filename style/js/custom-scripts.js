@@ -7,6 +7,46 @@
 $(document).ready(function() {
     'use strict';
     /*-----------------------------------------------------------------------------------*/
+    /*	HERO SLIDER (Embla Carousel)
+    /*-----------------------------------------------------------------------------------*/
+    var heroSlider = document.querySelector('.hero-slider');
+    if (heroSlider) {
+        var viewportNode = heroSlider.querySelector('.embla__viewport');
+        var slides = heroSlider.querySelectorAll('.embla__slide');
+
+        // Initialize with autoplay
+        var emblaApi = EmblaCarousel(
+            viewportNode,
+            {
+                loop: true,
+                draggable: false  // No manual navigation per requirements
+            },
+            [
+                EmblaCarouselAutoplay({
+                    delay: 6000,              // 6 seconds between slides
+                    stopOnInteraction: false, // Don't stop on any interaction
+                    stopOnMouseEnter: false,  // DON'T pause on hover (fixes BUG-03)
+                    playOnInit: true          // Start automatically
+                })
+            ]
+        );
+
+        // Handle fade effect via CSS class
+        function setSelectedClass() {
+            var selected = emblaApi.selectedScrollSnap();
+            slides.forEach(function(slide, index) {
+                if (index === selected) {
+                    slide.classList.add('is-selected');
+                } else {
+                    slide.classList.remove('is-selected');
+                }
+            });
+        }
+
+        emblaApi.on('select', setSelectedClass);
+        setSelectedClass(); // Set initial state
+    }
+    /*-----------------------------------------------------------------------------------*/
     /*	STICKY HEADER
     /*-----------------------------------------------------------------------------------*/
     if ($(".navbar").length) {
