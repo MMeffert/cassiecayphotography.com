@@ -11,9 +11,9 @@ autonomous: true
 
 must_haves:
   truths:
-    - "GitHub OIDC role only has access to new S3 bucket"
-    - "Dependabot security alerts are enabled for the repository"
-    - "No legacy bucket references in IAM policies"
+    - "GitHub Actions deployment succeeds using only the new S3 bucket"
+    - "Dependabot alerts user to new security vulnerabilities in dependencies"
+    - "IAM policy no longer grants access to legacy bucket"
   artifacts:
     - path: "infrastructure/lib/github-oidc-stack.ts"
       provides: "IAM policy with only new bucket"

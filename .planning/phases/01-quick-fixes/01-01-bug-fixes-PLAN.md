@@ -6,6 +6,7 @@ wave: 1
 depends_on: []
 files_modified:
   - index.html
+  - images/cassiecay-M4-full.png
 autonomous: true
 
 must_haves:
@@ -17,6 +18,8 @@ must_haves:
     - path: "index.html"
       provides: "Fixed image link and unique element IDs"
       contains: "cassiecay-M4-full.png"
+    - path: "images/cassiecay-M4-full.png"
+      provides: "Correctly named image file"
   key_links:
     - from: "index.html:445"
       to: "images/cassiecay-M4-full.png"
@@ -46,21 +49,29 @@ Output: index.html with corrected href and unique element IDs
 
 <task type="auto">
   <name>Task 1: Fix broken portfolio image link</name>
-  <files>index.html</files>
+  <files>images/cassiecay-M4-fullpng, images/cassiecay-M4-full.png, index.html</files>
   <action>
-  On line 445, change the malformed href from:
-  `href="images/cassiecay-M4-fullpng"`
-  to:
-  `href="images/cassiecay-M4-full.png"`
+  The image file is incorrectly named `cassiecay-M4-fullpng` (missing the dot before png).
+  Both the file and the HTML reference need to be fixed.
 
-  The issue is a missing dot before "png" in the filename.
+  Step 1: Rename the image file to include the missing dot:
+  ```bash
+  mv images/cassiecay-M4-fullpng images/cassiecay-M4-full.png
+  ```
+
+  Step 2: Update the HTML reference on line 445 to match the corrected filename:
+  Change: `href="images/cassiecay-M4-fullpng"`
+  To: `href="images/cassiecay-M4-full.png"`
+
+  Note: The file rename and HTML update together ensure the link works correctly.
   </action>
   <verify>
-  1. `grep -n "cassiecay-M4-fullpng" index.html` returns no results
-  2. `grep -n "cassiecay-M4-full.png" index.html` returns line 445
-  3. Verify the target file exists: `ls images/cassiecay-M4-full.png`
+  1. `ls images/cassiecay-M4-full.png` succeeds (file exists with correct name)
+  2. `ls images/cassiecay-M4-fullpng 2>&1` returns "No such file" (old name gone)
+  3. `grep -n "cassiecay-M4-fullpng" index.html` returns no results
+  4. `grep -n "cassiecay-M4-full.png" index.html` returns line 445
   </verify>
-  <done>Portfolio link points to existing image file with correct .png extension</done>
+  <done>Image file renamed to cassiecay-M4-full.png and portfolio link updated to match</done>
 </task>
 
 <task type="auto">
@@ -87,13 +98,15 @@ Output: index.html with corrected href and unique element IDs
 </tasks>
 
 <verification>
-1. HTML validation: No duplicate ID errors
-2. Portfolio link verified: `grep 'cassiecay-M4-full\.png' index.html` returns match
-3. Single message ID: `grep -c 'id="message"' index.html` returns 1
+1. Image file exists: `ls images/cassiecay-M4-full.png` succeeds
+2. HTML validation: No duplicate ID errors
+3. Portfolio link verified: `grep 'cassiecay-M4-full\.png' index.html` returns match
+4. Single message ID: `grep -c 'id="message"' index.html` returns 1
 </verification>
 
 <success_criteria>
-- BUG-01: Image link corrected from `cassiecay-M4-fullpng` to `cassiecay-M4-full.png`
+- BUG-01: Image file renamed from `cassiecay-M4-fullpng` to `cassiecay-M4-full.png`
+- BUG-01: HTML link updated to match corrected filename
 - BUG-02: Only one element with `id="message"` exists in contact form
 - All changes committed to git
 </success_criteria>
