@@ -22,6 +22,11 @@ env:
 jobs:
   validate:
     runs-on: ubuntu-latest
+    outputs:
+      performance: ${{ steps.lighthouse-scores.outputs.performance }}
+      accessibility: ${{ steps.lighthouse-scores.outputs.accessibility }}
+      best_practices: ${{ steps.lighthouse-scores.outputs.best_practices }}
+      seo: ${{ steps.lighthouse-scores.outputs.seo }}
 
     steps:
       - name: Checkout code
@@ -71,6 +76,30 @@ jobs:
           "
           pkill -f "serve dist" || true
         continue-on-error: true
+
+      - name: Extract Lighthouse scores
+        id: lighthouse-scores
+        run: |
+          if [ ! -f "./lighthouse-report.json" ]; then
+            echo "Warning: No lighthouse-report.json found"
+            echo "performance=N/A" >> $GITHUB_OUTPUT
+            echo "accessibility=N/A" >> $GITHUB_OUTPUT
+            echo "best_practices=N/A" >> $GITHUB_OUTPUT
+            echo "seo=N/A" >> $GITHUB_OUTPUT
+            exit 0
+          fi
+
+          PERF=$(jq '.categories.performance.score * 100 | floor' "./lighthouse-report.json")
+          A11Y=$(jq '.categories.accessibility.score * 100 | floor' "./lighthouse-report.json")
+          BP=$(jq '.categories["best-practices"].score * 100 | floor' "./lighthouse-report.json")
+          SEO=$(jq '.categories.seo.score * 100 | floor' "./lighthouse-report.json")
+
+          echo "performance=$PERF" >> $GITHUB_OUTPUT
+          echo "accessibility=$A11Y" >> $GITHUB_OUTPUT
+          echo "best_practices=$BP" >> $GITHUB_OUTPUT
+          echo "seo=$SEO" >> $GITHUB_OUTPUT
+
+          echo "Lighthouse Scores: Perf=$PERF, A11y=$A11Y, BP=$BP, SEO=$SEO"
 
   deploy:
     needs: validate
@@ -132,3 +161,86 @@ jobs:
           aws cloudfront create-invalidation \
             --distribution-id ${{ steps.cloudfront.outputs.distribution_id }} \
             --paths "/*"
+
+      - name: Send success notification
+        env:
+          COMMIT_MSG: ${{ github.event.head_commit.message }}
+          COMMIT_SHA: ${{ github.sha }}
+          PERF_SCORE: ${{ needs.validate.outputs.performance }}
+          A11Y_SCORE: ${{ needs.validate.outputs.accessibility }}
+          BP_SCORE: ${{ needs.validate.outputs.best_practices }}
+          SEO_SCORE: ${{ needs.validate.outputs.seo }}
+          WORKFLOW_URL: ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}
+        run: |
+          COMMIT_MSG_LINE=$(echo "$COMMIT_MSG" | head -1)
+          TIMESTAMP=$(date -u +"%Y-%m-%d %H:%M:%S UTC")
+
+          BODY="Deployment completed successfully!
+
+          Site: https://cassiecayphotography.com
+          Commit: ${COMMIT_SHA}
+          Message: ${COMMIT_MSG_LINE}
+          Time: ${TIMESTAMP}
+
+          Lighthouse Scores:
+          - Performance: ${PERF_SCORE}
+          - Accessibility: ${A11Y_SCORE}
+          - Best Practices: ${BP_SCORE}
+          - SEO: ${SEO_SCORE}
+
+          View workflow: ${WORKFLOW_URL}"
+
+          aws ses send-email \
+            --from "no-reply@cassiecayphotography.com" \
+            --destination "ToAddresses=mitchell@mitchellmeffert.com" \
+            --message "Subject={Data='Deploy Success: cassiecayphotography.com',Charset='utf-8'},Body={Text={Data='${BODY}',Charset='utf-8'}}"
+
+  notify-failure:
+    runs-on: ubuntu-latest
+    needs: [validate, deploy]
+    if: always() && (needs.validate.result == 'failure' || needs.deploy.result == 'failure')
+    permissions:
+      id-token: write
+      contents: read
+
+    steps:
+      - name: Configure AWS credentials
+        uses: aws-actions/configure-aws-credentials@v4
+        with:
+          role-to-assume: arn:aws:iam::241654197557:role/CassiePhotoGitHubActionsDeploymentRole
+          aws-region: us-east-1
+
+      - name: Determine failed job
+        id: failed-job
+        run: |
+          if [ "${{ needs.validate.result }}" == "failure" ]; then
+            echo "job=validate" >> $GITHUB_OUTPUT
+          elif [ "${{ needs.deploy.result }}" == "failure" ]; then
+            echo "job=deploy" >> $GITHUB_OUTPUT
+          else
+            echo "job=unknown" >> $GITHUB_OUTPUT
+          fi
+
+      - name: Send failure notification
+        env:
+          COMMIT_MSG: ${{ github.event.head_commit.message }}
+          COMMIT_SHA: ${{ github.sha }}
+          FAILED_JOB: ${{ steps.failed-job.outputs.job }}
+          WORKFLOW_URL: ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}
+        run: |
+          COMMIT_MSG_LINE=$(echo "$COMMIT_MSG" | head -1)
+          TIMESTAMP=$(date -u +"%Y-%m-%d %H:%M:%S UTC")
+
+          BODY="Deployment failed!
+
+          Failed job: ${FAILED_JOB}
+          Commit: ${COMMIT_SHA}
+          Message: ${COMMIT_MSG_LINE}
+          Time: ${TIMESTAMP}
+
+          View details: ${WORKFLOW_URL}"
+
+          aws ses send-email \
+            --from "no-reply@cassiecayphotography.com" \
+            --destination "ToAddresses=mitchell@mitchellmeffert.com" \
+            --message "Subject={Data='Deploy Failed: cassiecayphotography.com',Charset='utf-8'},Body={Text={Data='${BODY}',Charset='utf-8'}}"
