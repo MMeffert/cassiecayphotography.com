@@ -85,10 +85,10 @@
 | AUTO-04 | Phase 6 | Complete ✓ |
 | PERF-03 | Phase 7 | Complete ✓ |
 | FRONT-03 | Phase 7 | Complete ✓ |
-| FRONT-01 | Phase 8 | Pending |
-| FRONT-02 | Phase 8 | Pending |
+| FRONT-01 | Phase 8 | Complete ✓ |
+| FRONT-02 | Phase 8 | Complete ✓ |
 | WORK-01 | Phase 9 | Pending |
-| BUG-03 | Phase 8 | Pending |
+| BUG-03 | Phase 8 | Complete ✓ |
 
 **Coverage:** 21/21 v1 requirements mapped to phases
 
