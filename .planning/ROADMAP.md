@@ -61,15 +61,16 @@ Plans:
 
 ---
 
-### Phase 18: Image Sitemap Generation
+### Phase 18: Image Sitemap Generation ✓
 
 **Goal:** Google Image Search can discover all 84 portfolio images via sitemap
 
 **Depends on:** None (independent, but build process extension)
 **Plans:** 1 plan
+**Status:** COMPLETE (2026-01-21)
 
 Plans:
-- [ ] 18-01-PLAN.md — Create sitemap generation script with image extensions and postbuild hook
+- [x] 18-01-PLAN.md — Create sitemap generation script with image extensions and postbuild hook
 
 **Requirements:**
 - SEO-07: Build-time sitemap script
@@ -78,12 +79,12 @@ Plans:
 - SEO-10: Postbuild hook integration
 
 **Success Criteria:**
-1. `image-sitemap.xml` generated in dist/ with all 84 portfolio images
-2. Each image has `<image:caption>` and `<image:geo_location>`
-3. Main `sitemap.xml` updated to sitemap index format referencing image sitemap
-4. `npm run build` automatically generates current sitemap
+1. `image-sitemap.xml` generated in dist/ with all 100 portfolio images ✓
+2. Each image has `<image:caption>` and `<image:geo_location>` ✓
+3. Main `sitemap.xml` updated to sitemap index format referencing image sitemap ✓
+4. `npm run build` automatically generates current sitemap ✓
 
-**Notes:** Uses `sitemap` npm package (v9.0.0). Follows existing prebuild/postbuild script pattern.
+**Notes:** Uses `sitemap` npm package (v9.0.0). Found 100 portfolio images (more than original 84 estimate).
 
 ---
 

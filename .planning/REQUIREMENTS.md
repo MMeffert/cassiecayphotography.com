@@ -21,12 +21,12 @@ Improve search engine discoverability through technical SEO and image optimizati
 - [x] **SEO-05**: Add og:image meta tag with 1200x630 preview image — Phase 17 ✓
 - [x] **SEO-06**: Add Twitter Card meta tags (twitter:card, twitter:title, twitter:description, twitter:image) — Phase 17 ✓
 
-## Image Sitemap
+## Image Sitemap ✓
 
-- [ ] **SEO-07**: Create build-time script to generate image-sitemap.xml
-- [ ] **SEO-08**: Include image captions and geo_location in sitemap
-- [ ] **SEO-09**: Update main sitemap.xml to reference image sitemap (sitemap index)
-- [ ] **SEO-10**: Add sitemap generation to postbuild hook
+- [x] **SEO-07**: Create build-time script to generate image-sitemap.xml — Phase 18 ✓
+- [x] **SEO-08**: Include image captions and geo_location in sitemap — Phase 18 ✓
+- [x] **SEO-09**: Update main sitemap.xml to reference image sitemap (sitemap index) — Phase 18 ✓
+- [x] **SEO-10**: Add sitemap generation to postbuild hook — Phase 18 ✓
 
 ## Alt Text Generation
 
@@ -68,4 +68,4 @@ Improve search engine discoverability through technical SEO and image optimizati
 
 ---
 
-*Last updated: 2026-01-21 (Phase 17 complete)*
+*Last updated: 2026-01-21 (Phase 18 complete)*
