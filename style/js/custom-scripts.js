@@ -285,36 +285,6 @@ $(document).ready(function() {
         return bg;
     });
     /*-----------------------------------------------------------------------------------*/
-    /*	GO TO TOP
-    /*-----------------------------------------------------------------------------------*/
-    $.scrollUp({
-        scrollName: 'scrollUp',
-        // Element ID
-        scrollDistance: 300,
-        // Distance from top/bottom before showing element (px)
-        scrollFrom: 'top',
-        // 'top' or 'bottom'
-        scrollSpeed: 300,
-        // Speed back to top (ms)
-        easingType: 'linear',
-        // Scroll to top easing (see http://easings.net/)
-        animation: 'fade',
-        // Fade, slide, none
-        animationInSpeed: 200,
-        // Animation in speed (ms)
-        animationOutSpeed: 200,
-        // Animation out speed (ms)
-        scrollText: '<span style="background:#9A7A7D;" class="btn btn-square btn-full-rounded btn-icon"><i class="fa fa-chevron-up"></i></span>',
-        // Text for element, can contain HTML
-        scrollTitle: false,
-        // Set a custom <a> title if required. Defaults to scrollText
-        scrollImg: false,
-        // Set true to use image
-        activeOverlay: false,
-        // Set CSS color to display scrollUp active point, e.g '#00FFFF'
-        zIndex: 1001 // Z-Index for the overlay
-    });
-    /*-----------------------------------------------------------------------------------*/
     /*	PARALLAX MOBILE
     /*-----------------------------------------------------------------------------------*/
     if (navigator.userAgent.match(/Android/i) || navigator.userAgent.match(/webOS/i) || navigator.userAgent.match(/iPhone/i) || navigator.userAgent.match(/iPad/i) || (navigator.platform === 'MacIntel' && navigator.maxTouchPoints > 1) || navigator.userAgent.match(/iPod/i) || navigator.userAgent.match(/BlackBerry/i)) {
