@@ -8,15 +8,11 @@ A modern, fast, jQuery-free photography portfolio website. Static HTML/CSS/JS ho
 
 **The site must remain fast, secure, and easy for Cassie to update.** Everything else supports this goal.
 
-## Current Milestone: v2.2 Mobile Navigation
+## Current Milestone: v2.3 (Planning)
 
-**Goal:** Modernize the mobile menu with Bootstrap 5 offcanvas for a better mobile UX.
+**Goal:** TBD - to be defined in next milestone planning session.
 
-**Target features:**
-- Replace navbar collapse with offcanvas slide-in drawer
-- Smooth mobile navigation experience
-
-## Current State (v2.1 Shipped)
+## Current State (v2.2 Shipped)
 
 **Production bundle:** ~389KB (33% reduction from baseline)
 **Tech stack:** Bootstrap 5.3.3, Muuri, Embla Carousel, GLightbox, vanilla JS
@@ -57,10 +53,10 @@ A modern, fast, jQuery-free photography portfolio website. Static HTML/CSS/JS ho
 - ✓ SEO-07 to SEO-10: Image sitemap generation (100 images) — v2.1
 - ✓ SEO-11 to SEO-14: AI alt text for 76 portfolio images — v2.1
 
-### Active
-
 **v2.2 — Mobile Navigation:**
-- [ ] Bootstrap 5 offcanvas mobile menu
+- ✓ NAV-01 to NAV-06: Bootstrap 5 offcanvas mobile menu — v2.2
+
+### Active
 
 **v2.3+ — Planned features:**
 - [ ] Implement folder-based image galleries (WORK-01 from v1)
@@ -113,10 +109,12 @@ A modern, fast, jQuery-free photography portfolio website. Static HTML/CSS/JS ho
 | Remove jQuery entirely | ~95KB savings, vanilla JS for everything | ✓ Good |
 | Vanilla JS sticky header | IntersectionObserver + CSS, no plugin dependencies | ✓ Good |
 | Fetch API for contact form | Native browser API, no jQuery AJAX needed | ✓ Good |
-| Folder-based galleries | Reduces HTML editing for common task | — Deferred to v2.2 |
+| Folder-based galleries | Reduces HTML editing for common task | — Deferred to v2.3+ |
 | additionalType for Photographer | Per Google recommendation, simpler than nested schema | ✓ Good |
 | ccproxy for Claude Vision | Uses existing infrastructure for AI alt text generation | ✓ Good |
 | Image sitemap with postbuild | Automatically regenerates on every build | ✓ Good |
+| Offcanvas mobile navigation | Native mobile app-like drawer UX, Bootstrap 5 API | ✓ Good |
+| Shared offcanvas instance | Both navbars target same element, simpler state management | ✓ Good |
 
 ---
-*Last updated: 2026-01-21 after v2.2 milestone start*
+*Last updated: 2026-01-21 after v2.2 milestone completion*

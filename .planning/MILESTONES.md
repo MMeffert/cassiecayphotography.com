@@ -1,5 +1,34 @@
 # Project Milestones: Cassie Cay Photography
 
+## v2.2 Mobile Navigation (Shipped: 2026-01-21)
+
+**Delivered:** Modern mobile navigation with Bootstrap 5 offcanvas drawer that slides from the left, providing a native mobile app-like experience.
+
+**Phases completed:** 20 (1 plan total)
+
+**Key accomplishments:**
+
+- Replaced navbar-collapse mobile navigation with offcanvas drawer (slides from left)
+- Hamburger icon automatically syncs with offcanvas open/close state via event handlers
+- Navigation links close the drawer when clicked for seamless one-page site UX
+- Sticky header hamburger targets shared offcanvas instance (no state management issues)
+- Desktop navigation unchanged - horizontal navbar preserved at ≥992px breakpoint
+
+**Stats:**
+
+- 7 files created/modified
+- 410 lines of code (net)
+- 1 phase, 1 plan, 4 commits
+- Same day delivery (2026-01-21, ~7 minutes execution)
+
+**Requirements satisfied:** 6/6 (NAV-01 through NAV-06)
+
+**Git range:** `feat(20-01)` → `docs(phase-20)`
+
+**What's next:** v2.3+ features (folder-based galleries, dark mode toggle)
+
+---
+
 ## v2.1 SEO (Shipped: 2026-01-21)
 
 **Delivered:** Technical SEO improvements with structured data, social sharing meta tags, image sitemap, and AI-generated alt text for all portfolio images.
