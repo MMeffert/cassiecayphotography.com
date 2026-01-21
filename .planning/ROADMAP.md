@@ -133,8 +133,8 @@ Plans:
 **Plans:** 2 plans
 
 Plans:
-- [ ] 15-01-PLAN.md — Convert custom-scripts.js jQuery patterns to vanilla JS
-- [ ] 15-02-PLAN.md — Remove jQuery file, script tag, and Vite config references
+- [x] 15-01-PLAN.md — Convert custom-scripts.js jQuery patterns to vanilla JS ✓
+- [x] 15-02-PLAN.md — Remove jQuery file, script tag, and Vite config references ✓
 
 **Success Criteria:**
 1. Page loads with no console errors
@@ -157,7 +157,7 @@ Plans:
 | 12 | Navigation & Sticky Header | 4 | Complete |
 | 13 | Utility Scripts Conversion | 3 | Complete |
 | 14 | Contact Form Migration | 4 | Complete |
-| 15 | jQuery Removal & Cleanup | 4 | Pending |
+| 15 | jQuery Removal & Cleanup | 4 | Complete |
 
 **Total:** 24 requirements across 6 phases
 
@@ -187,3 +187,5 @@ All 24 v2.0 requirements mapped:
 *Phase 12 complete: 2026-01-21*
 *Phase 13 complete: 2026-01-21*
 *Phase 14 complete: 2026-01-21*
+*Phase 15 complete: 2026-01-21*
+*Milestone v2.0 complete: 2026-01-21*
