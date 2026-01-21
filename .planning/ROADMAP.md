@@ -44,6 +44,9 @@ Plans:
 **Depends on:** None (independent of Phase 16)
 **Plans:** 1 plan
 
+Plans:
+- [ ] 17-01-PLAN.md — Add Twitter Card and og:image meta tags
+
 **Requirements:**
 - SEO-05: og:image meta tag
 - SEO-06: Twitter Card meta tags
@@ -53,7 +56,7 @@ Plans:
 2. Facebook/LinkedIn share shows image preview
 3. All required meta tags present (twitter:card, twitter:site, twitter:image, twitter:title, twitter:description)
 
-**Notes:** Requires 1200x630 OG image. Can use existing hero image or create dedicated social preview.
+**Notes:** Uses existing hero image (cassiecay-background1.jpg, 2000x1333). Social platforms handle cropping.
 
 ---
 
