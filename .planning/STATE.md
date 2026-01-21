@@ -9,18 +9,18 @@ See: .planning/PROJECT.md (updated 2026-01-21)
 
 ## Current Position
 
-Phase: 16 (Structured Data)
-Plan: Not started
-Status: Ready to plan Phase 16
-Last activity: 2026-01-21 — Roadmap created
+Phase: 16 of 19 (Structured Data)
+Plan: 1 of 1 complete
+Status: Phase 16 complete
+Last activity: 2026-01-21 — Completed 16-01-PLAN.md
 
-Progress: Roadmap complete, 14 requirements across 4 phases (16-19)
+Progress: [||||............] 1/4 SEO phases (25%)
 
 ## Milestones
 
 See: .planning/MILESTONES.md
 
-- **v2.1** SEO — IN PROGRESS
+- **v2.1** SEO — IN PROGRESS (Phase 16 complete)
 - **v2.0** jQuery Removal & Bootstrap 5 Migration — SHIPPED 2026-01-21
 - **v1.0** Infrastructure & Modernization — SHIPPED 2026-01-20
 
@@ -31,6 +31,11 @@ See: .planning/MILESTONES.md
 Decisions logged in PROJECT.md Key Decisions table.
 Full decision log archived in phase SUMMARY.md files.
 
+| Phase | Decision | Rationale |
+|-------|----------|-----------|
+| 16-01 | Photographer via additionalType | Google recommendation for specialized local businesses |
+| 16-01 | Empty telephone field | Business uses booking system, not direct calls |
+
 ### Open Blockers/Concerns
 
 - **Dreamweaver workflow**: Build step must enhance, not replace HTML editing.
@@ -40,9 +45,9 @@ Full decision log archived in phase SUMMARY.md files.
 
 Baseline (discovered during research):
 - ✓ Meta description and OG tags present (partial)
+- ✓ Structured data (JSON-LD) added — Phase 16 COMPLETE
 - ✗ 84 portfolio images have empty alt text → Phase 19
 - ✗ Sitemap only lists homepage (no images) → Phase 18
-- ✗ No structured data (JSON-LD) → Phase 16
 - ✗ No Twitter card meta tags → Phase 17
 - ✗ og:image missing → Phase 17
 
@@ -55,6 +60,6 @@ Baseline (discovered during research):
 ## Session Continuity
 
 Last session: 2026-01-21
-Stopped at: Roadmap complete
+Stopped at: Completed 16-01-PLAN.md
 Resume file: None
-Next step: Plan and execute Phase 16 (Structured Data)
+Next step: Plan and execute Phase 17 (Social Meta Tags)
