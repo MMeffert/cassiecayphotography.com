@@ -151,6 +151,29 @@ $(document).ready(function() {
             }
         });
 
+        // Wait for images to load, then refresh layout
+        // This ensures Muuri calculates correct heights for masonry
+        var images = portfolioGrid.querySelectorAll('img');
+        var loadedCount = 0;
+        var totalImages = images.length;
+
+        function onImageLoad() {
+            loadedCount++;
+            // Refresh layout after each batch of images loads
+            if (loadedCount === totalImages || loadedCount % 10 === 0) {
+                grid.refreshItems().layout();
+            }
+        }
+
+        images.forEach(function(img) {
+            if (img.complete) {
+                onImageLoad();
+            } else {
+                img.addEventListener('load', onImageLoad);
+                img.addEventListener('error', onImageLoad); // Count errors too
+            }
+        });
+
         // Filter function with GLightbox integration (PORT-02, PORT-04)
         function filterPortfolio(category) {
             grid.filter(function(item) {
