@@ -3,8 +3,9 @@
  * Extracted from scripts.js - only includes initializations used by the site
  *
  * Phase 7 JavaScript Cleanup - Created 2026-01-20
+ * Phase 15 jQuery Removal - Converted to vanilla JS 2026-01-21
  */
-$(document).ready(function() {
+document.addEventListener('DOMContentLoaded', function() {
     'use strict';
     /*-----------------------------------------------------------------------------------*/
     /*	HERO SLIDER (Embla Carousel)
@@ -136,31 +137,32 @@ $(document).ready(function() {
     /*-----------------------------------------------------------------------------------*/
     /*	SWIPER
     /*-----------------------------------------------------------------------------------*/
-    $(".basic-slider").each(function(index, element) {
-        var $this = $(this);
-        $this.find(".swiper-container").addClass("basic-slider-" + index);
-        $this.find(".swiper-button-prev").addClass("btn-prev-" + index);
-        $this.find(".swiper-button-next").addClass("btn-next-" + index);
-        $this.find(".swiper-pagination").addClass("basic-slider-pagination-" + index);
-        var swiper1 = new Swiper(".basic-slider-" + index, {
+    document.querySelectorAll('.basic-slider').forEach(function(element, index) {
+        element.querySelector('.swiper-container').classList.add('basic-slider-' + index);
+        element.querySelector('.swiper-button-prev').classList.add('btn-prev-' + index);
+        element.querySelector('.swiper-button-next').classList.add('btn-next-' + index);
+        element.querySelector('.swiper-pagination').classList.add('basic-slider-pagination-' + index);
+        var swiper1 = new Swiper('.basic-slider-' + index, {
             slidesPerView: 1,
             spaceBetween: 0,
             autoHeight: true,
             grabCursor: true,
             pagination: {
-                el: ".basic-slider-pagination-" + index,
+                el: '.basic-slider-pagination-' + index,
                 clickable: true,
             },
             navigation: {
-                nextEl: ".btn-next-" + index,
-                prevEl: ".btn-prev-" + index
+                nextEl: '.btn-next-' + index,
+                prevEl: '.btn-prev-' + index
             }
         });
     });
     /*-----------------------------------------------------------------------------------*/
     /*	IMAGE ICON HOVER
     /*-----------------------------------------------------------------------------------*/
-    $('.overlay > a, .overlay > span').prepend('<span class="bg"></span>');
+    document.querySelectorAll('.overlay > a, .overlay > span').forEach(function(el) {
+        el.insertAdjacentHTML('afterbegin', '<span class="bg"></span>');
+    });
     /*-----------------------------------------------------------------------------------*/
     /*	GLIGHTBOX (replaced LightGallery - Phase 8)
     /*-----------------------------------------------------------------------------------*/
@@ -280,31 +282,33 @@ $(document).ready(function() {
     /*-----------------------------------------------------------------------------------*/
     /*	BACKGROUND IMAGE
     /*-----------------------------------------------------------------------------------*/
-    $(".bg-image").css('background-image', function() {
-        var bg = ('url(' + $(this).data("image-src") + ')');
-        return bg;
+    document.querySelectorAll('.bg-image').forEach(function(el) {
+        var bg = 'url(' + el.dataset.imageSrc + ')';
+        el.style.backgroundImage = bg;
     });
     /*-----------------------------------------------------------------------------------*/
     /*	PARALLAX MOBILE
     /*-----------------------------------------------------------------------------------*/
     if (navigator.userAgent.match(/Android/i) || navigator.userAgent.match(/webOS/i) || navigator.userAgent.match(/iPhone/i) || navigator.userAgent.match(/iPad/i) || (navigator.platform === 'MacIntel' && navigator.maxTouchPoints > 1) || navigator.userAgent.match(/iPod/i) || navigator.userAgent.match(/BlackBerry/i)) {
-		$('.image-wrapper').addClass('mobile');
-	}
+        document.querySelectorAll('.image-wrapper').forEach(function(el) {
+            el.classList.add('mobile');
+        });
+    }
     /*-----------------------------------------------------------------------------------*/
     /*	ONEPAGE HEADER OFFSET
     /*-----------------------------------------------------------------------------------*/
-    var header_height = $('.navbar:not(.banner--clone)').outerHeight();
+    var navbarEl = document.querySelector('.navbar:not(.banner--clone)');
+    var header_height = navbarEl ? navbarEl.offsetHeight : 0;
     var shrinked_header_height = 68;
-    var firstStyle = {
-        'padding-top': '' + shrinked_header_height + 'px',
-        'margin-top': '-' + shrinked_header_height + 'px'
-    };
-    $('.onepage section').css(firstStyle);
-    var secondStyle = {
-        'padding-top': '' + header_height + 'px',
-        'margin-top': '-' + header_height + 'px'
-    };
-    $('.onepage section:first-of-type').css(secondStyle);
+    document.querySelectorAll('.onepage section').forEach(function(el) {
+        el.style.paddingTop = shrinked_header_height + 'px';
+        el.style.marginTop = '-' + shrinked_header_height + 'px';
+    });
+    var firstSection = document.querySelector('.onepage section:first-of-type');
+    if (firstSection) {
+        firstSection.style.paddingTop = header_height + 'px';
+        firstSection.style.marginTop = '-' + header_height + 'px';
+    }
 	/*-----------------------------------------------------------------------------------*/
     /*	ONEPAGE NAV LINKS
     /*-----------------------------------------------------------------------------------*/
