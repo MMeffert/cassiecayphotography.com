@@ -66,10 +66,11 @@ document.addEventListener('DOMContentLoaded', function() {
         clone.classList.remove('absolute');
         document.body.insertBefore(clone, document.body.firstChild);
 
-        // Initialize Bootstrap Collapse on cloned navbar (required for hamburger menu)
-        var cloneCollapse = clone.querySelector('.navbar-collapse');
-        if (cloneCollapse) {
-            new bootstrap.Collapse(cloneCollapse, { toggle: false });
+        // Update cloned hamburger to target the shared offcanvas (not a clone)
+        var cloneHamburger = clone.querySelector('.hamburger');
+        if (cloneHamburger) {
+            cloneHamburger.setAttribute('data-bs-toggle', 'offcanvas');
+            cloneHamburger.setAttribute('data-bs-target', '#offcanvasNav');
         }
 
         // Observe sentinel for sticky activation
@@ -113,27 +114,35 @@ document.addEventListener('DOMContentLoaded', function() {
         }, { passive: true });
     })();
     /*-----------------------------------------------------------------------------------*/
-    /*	HAMBURGER MENU ICON (Vanilla JS - works on original and cloned navbar)
+    /*	OFFCANVAS NAVIGATION (Mobile drawer navigation)
     /*-----------------------------------------------------------------------------------*/
-    document.addEventListener('click', function(e) {
-        // Toggle hamburger animation on both navbars
-        if (e.target.closest('.hamburger.animate')) {
-            document.querySelectorAll('.hamburger.animate').forEach(function(btn) {
-                btn.classList.toggle('active');
-            });
-        }
+    (function() {
+        var offcanvasEl = document.getElementById('offcanvasNav');
+        if (!offcanvasEl) return;
 
-        // Close mobile nav on link click (one-page sites)
-        if (e.target.closest('.onepage .navbar .nav li a')) {
-            document.querySelectorAll('.navbar .navbar-collapse.show').forEach(function(openNav) {
-                var collapse = bootstrap.Collapse.getInstance(openNav);
-                if (collapse) collapse.hide();
+        // Get offcanvas instance
+        var offcanvasInstance = bootstrap.Offcanvas.getOrCreateInstance(offcanvasEl);
+
+        // Sync hamburger icon state with offcanvas show/hide
+        offcanvasEl.addEventListener('show.bs.offcanvas', function() {
+            document.querySelectorAll('.hamburger.animate').forEach(function(btn) {
+                btn.classList.add('active');
             });
+        });
+
+        offcanvasEl.addEventListener('hide.bs.offcanvas', function() {
             document.querySelectorAll('.hamburger.animate').forEach(function(btn) {
                 btn.classList.remove('active');
             });
-        }
-    });
+        });
+
+        // Close offcanvas when navigation link is clicked
+        offcanvasEl.querySelectorAll('.nav-link').forEach(function(link) {
+            link.addEventListener('click', function() {
+                offcanvasInstance.hide();
+            });
+        });
+    })();
     /*-----------------------------------------------------------------------------------*/
     /*	SWIPER
     /*-----------------------------------------------------------------------------------*/
