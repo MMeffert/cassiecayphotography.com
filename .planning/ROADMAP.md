@@ -17,6 +17,9 @@ Add structured data, social meta tags, image sitemap, and AI-generated alt text 
 **Depends on:** None (foundation phase)
 **Plans:** 1 plan
 
+Plans:
+- [ ] 16-01-PLAN.md — Add JSON-LD schemas and validate with Rich Results Test
+
 **Requirements:**
 - SEO-01: LocalBusiness schema
 - SEO-02: Photographer schema
