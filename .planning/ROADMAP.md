@@ -10,15 +10,16 @@ Add structured data, social meta tags, image sitemap, and AI-generated alt text 
 
 ## Phases
 
-### Phase 16: Structured Data (JSON-LD)
+### Phase 16: Structured Data (JSON-LD) ✓
 
 **Goal:** Site has valid JSON-LD schemas for LocalBusiness, Photographer, and ImageGallery
 
 **Depends on:** None (foundation phase)
 **Plans:** 1 plan
+**Status:** COMPLETE (2026-01-21)
 
 Plans:
-- [ ] 16-01-PLAN.md — Add JSON-LD schemas and validate with Rich Results Test
+- [x] 16-01-PLAN.md — Add JSON-LD schemas and validate with Rich Results Test
 
 **Requirements:**
 - SEO-01: LocalBusiness schema
