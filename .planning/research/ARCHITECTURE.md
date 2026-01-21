@@ -1,687 +1,610 @@
-# Architecture Patterns: Static Site CI/CD
+# Architecture Research: jQuery Removal Migration
 
-**Domain:** Photography portfolio static site (S3 + CloudFront)
-**Researched:** 2026-01-19
-**Confidence:** HIGH (verified with official GitHub Action repositories)
+**Project:** Cassie Cay Photography v2.0
+**Researched:** 2026-01-20
+**Confidence:** HIGH (verified via official documentation and code analysis)
 
 ## Executive Summary
 
-This document outlines CI/CD architecture patterns for a photography portfolio static site. The current deployment workflow syncs files to S3 and invalidates CloudFront cache. This architecture adds validation (HTML, links, images), performance testing (Lighthouse), and notifications for non-technical stakeholders.
+The jQuery removal and Bootstrap 5 migration integrates cleanly with the existing static HTML + Vite architecture. The migration should follow an **incremental approach** with jQuery as a bridge during transition, replacing dependencies one by one. The existing Vite build system requires minimal changes--primarily updating static copy targets and removing jQuery from external files. The Dreamweaver workflow is preserved since changes affect only script references, not HTML content structure.
 
-**Key Recommendation:** Implement a three-stage pipeline: Validate -> Deploy -> Notify. Keep validation fast (< 2 minutes) to avoid blocking frequent image updates.
+## Migration Strategy
 
-## Recommended Pipeline Architecture
+**Recommendation: Incremental migration with jQuery bridge**
 
-```
-┌─────────────────────────────────────────────────────────────────────────┐
-│                         On Push to Main                                  │
-└─────────────────────────────────────────────────────────────────────────┘
-                                    │
-                                    ▼
-┌─────────────────────────────────────────────────────────────────────────┐
-│  STAGE 1: VALIDATE                                                       │
-│  ┌──────────────┐  ┌──────────────┐  ┌──────────────┐                   │
-│  │ HTML Check   │  │ Link Check   │  │ Image Check  │                   │
-│  │ (proof-html) │  │ (lychee)     │  │ (custom)     │                   │
-│  └──────────────┘  └──────────────┘  └──────────────┘                   │
-│  ← Runs in parallel, ~30-60 seconds →                                    │
-└─────────────────────────────────────────────────────────────────────────┘
-                                    │
-                          If all pass │
-                                    ▼
-┌─────────────────────────────────────────────────────────────────────────┐
-│  STAGE 2: DEPLOY (existing workflow)                                     │
-│  ┌──────────────┐  ┌──────────────┐  ┌──────────────┐                   │
-│  │ S3 Sync      │  │ Cache Headers│  │ Invalidate   │                   │
-│  │              │  │              │  │ CloudFront   │                   │
-│  └──────────────┘  └──────────────┘  └──────────────┘                   │
-└─────────────────────────────────────────────────────────────────────────┘
-                                    │
-                                    ▼
-┌─────────────────────────────────────────────────────────────────────────┐
-│  STAGE 3: VERIFY & NOTIFY                                                │
-│  ┌──────────────┐  ┌──────────────┐  ┌──────────────┐                   │
-│  │ Lighthouse   │  │ Email        │  │ Slack        │                   │
-│  │ (optional)   │  │ Notification │  │ (optional)   │                   │
-│  └──────────────┘  └──────────────┘  └──────────────┘                   │
-└─────────────────────────────────────────────────────────────────────────┘
+**Rationale:** Big-bang migration risks breaking the entire site if any component fails. Incremental migration allows:
+1. Testing each component replacement independently
+2. Rolling back individual components without full revert
+3. Keeping the site functional throughout the migration
+4. Detecting regressions early in the process
+
+**jQuery Bridge Approach:**
+During migration, temporarily keep jQuery loaded alongside vanilla JS alternatives. This allows:
+- Old code to continue working while new code is added
+- Gradual replacement of jQuery calls in custom-scripts.js
+- Safe removal of jQuery only after all dependencies are eliminated
+
+## Current Architecture
+
+### Script Loading Order (index.html)
+
+```html
+<!-- End of body, before closing </body> tag -->
+<script src="style/js/jquery.min.js"></script>         <!-- 1. jQuery (85KB) -->
+<script src="style/js/popper.min.js"></script>         <!-- 2. Popper.js v1 (20KB) -->
+<script src="style/js/bootstrap.min.js"></script>      <!-- 3. Bootstrap 4.4.1 (60KB) -->
+<script src="style/js/embla-carousel.umd.js"></script> <!-- 4. Embla (already jQuery-free) -->
+<script src="style/js/embla-carousel-autoplay.umd.js"></script>
+<script src="style/js/glightbox.min.js"></script>      <!-- 5. GLightbox (already jQuery-free) -->
+<script src="style/js/custom-plugins.js"></script>     <!-- 6. Bundled jQuery plugins (250KB) -->
+<script src="style/js/custom-scripts.js"></script>     <!-- 7. Site initialization scripts -->
 ```
 
-## Component Details
+### jQuery Dependencies in custom-plugins.js
 
-### Stage 1: Validation
+| Plugin | Purpose | jQuery Required | Vanilla Alternative |
+|--------|---------|-----------------|---------------------|
+| SmartMenus | Navbar dropdowns | YES | Bootstrap 5 native navbar |
+| Headhesive | Sticky header | NO (already vanilla) | Keep as-is |
+| jQuery Easing | Smooth scroll animations | YES | CSS `scroll-behavior` or native `scrollTo()` |
+| Swiper | Quote slider | NO (supports vanilla) | Already vanilla-compatible |
+| Cubeportfolio | Portfolio grid/filtering | YES | Isotope (vanilla JS mode) |
+| scrollUp | Back-to-top button | YES | Native `scrollTo()` implementation |
+| imagesLoaded | Image load detection | NO (supports vanilla) | Keep or use native `onload` |
 
-#### HTML Validation with proof-html
+### jQuery Dependencies in custom-scripts.js
 
-**Recommended Action:** [anishathalye/proof-html@v2](https://github.com/anishathalye/proof-html)
-**Version:** v2.2.3 (January 2026)
-**Confidence:** HIGH (verified directly from repository)
+| Usage | Lines | Replacement |
+|-------|-------|-------------|
+| `$(document).ready()` | 7 | `DOMContentLoaded` event |
+| `$(".selector")` | 52+ | `document.querySelector/querySelectorAll` |
+| `$().on("click", ...)` | 73, 76, 219, 233 | `addEventListener` |
+| `$().toggleClass/addClass/removeClass` | 74, 78, 198, etc. | `classList.toggle/add/remove` |
+| `$().collapse('hide')` | 77 | Bootstrap 5 `Collapse` API |
+| `$().css()` | 160, 209, 214 | `element.style` or `setAttribute` |
+| `$().data()` | 161 | `dataset` API |
+| `$().each()` | 83 | `forEach()` |
+| `$().find()` | 84-88 | `querySelector` |
+| `$().prepend()` | 107, 149 | `insertAdjacentHTML` |
+| `$().outerHeight()` | 203 | `offsetHeight` |
+| `$().animate()` | 243 | CSS transitions or Web Animations API |
+| `$.scrollUp()` | 167-193 | Custom vanilla implementation |
+| `$.SmartMenus.Bootstrap.init` | 62 | Bootstrap 5 native |
+| `new Swiper()` | 89 | Keep (already vanilla) |
+| `$().cubeportfolio()` | 127 | Isotope vanilla initialization |
 
-**What it checks:**
-- HTML syntax validity (Nu HTML Validator)
-- CSS validity
-- Internal link integrity
-- External link reachability
-- Image references exist
-- Alt text presence
-- Favicon validity
-- OpenGraph metadata
+### HTML Data Attributes (Bootstrap 4)
 
-```yaml
-validate-html:
-  runs-on: ubuntu-latest
-  steps:
-    - uses: actions/checkout@v6
+```html
+<!-- Line 110: Body scroll spy -->
+<body class="onepage" data-spy="scroll" data-target=".navbar">
 
-    - name: Validate HTML and check links
-      uses: anishathalye/proof-html@v2
-      with:
-        directory: ./
-        check_html: true
-        check_css: true
-        check_external_hash: false  # Skip anchor verification on external sites
-        enforce_https: true
-        ignore_url: |
-          https://booking.appointy.com/
-          https://www.google.com/recaptcha/
-        ignore_url_re: |
-          ^https://fonts\.googleapis\.com/
-          ^https://use\.typekit\.net/
+<!-- Line 120: Mobile hamburger menu -->
+<button class="hamburger animate" data-toggle="collapse" data-target=".navbar-collapse">
+
+<!-- Line 123: Collapsible nav content -->
+<div class="collapse navbar-collapse">
 ```
 
-**Why proof-html over alternatives:**
-- Combines HTML validation + link checking in one action
-- Well-maintained (updated January 2026)
-- Configurable ignore patterns for external services
-- Fast enough for CI (< 60 seconds for typical portfolio site)
+### Vite Configuration (Current)
 
-#### Link Checking with lychee (Alternative/Supplement)
-
-**Recommended Action:** [lycheeverse/lychee-action@v2](https://github.com/lycheeverse/lychee-action)
-**Version:** v2.7.0 (October 2025)
-**Confidence:** HIGH (verified directly from repository)
-
-Use lychee if you need faster link checking or more detailed output.
-
-```yaml
-check-links:
-  runs-on: ubuntu-latest
-  steps:
-    - uses: actions/checkout@v6
-
-    - name: Check links
-      uses: lycheeverse/lychee-action@v2
-      with:
-        args: --verbose --no-progress './**/*.html'
-        fail: true
-      env:
-        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+```javascript
+// vite.config.js - Current external files copied to dist/
+viteStaticCopy({
+  targets: [
+    { src: 'style/js/jquery.min.js', dest: 'style/js' },
+    { src: 'style/js/popper.min.js', dest: 'style/js' },
+    { src: 'style/js/bootstrap.min.js', dest: 'style/js' },
+    { src: 'style/js/embla-carousel.umd.js', dest: 'style/js' },
+    { src: 'style/js/embla-carousel-autoplay.umd.js', dest: 'style/js' },
+    { src: 'style/js/glightbox.min.js', dest: 'style/js' },
+    { src: 'style/js/custom-plugins.js', dest: 'style/js' },
+    { src: 'style/js/custom-scripts.js', dest: 'style/js' },
+    // ... CSS and images
+  ]
+})
 ```
 
-**When to use lychee instead of proof-html:**
-- Need caching for rate-limited external links
-- Want Markdown output for GitHub issues
-- Checking markdown files in addition to HTML
+## Target Architecture
 
-#### Image Validation (Custom Step)
+### Script Loading Order (After Migration)
 
-No single GitHub Action handles image validation well. Use a custom script.
-
-```yaml
-validate-images:
-  runs-on: ubuntu-latest
-  steps:
-    - uses: actions/checkout@v6
-
-    - name: Check for missing images referenced in HTML
-      run: |
-        # Extract all image src attributes from HTML
-        grep -oP 'src="images/[^"]+' index.html | sed 's/src="//' | sort -u > /tmp/referenced.txt
-
-        # List actual images
-        ls images/*.{jpg,jpeg,png,gif,webp} 2>/dev/null | sed 's|images/||' | sort -u > /tmp/actual.txt
-
-        # Find referenced but missing
-        comm -23 <(cat /tmp/referenced.txt | sed 's|images/||' | sort) /tmp/actual.txt > /tmp/missing.txt
-
-        if [ -s /tmp/missing.txt ]; then
-          echo "ERROR: Missing images referenced in HTML:"
-          cat /tmp/missing.txt
-          exit 1
-        fi
-
-        echo "All referenced images exist"
-
-    - name: Check for oversized images
-      run: |
-        # Flag images over 2MB (too large for web)
-        find images -type f \( -name "*.jpg" -o -name "*.png" \) -size +2M | while read f; do
-          echo "WARNING: Large image: $f ($(du -h "$f" | cut -f1))"
-        done
+```html
+<!-- End of body, before closing </body> tag -->
+<script src="style/js/bootstrap.bundle.min.js"></script>  <!-- 1. Bootstrap 5 + Popper (80KB) -->
+<script src="style/js/embla-carousel.umd.js"></script>    <!-- 2. Embla (6KB) -->
+<script src="style/js/embla-carousel-autoplay.umd.js"></script>
+<script src="style/js/glightbox.min.js"></script>         <!-- 3. GLightbox (17KB) -->
+<script src="style/js/isotope.pkgd.min.js"></script>      <!-- 4. Isotope (25KB) -->
+<script src="style/js/imagesloaded.pkgd.min.js"></script> <!-- 5. imagesLoaded (3KB) -->
+<script src="style/js/headhesive.min.js"></script>        <!-- 6. Headhesive (3KB) -->
+<script src="style/js/swiper-bundle.min.js"></script>     <!-- 7. Swiper (140KB or custom build) -->
+<script src="style/js/site.js"></script>                  <!-- 8. Custom initialization -->
 ```
 
-### Stage 2: Deploy (Existing Pattern - Enhance)
+**Total estimated size:** ~275KB (vs current ~415KB including jQuery and plugins bundle)
+**Reduction:** ~140KB (~34% smaller)
 
-The current deploy workflow is solid. Recommended enhancements:
+### HTML Data Attributes (Bootstrap 5)
 
-#### Selective Cache Invalidation
+```html
+<!-- Body scroll spy (Bootstrap 5 syntax) -->
+<body class="onepage" data-bs-spy="scroll" data-bs-target=".navbar">
 
-**Current pattern:** Wildcard invalidation (`/*`)
-**Improved pattern:** Selective invalidation for cost and speed
+<!-- Mobile hamburger menu (Bootstrap 5 syntax) -->
+<button class="hamburger animate" data-bs-toggle="collapse" data-bs-target=".navbar-collapse">
 
-```yaml
-- name: Invalidate CloudFront cache (selective)
-  run: |
-    # Get changed files from git
-    CHANGED=$(git diff --name-only HEAD~1 HEAD | grep -E '\.(html|css|js)$' || echo "")
-
-    if [ -n "$CHANGED" ]; then
-      # Convert to CloudFront paths
-      PATHS=$(echo "$CHANGED" | sed 's|^|/|' | tr '\n' ' ')
-      aws cloudfront create-invalidation \
-        --distribution-id ${{ steps.cloudfront.outputs.distribution_id }} \
-        --paths $PATHS
-    fi
-
-    # Always invalidate HTML (short cache anyway)
-    aws cloudfront create-invalidation \
-      --distribution-id ${{ steps.cloudfront.outputs.distribution_id }} \
-      --paths "/index.html"
+<!-- Collapsible nav content (no change needed) -->
+<div class="collapse navbar-collapse">
 ```
 
-**Why selective invalidation:**
-- First 1,000 paths/month are free
-- Wildcard counts as one path but invalidates everything
-- For frequent deploys, selective is more cache-efficient
-- Images with immutable cache headers don't need invalidation
+### Vite Configuration (Target)
 
-**When to use wildcard anyway:**
-- Major site redesign
-- More than 10-15 files changed
-- Debugging cache issues
+```javascript
+// vite.config.js - Updated external files
+viteStaticCopy({
+  targets: [
+    // Bootstrap 5 bundle (includes Popper)
+    { src: 'style/js/bootstrap.bundle.min.js', dest: 'style/js' },
 
-### Stage 3: Verify and Notify
+    // Already jQuery-free
+    { src: 'style/js/embla-carousel.umd.js', dest: 'style/js' },
+    { src: 'style/js/embla-carousel-autoplay.umd.js', dest: 'style/js' },
+    { src: 'style/js/glightbox.min.js', dest: 'style/js' },
 
-#### Lighthouse Performance Testing
+    // New vanilla JS libraries
+    { src: 'style/js/isotope.pkgd.min.js', dest: 'style/js' },
+    { src: 'style/js/imagesloaded.pkgd.min.js', dest: 'style/js' },
+    { src: 'style/js/headhesive.min.js', dest: 'style/js' },
+    { src: 'style/js/swiper-bundle.min.js', dest: 'style/js' },
 
-**Recommended Action:** [treosh/lighthouse-ci-action@v12](https://github.com/treosh/lighthouse-ci-action)
-**Version:** v12
-**Confidence:** HIGH (verified directly from repository)
+    // New unified site script (replaces custom-plugins.js + custom-scripts.js)
+    { src: 'style/js/site.js', dest: 'style/js' },
 
-```yaml
-lighthouse:
-  runs-on: ubuntu-latest
-  needs: deploy  # Run after deploy
-  steps:
-    - uses: actions/checkout@v6
-
-    - name: Run Lighthouse
-      uses: treosh/lighthouse-ci-action@v12
-      with:
-        urls: |
-          https://cassiecayphotography.com/
-        uploadArtifacts: true
-        temporaryPublicStorage: true  # Get shareable report URL
-        budgetPath: ./lighthouse-budget.json
+    // CSS and images unchanged
+    // ...
+  ]
+})
 ```
 
-**Budget file example** (`lighthouse-budget.json`):
-```json
-[
-  {
-    "path": "/*",
-    "resourceSizes": [
-      { "resourceType": "total", "budget": 5000 },
-      { "resourceType": "image", "budget": 3000 }
-    ],
-    "resourceCounts": [
-      { "resourceType": "third-party", "budget": 10 }
-    ]
+## Migration Path
+
+### Phase Order Rationale
+
+The migration should proceed in this order based on dependency analysis:
+
+1. **Bootstrap 5 first** - Foundation that enables other changes
+2. **Cubeportfolio replacement** - Most complex component, benefits from early attention
+3. **SmartMenus removal** - Becomes redundant after Bootstrap 5 navbar
+4. **Custom scripts conversion** - Depends on above being complete
+5. **jQuery removal** - Final step after all dependencies eliminated
+
+### Dependency Graph
+
+```
+jQuery 3.x
+|-- Bootstrap 4.4.1 (requires jQuery)
+|   |-- navbar collapse functionality
+|   |-- scroll spy
+|-- custom-plugins.js bundle
+|   |-- SmartMenus (requires jQuery)
+|   |-- Cubeportfolio (requires jQuery)
+|   |-- jQuery Easing (requires jQuery)
+|   |-- scrollUp (requires jQuery)
+|
+|   [Already jQuery-free in bundle:]
+|   |-- Headhesive (vanilla JS)
+|   |-- Swiper (supports vanilla)
+|   |-- imagesLoaded (supports vanilla)
+|
+|-- custom-scripts.js
+    |-- All initialization code uses jQuery syntax
+```
+
+### Detailed Phase Breakdown
+
+#### Phase 1: Bootstrap 5 Migration
+
+**Changes:**
+1. Replace `style/css/bootstrap.min.css` with Bootstrap 5 version
+2. Replace `style/js/bootstrap.min.js` + `popper.min.js` with `bootstrap.bundle.min.js`
+3. Update HTML data attributes:
+   - `data-toggle` -> `data-bs-toggle`
+   - `data-target` -> `data-bs-target`
+   - `data-spy` -> `data-bs-spy`
+4. Update CSS class changes (if any used):
+   - `ml-*` -> `ms-*`
+   - `mr-*` -> `me-*`
+   - `pl-*` -> `ps-*`
+   - `pr-*` -> `pe-*`
+   - `text-left` -> `text-start`
+   - `text-right` -> `text-end`
+
+**Note:** jQuery still required at this point for custom-scripts.js
+
+#### Phase 2: Cubeportfolio -> Isotope Migration
+
+**Changes:**
+1. Add `isotope.pkgd.min.js` and `imagesloaded.pkgd.min.js`
+2. Update portfolio HTML markup (minimal changes to CSS classes)
+3. Replace Cubeportfolio initialization with Isotope:
+
+```javascript
+// Before (jQuery/Cubeportfolio)
+$('#cube-grid-mosaic').cubeportfolio({
+  filters: '#cube-grid-mosaic-filter',
+  layoutMode: 'mosaic',
+  // ...
+});
+
+// After (vanilla JS/Isotope)
+var grid = document.querySelector('#cube-grid-mosaic');
+var iso = new Isotope(grid, {
+  itemSelector: '.cbp-item',
+  layoutMode: 'masonry',
+  percentPosition: true,
+  masonry: { columnWidth: '.cbp-item' }
+});
+
+// Filter buttons
+var filterButtons = document.querySelectorAll('#cube-grid-mosaic-filter [data-filter]');
+filterButtons.forEach(function(button) {
+  button.addEventListener('click', function() {
+    var filterValue = this.getAttribute('data-filter');
+    iso.arrange({ filter: filterValue === '*' ? '*' : filterValue });
+  });
+});
+```
+
+4. Update GLightbox to work with Isotope filtering
+
+#### Phase 3: SmartMenus Removal
+
+**Changes:**
+1. Remove SmartMenus from custom-plugins.js
+2. Bootstrap 5 native navbar handles all current functionality:
+   - Mobile collapse toggle
+   - Responsive breakpoints
+   - No dropdown menus on this site (single-level nav)
+
+```javascript
+// Before (SmartMenus integration)
+onStick: function() {
+  $($.SmartMenus.Bootstrap.init);
+}
+
+// After (Bootstrap 5 native - no initialization needed)
+// Navbar collapse works automatically via data-bs-* attributes
+```
+
+#### Phase 4: Custom Scripts Conversion
+
+**Changes:**
+Convert all jQuery syntax in custom-scripts.js to vanilla JS:
+
+```javascript
+// Before
+$(document).ready(function() {
+  $(".hamburger.animate").on("click", function() {
+    $(".hamburger.animate").toggleClass("active");
+  });
+});
+
+// After
+document.addEventListener('DOMContentLoaded', function() {
+  var hamburger = document.querySelector('.hamburger.animate');
+  if (hamburger) {
+    hamburger.addEventListener('click', function() {
+      this.classList.toggle('active');
+    });
   }
-]
+});
 ```
 
-**Recommendation for this project:** Make Lighthouse informational, not blocking.
+**Key conversions:**
+| jQuery | Vanilla JS |
+|--------|-----------|
+| `$(document).ready(fn)` | `document.addEventListener('DOMContentLoaded', fn)` |
+| `$('.class')` | `document.querySelector('.class')` or `querySelectorAll` |
+| `$el.on('click', fn)` | `el.addEventListener('click', fn)` |
+| `$el.toggleClass('x')` | `el.classList.toggle('x')` |
+| `$el.addClass('x')` | `el.classList.add('x')` |
+| `$el.removeClass('x')` | `el.classList.remove('x')` |
+| `$el.css('prop', val)` | `el.style.prop = val` |
+| `$el.data('key')` | `el.dataset.key` |
+| `$el.each(fn)` | `els.forEach(fn)` |
+| `$el.find('.x')` | `el.querySelector('.x')` |
+| `$el.prepend(html)` | `el.insertAdjacentHTML('afterbegin', html)` |
+| `$el.outerHeight()` | `el.offsetHeight` |
+| `$('html,body').animate({scrollTop: x})` | `window.scrollTo({top: x, behavior: 'smooth'})` |
 
-```yaml
-- name: Run Lighthouse
-  uses: treosh/lighthouse-ci-action@v12
-  continue-on-error: true  # Don't fail deploy for perf regressions
-  with:
-    urls: https://cassiecayphotography.com/
-    uploadArtifacts: true
+#### Phase 5: scrollUp Replacement
+
+**Changes:**
+Replace jQuery scrollUp plugin with vanilla JS:
+
+```javascript
+// Vanilla scroll-to-top implementation
+(function() {
+  // Create button
+  var scrollBtn = document.createElement('a');
+  scrollBtn.id = 'scrollUp';
+  scrollBtn.innerHTML = '<span style="background:#9A7A7D;" class="btn btn-square btn-full-rounded btn-icon"><i class="fa fa-chevron-up"></i></span>';
+  scrollBtn.style.display = 'none';
+  scrollBtn.style.position = 'fixed';
+  scrollBtn.style.bottom = '20px';
+  scrollBtn.style.right = '20px';
+  scrollBtn.style.zIndex = '1001';
+  scrollBtn.style.cursor = 'pointer';
+  document.body.appendChild(scrollBtn);
+
+  // Show/hide on scroll
+  window.addEventListener('scroll', function() {
+    if (window.scrollY > 300) {
+      scrollBtn.style.display = 'block';
+    } else {
+      scrollBtn.style.display = 'none';
+    }
+  });
+
+  // Scroll to top on click
+  scrollBtn.addEventListener('click', function(e) {
+    e.preventDefault();
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  });
+})();
 ```
 
-#### Email Notifications
+#### Phase 6: jQuery Removal
 
-**Recommended Action:** [dawidd6/action-send-mail@v7](https://github.com/dawidd6/action-send-mail)
-**Version:** v7 (December 2025)
-**Confidence:** HIGH (verified directly from repository)
+**Changes:**
+1. Remove `jquery.min.js` from HTML script tags
+2. Remove jQuery from vite.config.js static copy targets
+3. Delete `style/js/jquery.min.js`
+4. Update rollupOptions.external to remove jQuery pattern
+5. Final testing of all functionality
 
-```yaml
-notify:
-  runs-on: ubuntu-latest
-  needs: [validate, deploy]
-  if: always()  # Run even if previous steps fail
-  steps:
-    - name: Send success email
-      if: needs.deploy.result == 'success'
-      uses: dawidd6/action-send-mail@v7
-      with:
-        server_address: smtp.gmail.com
-        server_port: 587
-        username: ${{ secrets.EMAIL_USERNAME }}
-        password: ${{ secrets.EMAIL_PASSWORD }}
-        subject: "Website Updated Successfully"
-        to: cassiecayphoto@gmail.com
-        from: GitHub Actions <noreply@github.com>
-        body: |
-          Your website has been updated!
+### Testing Strategy
 
-          Changes are now live at https://cassiecayphotography.com
+**Per-phase testing checklist:**
 
-          Commit: ${{ github.sha }}
-          By: ${{ github.actor }}
+| Feature | Test |
+|---------|------|
+| Navbar collapse | Mobile menu opens/closes on hamburger click |
+| Navbar links | Smooth scroll to sections works |
+| Sticky header | Header becomes fixed after scrolling 350px |
+| Hero slider | Embla carousel auto-advances (6s interval) |
+| Portfolio grid | Images display in mosaic layout |
+| Portfolio filter | Category buttons filter correctly |
+| Lightbox | Clicking portfolio images opens fullscreen gallery |
+| Quote slider | Swiper cycles through quotes |
+| Background images | `data-image-src` backgrounds load |
+| Scroll to top | Button appears after scrolling, scrolls to top on click |
+| Contact form | Form validation and submission works (jQuery in inline script) |
 
-    - name: Send failure email
-      if: needs.validate.result == 'failure' || needs.deploy.result == 'failure'
-      uses: dawidd6/action-send-mail@v7
-      with:
-        server_address: smtp.gmail.com
-        server_port: 587
-        username: ${{ secrets.EMAIL_USERNAME }}
-        password: ${{ secrets.EMAIL_PASSWORD }}
-        subject: "Website Update FAILED - Action Required"
-        to: cassiecayphoto@gmail.com
-        from: GitHub Actions <noreply@github.com>
-        priority: high
-        body: |
-          Your website update encountered an error.
+**Browser testing:**
+- Chrome (latest)
+- Firefox (latest)
+- Safari (latest)
+- Mobile Safari (iOS)
+- Chrome Mobile (Android)
 
-          Please check the following:
-          - Are all images in the images/ folder?
-          - Are there any typos in image filenames?
+**Automated validation:**
+- Existing `npm run validate:html` - HTML structure
+- Existing `npm run validate:refs` - Asset references
+- Manual visual regression testing (screenshots)
 
-          Technical details: ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}
+## Vite Configuration Changes
+
+### Before (Current)
+
+```javascript
+// vite.config.js
+external: [
+  /^style\/js\/jquery\.min\.js$/,
+  /^style\/js\/bootstrap\.min\.js$/,
+  /^style\/js\/popper\.min\.js$/,
+  /^style\/js\/embla-carousel\.umd\.js$/,
+  /^style\/js\/embla-carousel-autoplay\.umd\.js$/,
+],
 ```
 
-**Email Setup Requirements:**
-1. Create Gmail App Password (not regular password)
-2. Store in GitHub Secrets: `EMAIL_USERNAME`, `EMAIL_PASSWORD`
-3. Consider using AWS SES for production (already have AWS)
+### After (Target)
 
-#### Slack Notifications (Alternative)
-
-**Recommended Action:** [ravsamhq/notify-slack-action@v2](https://github.com/ravsamhq/notify-slack-action)
-**Version:** v2.5.0
-**Confidence:** HIGH (verified directly from repository)
-
-```yaml
-notify-slack:
-  runs-on: ubuntu-latest
-  needs: [validate, deploy]
-  if: always()
-  steps:
-    - uses: ravsamhq/notify-slack-action@v2
-      with:
-        status: ${{ job.status }}
-        notification_title: "Website Deployment"
-        message_format: "{emoji} *{status_message}* for cassiecayphotography.com"
-        notify_when: "success,failure"
-      env:
-        SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
+```javascript
+// vite.config.js
+external: [
+  /^style\/js\/bootstrap\.bundle\.min\.js$/,
+  /^style\/js\/embla-carousel\.umd\.js$/,
+  /^style\/js\/embla-carousel-autoplay\.umd\.js$/,
+  /^style\/js\/glightbox\.min\.js$/,
+  /^style\/js\/isotope\.pkgd\.min\.js$/,
+  /^style\/js\/imagesloaded\.pkgd\.min\.js$/,
+  /^style\/js\/headhesive\.min\.js$/,
+  /^style\/js\/swiper-bundle\.min\.js$/,
+],
 ```
 
-**Setup complexity:** Medium
-- Create Slack App with Incoming Webhooks
-- Add webhook URL to GitHub Secrets
-- Non-technical users comfortable with Slack will appreciate this
+### Static Copy Targets Update
 
-**Recommendation:** Start with email (simpler), add Slack later if desired.
+**Remove:**
+- `style/js/jquery.min.js`
+- `style/js/popper.min.js`
+- `style/js/bootstrap.min.js`
+- `style/js/custom-plugins.js`
 
-## Pre-Commit Hooks
+**Add:**
+- `style/js/bootstrap.bundle.min.js`
+- `style/js/isotope.pkgd.min.js`
+- `style/js/imagesloaded.pkgd.min.js`
 
-### Using Husky (Recommended for Node.js projects)
+**Rename/Replace:**
+- `style/js/custom-scripts.js` -> `style/js/site.js` (converted to vanilla JS)
 
-**Tool:** [Husky v9](https://typicode.github.io/husky/)
-**Confidence:** HIGH (official documentation)
+## Risk Mitigation
 
-```bash
-# Install
-npm install husky --save-dev
-npx husky init
+### Rollback Strategy
 
-# Create pre-commit hook
-echo '#!/bin/sh
-# Check for referenced images that do not exist
-grep -oP "src=\"images/[^\"]+\"" index.html | while read -r line; do
-  FILE=$(echo "$line" | sed "s/src=\"//" | sed "s/\"//")
-  if [ ! -f "$FILE" ]; then
-    echo "ERROR: Missing image: $FILE"
-    exit 1
-  fi
-done
-' > .husky/pre-commit
-```
-
-### Using pre-commit Framework (Alternative)
-
-**Tool:** [pre-commit](https://pre-commit.com/)
-**Confidence:** HIGH (official documentation)
-
-`.pre-commit-config.yaml`:
-```yaml
-repos:
-  - repo: https://github.com/pre-commit/mirrors-prettier
-    rev: v4.0.0-alpha.8
-    hooks:
-      - id: prettier
-        types_or: [html, css]
-
-  - repo: local
-    hooks:
-      - id: check-images
-        name: Check image references
-        entry: bash -c 'grep -oP "src=\"images/[^\"]+\"" index.html | while read -r line; do FILE=$(echo "$line" | sed "s/src=\"//" | sed "s/\"//"); if [ ! -f "$FILE" ]; then echo "Missing: $FILE"; exit 1; fi; done'
-        language: system
-        files: \.html$
-```
-
-**Recommendation for this project:** Use Husky since the infrastructure directory already has Node.js (package.json exists for CDK).
-
-### Pre-commit Hook: Quick Image Validation
-
-For a non-technical user, the most valuable pre-commit check is: "Do all referenced images exist?"
-
-```bash
-#!/bin/sh
-# .husky/pre-commit
-
-# Extract image references and check each exists
-MISSING=""
-for img in $(grep -oP 'src="images/[^"]+' index.html | sed 's/src="//' | sort -u); do
-  if [ ! -f "$img" ]; then
-    MISSING="$MISSING\n  - $img"
-  fi
-done
-
-if [ -n "$MISSING" ]; then
-  echo "ERROR: These images are referenced but missing:"
-  echo -e "$MISSING"
-  echo ""
-  echo "Add the missing images or fix the references in index.html"
-  exit 1
-fi
-
-echo "All images OK"
-```
-
-## Cache Invalidation Strategy
-
-### Current Approach Analysis
-
-The existing workflow uses:
-```yaml
---cache-control "public, max-age=31536000, immutable"  # All files
---cache-control "public, max-age=300"  # HTML override
-```
-
-This is correct for:
-- Images: Long cache (1 year) - images rarely change, and filenames are unique
-- HTML: Short cache (5 minutes) - content changes frequently
-
-### Recommended Improvements
-
-#### 1. Content-Based Filenames for CSS/JS
-
-If you ever add versioned CSS/JS, use content hashes:
-```
-style-abc123.css  # Name changes when content changes
-```
-Then cache forever and never invalidate.
-
-#### 2. Invalidation Decision Tree
+Each phase should be completed in a separate branch with a working deployment:
 
 ```
-Did HTML change?
-├── Yes → Invalidate /index.html
-└── No → Skip HTML invalidation
-
-Did images change?
-├── New images added → No invalidation needed (new paths)
-├── Images replaced (same name) → Invalidate specific paths
-└── Images deleted → Update HTML references
+main (production)
+|-- feature/bootstrap-5-migration (Phase 1)
+|   |-- Merge only after testing passes
+|-- feature/isotope-migration (Phase 2)
+|   |-- Merge only after testing passes
+|-- feature/vanilla-scripts (Phases 3-5)
+|   |-- Merge only after testing passes
+|-- feature/jquery-removal (Phase 6)
+    |-- Final merge removes jQuery
 ```
 
-#### 3. Cost-Aware Invalidation
+If any phase fails:
+1. Do not merge to main
+2. Revert branch to last working state
+3. Investigate root cause
+4. Re-attempt with fixes
 
-```yaml
-- name: Smart CloudFront invalidation
-  run: |
-    CHANGED_COUNT=$(git diff --name-only HEAD~1 HEAD | wc -l)
+### Known Risks
 
-    if [ "$CHANGED_COUNT" -gt 20 ]; then
-      # Many files: use wildcard (counts as 1 path)
-      aws cloudfront create-invalidation \
-        --distribution-id ${{ steps.cloudfront.outputs.distribution_id }} \
-        --paths "/*"
-    else
-      # Few files: invalidate specifically
-      PATHS=$(git diff --name-only HEAD~1 HEAD | sed 's|^|/|' | tr '\n' ' ')
-      aws cloudfront create-invalidation \
-        --distribution-id ${{ steps.cloudfront.outputs.distribution_id }} \
-        --paths $PATHS "/index.html"
-    fi
+| Risk | Likelihood | Impact | Mitigation |
+|------|------------|--------|------------|
+| Bootstrap 5 CSS breaks layout | Medium | High | Audit all Bootstrap classes before migration |
+| Isotope filtering differs from Cubeportfolio | Medium | Medium | Test with all filter combinations |
+| Smooth scroll animation differs | Low | Low | Use CSS `scroll-behavior: smooth` as baseline |
+| Contact form jQuery inline script | High | High | Must convert separately (lines 9-74 in index.html) |
+| Third-party script conflicts | Low | Medium | Test in isolation first |
+
+### Critical: Contact Form Inline Script
+
+The contact form submission (`submitToAPI` function) uses jQuery (`$()` syntax) directly in index.html:
+
+```html
+<script>
+function submitToAPI(e) {
+    // Uses: $("#name"), $("#mail"), $("#subject"), $("#comment")
+    // Uses: $.ajax() for form submission
+    // Uses: $("#message").css() and .text()
+    // Uses: $("#submitmessage").prop() and .text()
+}
+</script>
 ```
 
-## Complete Workflow Example
+This inline script MUST be converted to vanilla JS before jQuery can be removed:
 
-```yaml
-name: Deploy with Validation
+```javascript
+function submitToAPI(e) {
+  e.preventDefault();
 
-on:
-  push:
-    branches: [main]
-    paths-ignore:
-      - 'infrastructure/**'
-      - '.github/dependabot.yml'
-      - 'README.md'
-  workflow_dispatch:
+  var name = document.getElementById('name');
+  var mail = document.getElementById('mail');
+  var subject = document.getElementById('subject');
+  var comment = document.getElementById('comment');
+  var message = document.getElementById('message');
+  var submitBtn = document.getElementById('submitmessage');
 
-permissions:
-  id-token: write
-  contents: read
+  // Validation
+  var nameRe = /[A-Za-z]{1}[A-Za-z]/;
+  if (!nameRe.test(name.value)) {
+    alert("Name cannot be less than 2 characters");
+    return;
+  }
+  if (mail.value === "") {
+    alert("Please enter your email");
+    return;
+  }
+  var emailRe = /^([\w-\.]+@([\w-]+\.)+[\w-]{2,6})?$/;
+  if (!emailRe.test(mail.value)) {
+    alert("Please enter a valid email address");
+    return;
+  }
 
-env:
-  AWS_REGION: us-east-1
-  S3_BUCKET: cassiecayphotography.com-site-content
+  // Disable button
+  submitBtn.disabled = true;
+  submitBtn.textContent = 'Sending...';
 
-jobs:
-  validate:
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v6
+  // reCAPTCHA and fetch
+  grecaptcha.enterprise.ready(function() {
+    grecaptcha.enterprise.execute('6LchXjYsAAAAANiJ_B8AKMUp7vwsJx_8HnKLBzr2', {action: 'contact_submit'})
+      .then(function(token) {
+        var data = {
+          site: 'cassiecayphotography.com',
+          name: name.value,
+          email: mail.value,
+          subject: subject.value,
+          message: comment.value,
+          recaptchaToken: token
+        };
 
-      - name: Validate HTML and check links
-        uses: anishathalye/proof-html@v2
-        with:
-          directory: ./
-          check_external_hash: false
-          ignore_url: |
-            https://booking.appointy.com/
-            https://www.google.com/recaptcha/
-          ignore_url_re: |
-            ^https://fonts\.googleapis\.com/
-            ^https://use\.typekit\.net/
-
-      - name: Check image references
-        run: |
-          MISSING=""
-          for img in $(grep -oP 'src="images/[^"]+' index.html | sed 's/src="//' | sort -u); do
-            if [ ! -f "$img" ]; then
-              MISSING="$MISSING $img"
-            fi
-          done
-          if [ -n "$MISSING" ]; then
-            echo "ERROR: Missing images:$MISSING"
-            exit 1
-          fi
-
-  deploy:
-    needs: validate
-    runs-on: ubuntu-latest
-    environment: production
-    steps:
-      - uses: actions/checkout@v6
-
-      - uses: aws-actions/configure-aws-credentials@v5
-        with:
-          role-to-assume: arn:aws:iam::241654197557:role/CassiePhotoGitHubActionsDeploymentRole
-          aws-region: ${{ env.AWS_REGION }}
-
-      - name: Get CloudFront Distribution ID
-        id: cloudfront
-        run: |
-          DISTRIBUTION_ID=$(aws cloudformation describe-stacks \
-            --stack-name CassiePhotoStaticSiteStack \
-            --query "Stacks[0].Outputs[?ExportName=='CassiePhotoDistributionId'].OutputValue" \
-            --output text)
-          echo "distribution_id=$DISTRIBUTION_ID" >> $GITHUB_OUTPUT
-
-      - name: Sync to S3
-        run: |
-          aws s3 sync . s3://${{ env.S3_BUCKET }} \
-            --delete \
-            --exclude ".git/*" \
-            --exclude ".github/*" \
-            --exclude "infrastructure/*" \
-            --exclude ".DS_Store" \
-            --exclude "*.md" \
-            --exclude ".husky/*" \
-            --exclude "package*.json" \
-            --cache-control "public, max-age=31536000, immutable"
-
-      - name: Set HTML cache headers
-        run: |
-          aws s3 cp s3://${{ env.S3_BUCKET }}/index.html s3://${{ env.S3_BUCKET }}/index.html \
-            --cache-control "public, max-age=300" \
-            --content-type "text/html" \
-            --metadata-directive REPLACE
-
-      - name: Invalidate CloudFront
-        run: |
-          aws cloudfront create-invalidation \
-            --distribution-id ${{ steps.cloudfront.outputs.distribution_id }} \
-            --paths "/*"
-
-  lighthouse:
-    needs: deploy
-    runs-on: ubuntu-latest
-    continue-on-error: true
-    steps:
-      - uses: actions/checkout@v6
-
-      - name: Wait for CloudFront propagation
-        run: sleep 30
-
-      - uses: treosh/lighthouse-ci-action@v12
-        with:
-          urls: https://cassiecayphotography.com/
-          uploadArtifacts: true
-          temporaryPublicStorage: true
-
-  notify:
-    needs: [validate, deploy]
-    runs-on: ubuntu-latest
-    if: always()
-    steps:
-      - name: Send success notification
-        if: needs.deploy.result == 'success'
-        uses: dawidd6/action-send-mail@v7
-        with:
-          server_address: smtp.gmail.com
-          server_port: 587
-          secure: true
-          username: ${{ secrets.EMAIL_USERNAME }}
-          password: ${{ secrets.EMAIL_PASSWORD }}
-          subject: "Cassie Cay Photography - Website Updated"
-          to: cassiecayphoto@gmail.com
-          from: Website Updates <noreply@cassiecayphotography.com>
-          body: |
-            Your website has been updated successfully!
-
-            The changes are now live at https://cassiecayphotography.com
-
-            ---
-            This is an automated message from your website deployment system.
-
-      - name: Send failure notification
-        if: needs.validate.result == 'failure' || needs.deploy.result == 'failure'
-        uses: dawidd6/action-send-mail@v7
-        with:
-          server_address: smtp.gmail.com
-          server_port: 587
-          secure: true
-          username: ${{ secrets.EMAIL_USERNAME }}
-          password: ${{ secrets.EMAIL_PASSWORD }}
-          subject: "ATTENTION: Website Update Failed"
-          to: cassiecayphoto@gmail.com
-          from: Website Updates <noreply@cassiecayphotography.com>
-          priority: high
-          body: |
-            Your website update could not be completed.
-
-            COMMON ISSUES:
-            - An image file may be missing
-            - There may be a broken link in the website
-
-            WHAT TO DO:
-            Please contact your website administrator or check:
-            ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}
-
-            ---
-            This is an automated message from your website deployment system.
+        fetch('https://7qcdrfk7uctpaqw36i5z2kwxha0rgrnx.lambda-url.us-east-1.on.aws/', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(data)
+        })
+        .then(function(response) {
+          if (!response.ok) throw new Error('Network response was not ok');
+          return response.json();
+        })
+        .then(function() {
+          message.style.color = 'green';
+          message.textContent = 'Message Sent Successfully';
+          name.value = '';
+          mail.value = '';
+          subject.value = '';
+          comment.value = '';
+          submitBtn.disabled = false;
+          submitBtn.textContent = 'Send Message';
+        })
+        .catch(function() {
+          message.style.color = 'red';
+          message.textContent = 'Error. Your message was not sent.';
+          submitBtn.disabled = false;
+          submitBtn.textContent = 'Send Message';
+        });
+      })
+      .catch(function() {
+        message.style.color = 'red';
+        message.textContent = 'reCAPTCHA error. Please try again.';
+        submitBtn.disabled = false;
+        submitBtn.textContent = 'Send Message';
+      });
+  });
+}
 ```
 
-## Tool Summary
+## Dreamweaver Workflow Preservation
 
-| Tool | Purpose | Version | Confidence | Setup Complexity |
-|------|---------|---------|------------|------------------|
-| [proof-html](https://github.com/anishathalye/proof-html) | HTML validation + link checking | v2.2.3 | HIGH | Low |
-| [lychee-action](https://github.com/lycheeverse/lychee-action) | Fast link checking | v2.7.0 | HIGH | Low |
-| [lighthouse-ci-action](https://github.com/treosh/lighthouse-ci-action) | Performance testing | v12 | HIGH | Low |
-| [action-send-mail](https://github.com/dawidd6/action-send-mail) | Email notifications | v7 | HIGH | Medium |
-| [notify-slack-action](https://github.com/ravsamhq/notify-slack-action) | Slack notifications | v2.5.0 | HIGH | Medium |
-| [Husky](https://typicode.github.io/husky/) | Git hooks | v9 | HIGH | Low |
+The migration preserves Cassie's Dreamweaver workflow:
 
-## Roadmap Implications
+| Aspect | Impact | Notes |
+|--------|--------|-------|
+| HTML content editing | None | Content structure unchanged |
+| Adding images | None | Same image paths and markup |
+| CSS class usage | Minimal | Some Bootstrap utility classes renamed |
+| Script references | One-time update | Script src paths change once |
+| Portfolio items | Minimal | May need `data-filter` attribute updates |
 
-### Phase 1: Core Validation (Recommended First)
-- Add HTML validation (proof-html)
-- Add image reference checking
-- Keep existing deploy flow
-
-### Phase 2: Notifications
-- Add email notifications (requires Gmail App Password or AWS SES)
-- Clear success/failure messages for non-technical owner
-
-### Phase 3: Pre-commit Hooks
-- Install Husky
-- Add image validation hook
-- Catches errors before they reach CI
-
-### Phase 4: Performance (Optional)
-- Add Lighthouse CI
-- Make informational, not blocking
-- Review quarterly for optimization opportunities
+**Training needed:**
+- One-time update to script references in HTML template
+- If Bootstrap utility class renames affect existing content
 
 ## Sources
 
-- [proof-html GitHub Repository](https://github.com/anishathalye/proof-html) - v2.2.3, January 2026
-- [lychee-action GitHub Repository](https://github.com/lycheeverse/lychee-action) - v2.7.0, October 2025
-- [lighthouse-ci-action GitHub Repository](https://github.com/treosh/lighthouse-ci-action) - v12
-- [action-send-mail GitHub Repository](https://github.com/dawidd6/action-send-mail) - v7, December 2025
-- [notify-slack-action GitHub Repository](https://github.com/ravsamhq/notify-slack-action) - v2.5.0
-- [Husky Official Documentation](https://typicode.github.io/husky/)
-- [AWS CloudFront Invalidation Documentation](https://docs.aws.amazon.com/AmazonCloudFront/latest/DeveloperGuide/Invalidation.html)
-- [GitHub Actions Workflow Documentation](https://docs.github.com/en/actions/monitoring-and-troubleshooting-workflows/notifications-for-workflow-runs)
+**Bootstrap 5 Migration:**
+- [Bootstrap 5 Migration Guide](https://getbootstrap.com/docs/5.3/migration/) - HIGH confidence
+- [Bootstrap 5 vs Bootstrap 4 Key Differences](https://www.vincentschmalbach.com/bootstrap-5-vs-bootstrap-4-key-differences-and-migration-guide/) - MEDIUM confidence
+- [Bootstrap 5 data-bs-* Attribute Change](https://www.vincentschmalbach.com/bootstrap-5-change-from-data-to-data-bs-attributes/) - HIGH confidence
+
+**Isotope:**
+- [Isotope Official Documentation](https://isotope.metafizzy.co/) - HIGH confidence
+- [Isotope vanilla JS usage](https://isotope.metafizzy.co/extras.html) - HIGH confidence
+
+**Headhesive:**
+- [Headhesive.js](https://webscripts.softpedia.com/blog/Script-of-the-Day-Headhesive-js-455192.shtml) - Already vanilla JS, HIGH confidence
+
+**Swiper:**
+- [Swiper Getting Started](https://swiperjs.com/get-started) - HIGH confidence, no jQuery dependency
+
+**Vanilla JS Scroll:**
+- [Vanilla JavaScript Scroll to Top](https://dev.to/dailydevtips1/vanilla-javascript-scroll-to-top-3mkd) - MEDIUM confidence
+- [You Might Not Need jQuery](https://youmightnotneedjquery.com/) - HIGH confidence for syntax conversions

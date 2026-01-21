@@ -1,188 +1,205 @@
 # Project Research Summary
 
-**Project:** Cassie Cay Photography - Static Site Modernization
-**Domain:** Photography portfolio website (existing jQuery/Bootstrap site)
-**Researched:** 2026-01-19
+**Project:** Cassie Cay Photography v2.0 - jQuery Removal & Bootstrap 5 Migration
+**Domain:** Static site modernization / Legacy JavaScript migration
+**Researched:** 2026-01-20
 **Confidence:** HIGH
 
 ## Executive Summary
 
-This is a **modernization project for an existing jQuery/Bootstrap/Revolution Slider static site**, not a greenfield build. The site owner edits HTML directly in Dreamweaver and expects to continue doing so. The primary goals are asset optimization (81MB of images), CI/CD validation, and improved caching — without breaking the existing workflow or functionality.
+This milestone removes jQuery entirely from the photography portfolio site and migrates from Bootstrap 4 to Bootstrap 5. Research confirms this is a well-documented migration path with high confidence. The key constraint is preserving the site owner's Dreamweaver editing workflow, which remains intact since changes affect only script references, not HTML content structure.
 
-The recommended approach is a **conservative, additive modernization**: keep jQuery and Revolution Slider intact, add Vite for asset optimization only (not HTML transformation), implement image compression with AVIF/WebP fallbacks, and enhance the GitHub Actions pipeline with validation and notifications. The build system must work WITH the existing code, preserving the owner's ability to edit and preview locally.
+The recommended approach is **incremental migration with jQuery as a bridge** during transition. This allows testing each component replacement independently, rolling back individual components without full revert, and detecting regressions early. The migration order should be: (1) Bootstrap 5 CSS/JS upgrade, (2) Cubeportfolio replacement with vanilla JS filtering, (3) SmartMenus removal (redundant after Bootstrap 5), (4) custom scripts conversion to vanilla JS, (5) jQuery removal.
 
-The key risks are (1) breaking Revolution Slider by disrupting jQuery load order or bundling its scripts, (2) destroying the Dreamweaver edit workflow by introducing source/output file confusion, and (3) degrading image quality through over-aggressive compression on a photography portfolio. All three are mitigated by treating Revolution Slider as a "do not touch" zone, keeping HTML files editable in-place, and using conservative quality settings with A/B testing before deployment.
+Three critical risks require attention: Bootstrap's `data-*` to `data-bs-*` namespace change silently breaks all interactive components with no console errors, Bootstrap 5's CSS class renaming (left/right to start/end) silently breaks responsive layouts, and the contact form's 18 jQuery calls including AJAX submission must be carefully migrated to fetch API. All three have well-documented migration patterns and prevention strategies.
 
 ## Key Findings
 
-### Recommended Stack
+### Recommended Stack Changes
 
-From [STACK.md](./STACK.md): The build tool recommendation is **Vite 7.x** for its speed, zero-config defaults, and native ES module support. Sharp handles image optimization (4-5x faster than alternatives), and PostCSS with autoprefixer/cssnano processes CSS. The critical constraint is that jQuery must remain globally available as an external script — do not bundle it.
+| Component | Current | Target | Bundle Impact |
+|-----------|---------|--------|---------------|
+| jQuery | 3.x (97KB) | **Remove** | -97KB |
+| Bootstrap | 4.4.1 + Popper (80KB) | 5.3 bundle (80KB) | ~0 |
+| Cubeportfolio | ~80KB | CSS Grid + Vanilla JS | -77KB |
+| SmartMenus | ~15KB | Bootstrap 5 native | -15KB |
+| Headhesive | ~2KB | Keep (already vanilla) | 0 |
+| scrollUp | ~2KB | Native vanilla JS | -1.5KB |
+| **Estimated Total** | **~276KB plugins** | **~4KB custom** | **~192KB savings** |
 
-**Core technologies:**
-- **Vite 7.3.1**: Build tool — Fastest modern bundler, multi-page HTML support, Rollup production builds
-- **Sharp 0.34.5**: Image optimization — AVIF/WebP generation, 70%+ size reduction potential
-- **PostCSS + cssnano**: CSS processing — Minification and autoprefixing without framework change
-- **jQuery (external)**: Keep as-is — Revolution Slider dependency, mark as external in Vite config
-
-**NOT recommended:** Tailwind CSS (would require HTML rewrite), Webpack (slower, legacy), Sass (no preprocessor source exists).
+The current custom-plugins.js bundle (257KB) shrinks dramatically. Bootstrap 5's built-in navbar handles all SmartMenus functionality. Cubeportfolio's filtering can be achieved with ~50 lines of vanilla JS since the site uses simple category filtering (5 categories, show/hide by class - no true masonry required).
 
 ### Expected Features
 
-From [FEATURES.md](./FEATURES.md): Modern photography portfolios require lightweight, dependency-free components. The current stack (Revolution Slider, LightGallery, CubePortfolio) totals 150KB+ JavaScript. Modern replacements achieve the same functionality in ~20KB.
-
 **Must have (table stakes):**
-- Native `loading="lazy"` for all below-fold images — 0KB, 95%+ browser support
-- Responsive images with `srcset`/`sizes` — 0KB, per-device optimization
-- AVIF/WebP images with JPEG fallback — 60-75% bandwidth reduction
-- GLightbox for image viewing — 11KB, replaces 25KB LightGallery
+- Mobile hamburger menu collapse/expand
+- Portfolio category filtering with smooth transitions
+- Sticky header after scrolling past hero (350px offset)
+- Scroll-to-top button
+- Contact form with validation and submission
+- GLightbox integration for portfolio images
 
 **Should have (competitive):**
-- Embla Carousel for hero — 6KB, replaces 150KB+ Revolution Slider
-- CSS Grid filtering — ~3KB custom code, replaces 50KB+ CubePortfolio
-- View Transitions API — native, modern navigation feel
+- Filter animations respecting prefers-reduced-motion
+- CSS-only smooth scroll where possible
+- IntersectionObserver for sticky header detection
 
 **Defer (v2+):**
-- Dark mode toggle — low impact, easy addition later
-- Blurhash placeholders — medium effort, marginal UX improvement
-- Infinite scroll — pagination simpler and sufficient
+- URL hash filtering (deep link to filtered category)
+- Complex animation libraries (GSAP/Anime.js)
+- Infinite scroll
+- True masonry layout (CSS Grid handles responsive columns)
+- IE11 support
 
 ### Architecture Approach
 
-From [ARCHITECTURE.md](./ARCHITECTURE.md): A three-stage CI/CD pipeline (Validate -> Deploy -> Notify) with validation completing in under 2 minutes to avoid blocking frequent image updates. Email notifications provide clear success/failure feedback to the non-technical site owner.
+The migration preserves the existing static HTML + Vite architecture. Scripts remain loaded individually rather than bundled to maintain compatibility with Dreamweaver editing. The key architectural change is replacing the monolithic custom-plugins.js with individual vanilla JS libraries (Headhesive, imagesLoaded) plus a new unified site.js initialization script.
 
 **Major components:**
-1. **Validation Stage** — HTML validation (proof-html), link checking, image reference verification
-2. **Deploy Stage** — S3 sync with cache headers, selective CloudFront invalidation
-3. **Notify Stage** — Email notifications for success/failure, Lighthouse (informational)
-4. **Pre-commit Hooks** — Husky with image validation to catch errors before CI
+1. **Bootstrap 5 Bundle** - Handles navbar collapse, scrollspy, responsive utilities (includes Popper)
+2. **site.js** - Custom initialization replacing custom-scripts.js + custom-plugins.js functionality
+3. **Existing libraries** - Embla, GLightbox, Swiper already jQuery-free, unchanged
+
+**Script load order (target):**
+```html
+<script src="style/js/bootstrap.bundle.min.js"></script>  <!-- Bootstrap 5 + Popper -->
+<script src="style/js/embla-carousel.umd.js"></script>    <!-- Already jQuery-free -->
+<script src="style/js/glightbox.min.js"></script>         <!-- Already jQuery-free -->
+<script src="style/js/headhesive.min.js"></script>        <!-- Already vanilla JS -->
+<script src="style/js/site.js"></script>                  <!-- New unified init script -->
+```
 
 ### Critical Pitfalls
 
-From [PITFALLS.md](./PITFALLS.md):
+1. **Bootstrap data attribute namespace** - `data-toggle` must become `data-bs-toggle`. Silent failure with no console errors. Create CI check to catch regressions: `grep -r "data-toggle=" --include="*.html"`.
 
-1. **Breaking Revolution Slider** — Do NOT bundle Revolution Slider scripts. Keep jQuery as external global. Maintain exact script load order. Treat `/style/revolution/` as "do not touch" initially.
+2. **Bootstrap CSS class renaming** - `.ml-*` to `.ms-*`, `.text-left` to `.text-start`. Audit all Bootstrap classes before migration and bulk find/replace. Current project: `ml-auto` on line 120 needs to become `ms-auto`.
 
-2. **Destroying Dreamweaver Workflow** — Build step must enhance, not replace HTML. Keep HTML editable in-place. Preserve relative paths for local preview. Document workflow clearly.
+3. **Contact form AJAX migration** - 18 jQuery calls including `$.ajax()` must convert to `fetch()` API with proper error handling. Test with network throttling (slow 3G) and error scenarios.
 
-3. **Image Quality Destruction** — Use conservative settings (JPEG 85+, AVIF 60+). Optimize from original masters, not deployed images. A/B test before full rollout. Keep originals in backup.
+4. **Cubeportfolio replacement complexity** - Must replicate filtering, responsive columns (4/3/2/1), and GLightbox reload integration. Implement features incrementally: grid layout -> filtering -> lightbox integration.
 
-4. **CloudFront Cache Issues** — Current 1-year cache on assets requires content hashing. Use selective invalidation for cost efficiency. Add invalidation completion verification.
-
-5. **jQuery Breaking Changes** — Do NOT upgrade jQuery version. Do NOT remove jQuery. Test all 15+ jQuery plugins after any JS change.
+5. **Sticky header SmartMenus callback** - Headhesive's `onStick` callback currently initializes SmartMenus (`$($.SmartMenus.Bootstrap.init)`). Remove this callback entirely when SmartMenus is removed.
 
 ## Implications for Roadmap
 
 Based on research, suggested phase structure:
 
-### Phase 1: Foundation (Build Setup)
-**Rationale:** Must establish build tooling before any optimization work. Vite configuration with Revolution Slider exclusions prevents the most critical pitfall.
-**Delivers:** package.json, vite.config.js, PostCSS config, build/dev scripts
-**Addresses:** Build tool setup (STACK.md), infrastructure foundation
-**Avoids:** Revolution Slider breakage (Pitfall #1) by establishing exclusion patterns first
+### Phase 1: Bootstrap 5 Migration
+**Rationale:** Foundation that enables all other changes. Bootstrap 5 has no jQuery dependency, but jQuery is still needed during this phase for custom-scripts.js.
+**Delivers:** Modern CSS framework, native navbar collapse, updated utility classes
+**Addresses:** Bootstrap CSS migration (`.ml-*` to `.ms-*`), data attribute namespace updates (`data-toggle` to `data-bs-toggle`)
+**Avoids:** Silent failures from old data attributes (Pitfall #1)
+**Estimated effort:** 2-3 hours
 
-### Phase 2: Image Optimization
-**Rationale:** Images are 81MB — the largest optimization opportunity. Requires careful quality testing.
-**Delivers:** AVIF/WebP variants for all 218 images, `<picture>` element implementation, responsive srcset
-**Uses:** Sharp for image processing, vite-plugin-image-optimizer
-**Avoids:** Quality destruction (Pitfall #3) through A/B testing batch before full conversion
+### Phase 2: Cubeportfolio Replacement
+**Rationale:** Most complex component. Better to tackle early while context is fresh. CSS Grid + vanilla JS filtering is sufficient for 5 categories.
+**Delivers:** Vanilla JS portfolio filtering, responsive grid layout, GLightbox integration
+**Uses:** CSS Grid for responsive columns, vanilla JS for filtering (~50 lines)
+**Implements:** GLightbox reload on filter events
+**Avoids:** Layout breaks at different screen sizes (Pitfall #4)
+**Estimated effort:** 4-8 hours
 
-### Phase 3: Library Replacement (Optional)
-**Rationale:** Replace heavy jQuery plugins with modern alternatives. This is optional — current site works, this is optimization.
-**Delivers:** Embla Carousel (6KB) replaces Revolution Slider (150KB+), GLightbox (11KB) replaces LightGallery (25KB)
-**Risk:** HIGH — significant testing required, potential to break existing functionality
-**Avoids:** jQuery migration issues (Pitfall #5) by testing all interactive features
+### Phase 3: Navigation and Sticky Header Cleanup
+**Rationale:** SmartMenus becomes redundant after Bootstrap 5 navbar is working.
+**Delivers:** Removal of SmartMenus from custom-plugins.js, updated Headhesive initialization
+**Addresses:** Sticky header jQuery selectors (`$(".navbar").length`), SmartMenus callback removal
+**Estimated effort:** 2-3 hours
 
-### Phase 4: CI/CD Enhancement
-**Rationale:** Validation catches errors before deployment; notifications keep owner informed.
-**Delivers:** HTML/link validation, image reference checking, email notifications, Lighthouse reporting
-**Uses:** proof-html, action-send-mail, lighthouse-ci-action
-**Avoids:** Deployment failures (Pitfall #8) through verification steps
+### Phase 4: Custom Scripts Conversion
+**Rationale:** Depends on Bootstrap 5 and Cubeportfolio being complete. All remaining jQuery syntax in custom-scripts.js must be converted.
+**Delivers:** Vanilla JS version of custom-scripts.js (site.js)
+**Implements:** All jQuery syntax conversions:
+- `$(document).ready()` -> `DOMContentLoaded`
+- `$()` -> `querySelector`/`querySelectorAll`
+- `.on()` -> `addEventListener`
+- `.toggleClass()` -> `classList.toggle()`
+**Avoids:** Event delegation issues with dynamic content (Pitfall #6)
+**Estimated effort:** 3-4 hours
 
-### Phase 5: Pre-commit Hooks
-**Rationale:** Catches errors before they reach CI, faster feedback for owner.
-**Delivers:** Husky with image validation hook
-**Avoids:** Missing image errors caught locally instead of in CI
+### Phase 5: Contact Form Migration
+**Rationale:** Isolated component, can be done in parallel with Phase 4 but documented separately for clarity.
+**Delivers:** Vanilla JS contact form with fetch API, proper error handling
+**Addresses:** 18 jQuery calls, AJAX submission, reCAPTCHA Enterprise integration
+**Avoids:** Silent form submission failures (Pitfall #3)
+**Estimated effort:** 2-3 hours
+
+### Phase 6: jQuery Removal and Cleanup
+**Rationale:** Final step after all dependencies eliminated.
+**Delivers:** jQuery-free site, ~97KB bundle size reduction
+**Addresses:** Script tag removal, Vite config cleanup, verification testing
+**Estimated effort:** 1 hour
 
 ### Phase Ordering Rationale
 
-- **Foundation first** (Phase 1): All other phases depend on having a build system that respects Revolution Slider boundaries
-- **Images before libraries** (Phase 2 before 3): Image optimization has highest ROI (60-75% savings) with lower risk than library replacement
-- **Library replacement optional** (Phase 3): Current site works; this phase is pure optimization and carries the highest risk
-- **CI/CD after optimization** (Phase 4): Validation rules should reflect the optimized asset structure
-- **Pre-commit last** (Phase 5): Depends on understanding what validations are most valuable from CI experience
+- **Bootstrap 5 first** because it removes Bootstrap's jQuery dependency and enables SmartMenus removal
+- **Cubeportfolio second** because it's the most complex (4-8 hours) and benefits from early attention when context is fresh
+- **Navigation third** because it depends on Bootstrap 5 being complete and is straightforward after BS5 navbar works
+- **Custom scripts fourth** because it requires knowing what patterns remain after Cubeportfolio and SmartMenus are gone
+- **Contact form fifth** because it's isolated and self-contained - could be done in parallel with Phase 4
+- **jQuery removal last** because it's the final verification that everything works without jQuery
 
 ### Research Flags
 
 Phases likely needing deeper research during planning:
-- **Phase 2 (Image Optimization):** Quality settings vary by image type (portraits vs landscapes). May need per-image quality tuning.
-- **Phase 3 (Library Replacement):** Revolution Slider replacement requires understanding all current slider features (transitions, layers, etc.)
+- **Phase 2 (Cubeportfolio):** Need to verify CSS Grid can match current mosaic visual appearance. If not, may need Isotope's masonry mode.
 
 Phases with standard patterns (skip research-phase):
-- **Phase 1 (Build Setup):** Vite configuration is well-documented; STACK.md provides complete config
-- **Phase 4 (CI/CD Enhancement):** ARCHITECTURE.md includes complete workflow examples
-- **Phase 5 (Pre-commit Hooks):** Husky setup is straightforward
-
-## Key Decisions
-
-| Decision | Choice | Rationale | Source |
-|----------|--------|-----------|--------|
-| Build tool | Vite 7.x | Fastest, zero-config, ES module support | STACK.md |
-| Image optimizer | Sharp 0.34.5 | 4-5x faster than alternatives, AVIF support | STACK.md |
-| Slider replacement | Embla Carousel (6KB) | Smallest footprint, dependency-free | FEATURES.md |
-| Lightbox replacement | GLightbox (11KB) | Pure JS, accessible, video support | FEATURES.md |
-| Grid filtering | CSS Grid + vanilla JS | No library needed for 5 categories | FEATURES.md |
-| Image format | AVIF primary, WebP, JPEG fallback | 60-75% savings with compatibility | FEATURES.md |
-| Validation tool | proof-html v2 | Combined HTML + link checking | ARCHITECTURE.md |
-| Notifications | Email (dawidd6/action-send-mail) | Simpler than Slack for non-technical user | ARCHITECTURE.md |
-| jQuery handling | Keep external, do not bundle | Revolution Slider dependency | STACK.md, PITFALLS.md |
+- **Phase 1 (Bootstrap 5):** Well-documented, official migration guide exists at getbootstrap.com
+- **Phase 3 (Navigation):** Bootstrap 5 navbar is mature, extensively documented
+- **Phase 4 (Custom Scripts):** jQuery-to-vanilla patterns well-established at youmightnotneedjquery.com
+- **Phase 5 (Contact Form):** fetch API is standard, straightforward conversion
+- **Phase 6 (jQuery Removal):** Trivial once dependencies are eliminated
 
 ## Bundle Budget
 
-| Category | Current (Est.) | Target | Savings |
-|----------|----------------|--------|---------|
-| JavaScript | ~150KB+ | ~20KB | 85%+ |
-| CSS | ~100KB+ | ~30KB | 70%+ |
-| Images | 81MB | ~25MB | 70%+ |
-| Total page weight | ~90MB | ~27MB | 70%+ |
+| Category | Before (current) | After (target) | Savings |
+|----------|------------------|----------------|---------|
+| jQuery | 97KB | 0KB | -97KB |
+| Bootstrap + Popper | 80KB | 80KB (bundle) | 0 |
+| custom-plugins.js | 257KB | 0KB | -257KB |
+| Replacement code | 0KB | ~4KB (site.js) | +4KB |
+| **Total JS reduction** | | | **~350KB (80%)** |
+
+**Note:** Embla (6KB), GLightbox (17KB), and Swiper (140KB or custom build) are unchanged - already jQuery-free.
 
 ## Confidence Assessment
 
 | Area | Confidence | Notes |
 |------|------------|-------|
-| Stack | HIGH | Vite, Sharp, PostCSS all verified via official docs |
-| Features | HIGH | Library comparisons verified via Bundlephobia, GitHub repos |
-| Architecture | HIGH | All GitHub Actions verified from official repositories |
-| Pitfalls | HIGH | Based on documented issues and current site analysis |
+| Stack | HIGH | Bootstrap 5 and vanilla JS are mature, well-documented |
+| Features | HIGH | All features verified achievable without jQuery |
+| Architecture | HIGH | Incremental migration pattern is proven across industry |
+| Pitfalls | HIGH | Bootstrap migration guide documents all breaking changes |
 
 **Overall confidence:** HIGH
 
 ### Gaps to Address
 
-- **Revolution Slider feature parity:** If replacing slider (Phase 3), need inventory of current slider features (transitions, layers, timing)
-- **Owner workflow testing:** Before finalizing any workflow changes, have owner make a test edit to validate Dreamweaver compatibility
-- **Image quality thresholds:** May need per-image tuning for portraits vs landscapes vs detail shots
-- **Email delivery:** Gmail App Password or AWS SES setup required for notifications
+- **Mosaic layout verification:** Need to confirm CSS Grid can replicate Cubeportfolio's mosaic appearance during Phase 2. If not, may need Isotope's masonry mode (~25KB).
+- **Smooth scroll easing:** Current site uses jQuery easing plugin with easeInOutExpo. CSS `scroll-behavior: smooth` uses different easing. Acceptable difference but may feel slightly different to users.
+- **reCAPTCHA timing:** Contact form's reCAPTCHA Enterprise integration with fetch needs testing to ensure token generation timing works correctly in Phase 5.
+- **Swiper usage:** Need to verify if current Swiper initialization in custom-scripts.js uses jQuery syntax that needs conversion.
 
 ## Sources
 
 ### Primary (HIGH confidence)
-- [Vite Official Documentation](https://vite.dev/guide/) — version 7.3.1, Node 20.19+
-- [Sharp Documentation](https://sharp.pixelplumbing.com/) — version 0.34.5
-- [proof-html GitHub](https://github.com/anishathalye/proof-html) — v2.2.3
-- [GLightbox GitHub](https://github.com/biati-digital/glightbox) — pure JS lightbox
-- [Embla Carousel](https://www.embla-carousel.com) — dependency-free carousel
-- [GitHub Actions official docs](https://docs.github.com/en/actions)
+- [Bootstrap 5.3 Migration Guide](https://getbootstrap.com/docs/5.3/migration/) - Data attributes, CSS classes, breaking changes
+- [Bootstrap 5 Navbar Documentation](https://getbootstrap.com/docs/5.3/components/navbar/) - Native collapse without jQuery
+- [Bootstrap 5 Collapse Documentation](https://getbootstrap.com/docs/5.3/components/collapse/) - Programmatic API
+- [MDN Fetch API](https://developer.mozilla.org/en-US/docs/Web/API/Fetch_API) - AJAX replacement
+- [MDN Window.scrollTo](https://developer.mozilla.org/en-US/docs/Web/API/Window/scrollTo) - Smooth scroll API
+- [You Might Not Need jQuery](https://youmightnotneedjquery.com/) - Syntax conversion reference
 
 ### Secondary (MEDIUM confidence)
-- [vite-plugin-image-optimizer](https://github.com/FatehAK/vite-plugin-image-optimizer) — Vite+Sharp integration
-- [Vite jQuery Discussion](https://github.com/vitejs/vite/discussions/3744) — external jQuery patterns
-- [Bundlephobia](https://bundlephobia.com) — package size analysis
-- [Can I Use - AVIF/WebP](https://caniuse.com/avif) — browser support data
+- [Isotope Documentation](https://isotope.metafizzy.co/) - Vanilla JS filtering if CSS Grid insufficient
+- [Headhesive.js GitHub](https://github.com/markgoodyear/headhesive.js) - Verified already vanilla JS
+- [Vanilla JS Scroll to Top](https://dev.to/dailydevtips1/vanilla-javascript-scroll-to-top-3mkd) - Implementation pattern
+- [Bootstrap Collapsing Menus without jQuery](https://dev.to/ara225/bootstrap-collapsing-menus-without-jquery-4l8l) - Community validation
 
 ### Tertiary (LOW confidence)
-- Revolution Slider internal behavior — limited official documentation, based on community patterns
+- Bundle size estimates based on direct file measurements of current site files (custom-plugins.js: 257KB, jquery.min.js: 97KB)
 
 ---
-*Research completed: 2026-01-19*
+*Research completed: 2026-01-20*
 *Ready for roadmap: yes*

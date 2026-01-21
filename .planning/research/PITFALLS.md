@@ -1,472 +1,579 @@
 # Domain Pitfalls: Static Site Modernization
 
 **Domain:** Photography portfolio static site modernization
-**Researched:** 2026-01-19
-**Project Context:** jQuery/Bootstrap/Revolution Slider site, owner edits HTML in Dreamweaver
+**Researched:** 2026-01-19 (v1), 2026-01-20 (v2.0 jQuery/Bootstrap 5)
+**Project Context:** jQuery/Bootstrap site, owner edits HTML in Dreamweaver
 
 ---
 
-## Critical Pitfalls
+## v2.0 Milestone: jQuery Removal & Bootstrap 5 Migration
 
-Mistakes that cause rewrites, major breakage, or workflow disasters.
+This section covers pitfalls specific to the v2.0 milestone: removing jQuery dependency entirely and migrating from Bootstrap 4 to Bootstrap 5.
+
+**Executive Summary:** Three critical risk areas: (1) Bootstrap's `data-*` to `data-bs-*` namespace change silently breaks all interactive components, (2) Bootstrap 5's CSS class renaming (left/right to start/end) silently breaks responsive layouts, (3) the contact form's jQuery AJAX submission is the highest-risk custom code requiring careful migration to fetch API.
 
 ---
 
-### Pitfall 1: Breaking Revolution Slider During Modernization
+### Critical: Bootstrap Data Attribute Namespace Silent Failures
 
-**What goes wrong:** Revolution Slider (version 5.4.8 detected in this site) has tight jQuery dependencies and specific initialization timing. Adding a build step or module bundler can break the slider entirely by:
-- Loading jQuery after Revolution Slider scripts
-- Tree-shaking away required jQuery methods
-- Breaking the global `$` and `jQuery` references
-- Changing script load order
+**Risk level:** HIGH
 
-**Why it happens:** Modern bundlers like Vite and Webpack optimize and tree-shake by default. Revolution Slider expects jQuery to be globally available before its scripts run. The slider also uses many undocumented internal APIs.
-
-**Consequences:**
-- Slider displays blank or throws console errors like "jQuery is not defined"
-- Site hero section completely broken
-- Major visual impact on homepage
+Bootstrap 5 changed all data attributes from `data-*` to `data-bs-*` (e.g., `data-toggle` to `data-bs-toggle`, `data-target` to `data-bs-target`). Components **silently fail** if old attributes remain - no console errors, just non-working components.
 
 **Warning signs:**
-- Console errors mentioning `jQuery is not defined` or `revapi undefined`
-- Slider not initializing on page load
-- Blank space where slider should be
+- Mobile hamburger menu stops working (no collapse/expand)
+- Modal dialogs don't open
+- Tooltips/popovers don't appear
+- No JavaScript console errors (Bootstrap 5 just ignores old attributes)
 
-**Prevention:**
-1. **Do NOT bundle Revolution Slider scripts** - Keep them as external `<script>` tags
-2. **Ensure jQuery loads first and globally** - Use `window.jQuery = window.$ = jQuery` if using modules
-3. **Test slider initialization after ANY build changes**
-4. **Keep original script loading order exactly as-is**
-5. Consider treating `/style/revolution/` as a "do not touch" zone initially
+**Prevention strategy:**
+1. Create comprehensive list of all `data-toggle`, `data-target`, `data-dismiss`, `data-spy`, `data-parent` attributes in HTML
+2. Use find/replace to update ALL occurrences: `data-toggle` -> `data-bs-toggle`, etc.
+3. Test every interactive component after migration
+4. Add CI check: grep for `data-toggle=` (without `-bs-`) to catch regressions
 
-**Phase to address:** Phase 1 (Build Setup) - Must establish bundler exclusion patterns before any other changes
+**Current project impact (lines 110, 120 in index.html):**
+```html
+<body class="onepage" data-spy="scroll" data-target=".navbar">
+<button class="hamburger animate" data-toggle="collapse" data-target=".navbar-collapse">
+```
 
-**Sources:**
-- [Slider Revolution Changelog](https://www.sliderrevolution.com/documentation/changelog/)
-- [Slider Revolution Troubleshooting](https://www.sliderrevolution.com/faq/how-to-troubleshoot-slider-revolution/)
+**Recovery if hit:**
+- Add missing `data-bs-` prefix to affected elements
+- Test all interactive components again
+
+**Phase to address:** Early in Bootstrap 5 migration (first phase)
 
 ---
 
-### Pitfall 2: Destroying Dreamweaver Edit Workflow
+### Critical: Bootstrap CSS Class Renaming Breaks Responsive Layouts
 
-**What goes wrong:** Adding a build step creates a disconnect between what the site owner edits and what gets deployed. If she edits `index.html` in Dreamweaver:
-- Build step overwrites her changes
-- Source files are in one place, output in another
-- WYSIWYG preview in Dreamweaver no longer matches production
-- She can't see her changes without running a build
+**Risk level:** HIGH
 
-**Why it happens:** Build tools assume developers who use CLI, version control, and understand source-vs-output distinction. Dreamweaver users expect "edit file, upload, done."
+Bootstrap 5 renamed directional classes from left/right to start/end for RTL support. This is a **silent breaking change** - old classes become no-ops.
 
-**Consequences:**
-- Owner can no longer update her own site
-- Every text change requires developer involvement
-- Site becomes unmaintainable for non-technical user
-- Relationship friction between owner and developer
+**Breaking changes:**
+
+| Bootstrap 4 | Bootstrap 5 | Impact |
+|-------------|-------------|--------|
+| `.ml-*` / `.mr-*` | `.ms-*` / `.me-*` | Margins break |
+| `.pl-*` / `.pr-*` | `.ps-*` / `.pe-*` | Padding breaks |
+| `.float-left` / `.float-right` | `.float-start` / `.float-end` | Floats break |
+| `.text-left` / `.text-right` | `.text-start` / `.text-end` | Text alignment breaks |
+| `.border-left` / `.border-right` | `.border-start` / `.border-end` | Borders break |
+| `.rounded-left` / `.rounded-right` | `.rounded-start` / `.rounded-end` | Rounded corners break |
+
+**Additional class changes:**
+
+| Bootstrap 4 | Bootstrap 5 |
+|-------------|-------------|
+| `.sr-only` | `.visually-hidden` |
+| `.font-weight-bold` | `.fw-bold` |
+| `.font-italic` | `.fst-italic` |
+| `.text-monospace` | `.font-monospace` |
+| `.no-gutters` | `.g-0` |
+| `.btn-block` | Removed (use `.d-grid` wrapper) |
+| `.form-group` | Removed (use spacing utilities) |
 
 **Warning signs:**
-- "I made a change but it didn't show up on the site"
-- "The file I edited disappeared"
-- "What's this 'dist' folder?"
+- Elements misaligned (especially on mobile)
+- Spacing inconsistent
+- Hidden accessibility elements visible
+- Text alignment wrong
 
-**Prevention:**
-1. **Keep HTML files editable in-place** - Build step should enhance, not replace
-2. **Use build for assets only** - Images, CSS optimization, not HTML transformation
-3. **Preserve Dreamweaver's live preview capability** - Relative paths must still work locally
-4. **Document the workflow clearly** - Create a simple guide: "Edit HTML, push to GitHub, wait 2 minutes"
-5. Consider a **zero-build approach** for HTML - only optimize images/assets
+**Prevention strategy:**
+1. Audit all Bootstrap utility classes in HTML/CSS before migration
+2. Create find/replace script for bulk updates
+3. Test at all breakpoints after migration
 
-**Phase to address:** Phase 1 (Planning) - Define workflow before implementing any build step
+**Current project impact (line 120):**
+```html
+<div class="navbar-hamburger ml-auto d-lg-none d-xl-none">
+<!-- ml-auto needs to become ms-auto -->
+```
 
-**Detection:** Ask owner to make a test edit before finalizing any workflow changes
+**Phase to address:** Same phase as Bootstrap CSS upgrade
 
 ---
 
-### Pitfall 3: Image Optimization Quality Destruction
+### Critical: Contact Form jQuery AJAX Migration
 
-**What goes wrong:** Automated image optimization destroys photo quality, which is catastrophic for a photography portfolio. Common failures:
-- Over-aggressive compression creates visible artifacts
-- Color profile loss/conversion makes photos look flat or wrong
-- Re-encoding already-compressed JPEGs compounds degradation
-- Cropping or resizing breaks carefully composed images
+**Risk level:** HIGH
 
-**Why it happens:**
-- Default optimization settings prioritize file size over quality
-- Photography requires higher quality thresholds than typical web images
-- PNG photos (detected in this site) are often already optimized by Lightroom/Photoshop
-- Re-compressing from JPEG source accumulates artifacts
-
-**Consequences:**
-- Portfolio photos look amateurish
-- Owner's professional reputation damaged
-- Difficult to detect until after deployment
-- May need to re-upload all 218 original images
+The contact form (lines 8-75 in index.html) uses jQuery's `$.ajax()` and multiple jQuery DOM selectors (`$()`, `.val()`, `.prop()`, `.text()`, `.css()`). This is the most complex custom JavaScript to migrate.
 
 **Warning signs:**
-- Banding in gradient areas (sky, skin tones)
-- Loss of detail in shadows/highlights
-- Colors look "off" compared to originals
-- File sizes dropped dramatically (>60% reduction is suspicious)
+- Form validation breaks silently
+- Form submission fails (no network request)
+- Success/error messages don't display
+- Button state doesn't update (loading state)
 
-**Prevention:**
-1. **Never re-encode from deployed images** - Always optimize from original masters
-2. **Use conservative quality settings** - JPEG quality 85-90, WebP quality 85-90
-3. **Preserve color profiles** - Always use sRGB, don't strip ICC profiles
-4. **A/B test before deployment** - Compare optimized vs original side-by-side
-5. **Create a test batch first** - Optimize 10 representative images before all 218
-6. **Keep originals accessible** - Store unoptimized backups in S3
+**Current jQuery dependencies in submitToAPI() - 18 jQuery calls:**
+```javascript
+// Selectors
+$("#name").val()
+$("#mail").val()
+$("#subject").val()
+$("#comment").val()
+$("#message").css('color', '...')
+$("#message").text('...')
+$("#submitmessage").prop('disabled', true/false)
+$("#submitmessage").text('...')
 
-**Phase to address:** Phase 2 (Image Optimization) - Needs dedicated testing phase before rollout
+// AJAX call
+$.ajax({ type: "POST", url: "...", ... })
+```
 
-**Quality thresholds for photography:**
-- JPEG/WebP: minimum quality 82-85
-- AVIF: minimum quality 50-60 (AVIF quality scale differs)
-- Maximum acceptable PSNR loss: <2dB from original
+**Prevention strategy:**
+1. Create vanilla JS equivalents for ALL jQuery calls before removing jQuery
+2. Use fetch API with proper error handling for AJAX
+3. Test with network throttling (slow 3G) to catch timing issues
+4. Test error scenarios (network failure, server 500, validation errors)
+
+**Vanilla JS migration pattern:**
+```javascript
+// jQuery: $.ajax({ type: "POST", ... })
+// Vanilla:
+const response = await fetch(url, {
+  method: "POST",
+  headers: { "Content-Type": "application/json" },
+  body: JSON.stringify(data)
+});
+
+// jQuery: $("#name").val()
+// Vanilla: document.getElementById("name").value
+
+// jQuery: $("#message").css('color', 'green').text('Success')
+// Vanilla:
+const msg = document.getElementById("message");
+msg.style.color = "green";
+msg.textContent = "Success";
+
+// jQuery: $("#btn").prop('disabled', true)
+// Vanilla: document.getElementById("btn").disabled = true;
+```
+
+**Phase to address:** Dedicated phase for contact form migration
 
 ---
 
-### Pitfall 4: CloudFront Cache Invalidation Failures
+### Critical: Cubeportfolio Replacement Complexity
 
-**What goes wrong:** Site updates don't appear after deployment due to:
-- Cached old versions persisting at edge locations
-- Browser caching old versions locally
-- Incomplete invalidation paths
-- Invalidation completing for some edge locations but not others
+**Risk level:** HIGH
 
-**Why it happens:**
-- CloudFront caches for 24 hours by default (current workflow sets `max-age=31536000` for most assets)
-- Invalidations take 10-100 seconds and aren't guaranteed immediate
-- Browser respects Cache-Control headers independent of CDN
-- Invalidation paths are case-sensitive and must match exactly
-
-**Consequences:**
-- Owner says "I updated the site but nothing changed"
-- Different users see different versions
-- Debugging nightmare ("works for me, not for you")
-- False assumption that deployment failed
+Cubeportfolio provides filtering, mosaic layout, load-more, and GLightbox integration. Replacing it requires multiple features to work together.
 
 **Warning signs:**
-- Changes appear after hard refresh but not normal browsing
-- "It worked yesterday, now it's showing old content"
-- Console shows old file versions being served
+- Portfolio images don't display in grid
+- Filter buttons don't filter
+- Load More doesn't work
+- Lightbox doesn't open for new images
+- Mosaic layout breaks at different screen sizes
 
-**Prevention:**
-1. **Use content hashing for assets** - `styles.abc123.css` instead of `styles.css`
-2. **Short TTL for HTML** - Current workflow correctly uses 5-minute TTL for index.html
-3. **Document "clear cache" steps for owner** - Hard refresh instructions
-4. **Add cache-busting query strings** - `?v=2` for manual updates
-5. **Wait for invalidation completion** - Add `aws cloudfront wait invalidation-completed` to workflow
+**Current Cubeportfolio features used (custom-scripts.js lines 121-156):**
+```javascript
+$cubemosaic.cubeportfolio({
+  filters: '#cube-grid-mosaic-filter',    // Filter buttons
+  loadMore: '#cube-grid-mosaic-more',     // Load more button
+  loadMoreAction: 'click',
+  layoutMode: 'mosaic',                   // Masonry-style layout
+  mediaQueries: [{width: 1440, cols: 4}, ...],  // Responsive columns
+  animationType: 'quicksand',             // Animation
+  caption: 'fadeIn'                       // Hover captions
+});
 
-**Phase to address:** Phase 3 (CI/CD Enhancement) - Improve caching strategy during pipeline improvements
+// Events for GLightbox integration
+$cubemosaic.on('onAfterLoadMore.cbp', ...);
+$cubemosaic.on('onFilterComplete.cbp', ...);
+```
 
-**Current workflow analysis:**
-- HTML files: 5-minute cache (good)
-- All other assets: 1-year cache with `immutable` (problematic without content hashing)
-- Invalidation runs but completion isn't verified
+**Prevention strategy:**
+1. Use Isotope.js (vanilla JS mode, no jQuery) - proven replacement
+2. Implement features incrementally: (a) grid layout, (b) filtering, (c) load-more, (d) GLightbox integration
+3. Keep existing HTML structure (minimal markup changes)
+4. Test at all responsive breakpoints
+5. Test GLightbox integration after each filter/load-more operation
+
+**Isotope implementation pattern:**
+```javascript
+// Vanilla JS Isotope (no jQuery)
+var iso = new Isotope('.grid', {
+  itemSelector: '.grid-item',
+  layoutMode: 'masonry',
+  masonry: { columnWidth: '.grid-sizer' }
+});
+
+// Filtering
+document.querySelectorAll('.filter-btn').forEach(btn => {
+  btn.addEventListener('click', () => {
+    iso.arrange({ filter: btn.dataset.filter });
+  });
+});
+```
+
+**Phase to address:** Dedicated phase with incremental feature implementation
 
 ---
 
-## Moderate Pitfalls
+### Moderate: Sticky Header (Headhesive) jQuery Dependency
 
-Mistakes that cause delays, technical debt, or require rollback.
+**Risk level:** MEDIUM
 
----
-
-### Pitfall 5: jQuery Migration Breaking Existing Functionality
-
-**What goes wrong:** Upgrading jQuery or removing it breaks:
-- Contact form (uses `$.ajax()`)
-- Portfolio grid filtering (cubeportfolio.js depends on jQuery)
-- Smooth scrolling
-- All swiper/slider interactions
-- LightGallery image viewer
-- Counter animations
-- All 1800+ lines of scripts.js
-
-**Why it happens:**
-- jQuery 3.0+ removed deprecated APIs that older plugins use
-- jQuery 4.0 made significant breaking changes
-- Many plugins use internal jQuery APIs that change between versions
-- The site uses at least 15 different jQuery plugins
-
-**Consequences:**
-- Portfolio filtering stops working
-- Contact form fails silently
-- Lightbox gallery broken
-- Site appears functional but interactions fail
+Headhesive is already vanilla JS (no jQuery dependency), but the initialization in custom-scripts.js uses jQuery selectors and SmartMenus callback.
 
 **Warning signs:**
-- Console errors about undefined jQuery methods
-- Click handlers not firing
-- AJAX requests failing
+- Header doesn't become sticky on scroll
+- Clone header styling broken
+- SmartMenus init callback fails (console errors)
 
-**Prevention:**
-1. **Don't upgrade jQuery version** - Current version works, leave it
-2. **Don't remove jQuery** - Too many dependencies
-3. **Use jQuery Migrate if upgrading** - Provides compatibility shims
-4. **Test ALL interactive features** after any JS changes:
-   - [ ] Contact form submission
-   - [ ] Portfolio filter buttons
-   - [ ] Image lightbox opening
-   - [ ] Smooth scroll navigation
-   - [ ] Slider transitions
-5. **Keep jQuery as external script** - Don't bundle it
+**Current implementation (lines 52-69):**
+```javascript
+if ($(".navbar").length) {  // jQuery selector
+  var options = {
+    // ...
+    onStick: function() {
+      $($.SmartMenus.Bootstrap.init);  // SmartMenus dependency
+    },
+    onUnstick: function() {
+      $('.navbar .btn-group').removeClass('open');  // jQuery
+    }
+  };
+  var banner = new Headhesive('.navbar', options);  // Headhesive is vanilla JS
+}
+```
 
-**Phase to address:** All phases - Any JS change requires full regression testing
+**Prevention strategy:**
+1. Replace jQuery selector with `document.querySelector`
+2. Remove SmartMenus callback entirely (SmartMenus being replaced with Bootstrap 5 native)
+3. Test scroll behavior at various page positions
+4. Consider CSS `position: sticky` as simpler alternative
 
-**Sources:**
-- [jQuery 3.0 Upgrade Guide](https://jquery.com/upgrade-guide/3.0/)
-- [jQuery Migrate Plugin](https://wordpress.org/plugins/enable-jquery-migrate-helper/)
+**Phase to address:** jQuery removal phase
 
 ---
 
-### Pitfall 6: WebP/AVIF Compatibility Breaking Older Browsers
+### Moderate: Smooth Scroll jQuery Dependency
 
-**What goes wrong:** Converting all images to modern formats without fallbacks breaks images on:
-- Safari < 14 (WebP)
-- Firefox < 86 (AVIF)
-- Older iOS devices
-- Some email clients rendering shared links
+**Risk level:** MEDIUM
 
-**Why it happens:**
-- Enthusiasm for new formats without understanding adoption
-- Single-format conversion instead of multi-format with `<picture>` element
-- Forgetting that photography clients may have older devices
-
-**Consequences:**
-- Blank or broken images for some visitors
-- Portfolio appears empty on older devices
-- Professional embarrassment
+Current smooth scroll (lines 225-248) uses jQuery's `.animate()` with easeInOutExpo easing.
 
 **Warning signs:**
-- "Images don't load on my phone" complaints
-- Analytics showing high bounce rate from iOS users
+- Scroll anchor links jump instead of smooth scroll
+- Easing feels different (linear vs eased)
+- Hash URL handling broken
 
-**Prevention:**
-1. **Always provide JPEG/PNG fallbacks** using `<picture>` element:
-   ```html
-   <picture>
-     <source srcset="photo.avif" type="image/avif">
-     <source srcset="photo.webp" type="image/webp">
-     <img src="photo.jpg" alt="description">
-   </picture>
-   ```
-2. **Test on actual older devices** - Not just browser dev tools
-3. **Generate all three formats** - AVIF, WebP, and original
-4. **Consider WebP-only first** - AVIF support still maturing
+**Current implementation:**
+```javascript
+$('html,body').animate({
+  scrollTop: target.offset().top
+}, 1500, 'easeInOutExpo');
+```
 
-**Phase to address:** Phase 2 (Image Optimization) - Must include fallback strategy
+**Prevention strategy:**
+1. Use CSS `scroll-behavior: smooth` for basic smooth scroll
+2. For custom easing, use `window.scrollTo({ top: y, behavior: 'smooth' })`
+3. For complex easing, use requestAnimationFrame with easing function
+4. Test all anchor links in navbar
 
-**Sources:**
-- [WebP vs AVIF Comparison](https://speedvitals.com/blog/webp-vs-avif/)
-- [Image Optimization 2025](https://aibudwp.com/image-optimization-in-2025-webp-avif-srcset-and-preload/)
+**Phase to address:** jQuery removal phase
 
 ---
 
-### Pitfall 7: Build Tool Configuration Complexity
+### Moderate: Event Delegation Pattern Changes
 
-**What goes wrong:** Over-engineering the build setup with complex Webpack/Vite configuration that:
-- Takes longer to configure than the time it saves
-- Breaks when dependencies update
-- No one can maintain after initial setup
-- Introduces bugs that didn't exist before
+**Risk level:** MEDIUM
 
-**Why it happens:**
-- Copy-pasting "modern" configurations without understanding them
-- Adding features that aren't needed (hot reload for a simple static site)
-- Treating a 1-page photography portfolio like a SPA
-
-**Consequences:**
-- Build failures block all deployments
-- Developer time spent on tooling, not features
-- Fragile pipeline that breaks unexpectedly
+jQuery's `.on()` provides easy event delegation. Vanilla JS requires explicit delegation setup.
 
 **Warning signs:**
-- Build configuration exceeds 100 lines
-- Multiple environment-specific configurations
-- Frequent "works locally, fails in CI"
+- Dynamically added elements don't respond to clicks
+- Events fire multiple times (bound multiple times)
+- Events stop working after DOM changes
 
-**Prevention:**
-1. **Start minimal** - One optimization task at a time
-2. **Consider no bundler** - Shell scripts for image optimization may suffice
-3. **If using Vite, use defaults** - Don't customize what you don't need
-4. **Document every configuration choice** - Future you will forget why
+**Current patterns requiring migration:**
+```javascript
+$('.navbar .nav li a').on('click', function() { ... });
+$(".hamburger.animate").on("click", function() { ... });
+```
 
-**Phase to address:** Phase 1 (Build Setup) - Resist over-engineering
+**Prevention strategy:**
+1. Use event delegation on parent elements
+2. Check for event listener cleanup on dynamic content
+3. Test with dynamically added content (load-more)
+
+**Vanilla JS pattern:**
+```javascript
+// Delegate to parent
+document.querySelector('.navbar').addEventListener('click', (e) => {
+  if (e.target.matches('.nav li a')) {
+    // handle click
+  }
+});
+```
+
+**Phase to address:** jQuery removal phase
 
 ---
 
-### Pitfall 8: GitHub Actions Workflow Failures
+### Moderate: Bootstrap 5 Navbar Container Requirement
 
-**What goes wrong:** Deployment pipeline fails silently or partially:
-- OIDC authentication failures
-- S3 sync fails but invalidation runs on old content
-- Workflow succeeds but wrong files deployed
-- Branch protection rules blocking deployment
+**Risk level:** MEDIUM
 
-**Why it happens:**
-- IAM role permissions too restrictive or too broad
-- Workflow steps not properly dependent on each other
-- No verification that deployment actually succeeded
-- Secrets/environment configuration issues
-
-**Consequences:**
-- Site not updating despite "successful" workflow
-- Partial deployments with broken references
-- Hard to debug remote failures
+Bootstrap 5 requires a container within navbars. Missing this causes spacing issues.
 
 **Warning signs:**
-- Green checkmark but site unchanged
-- Intermittent deployment failures
-- "Access Denied" errors in workflow logs
+- Navbar content not centered
+- Horizontal padding inconsistent
+- Mobile layout broken
 
-**Prevention:**
-1. **Add deployment verification step** - Fetch deployed page and check content
-2. **Chain dependent steps properly** - Use `needs:` in workflow jobs
-3. **Add meaningful error messages** - Don't let failures pass silently
-4. **Test workflow changes in a branch first** - Don't push directly to main
-5. **Review current workflow** (already well-structured, but could add verification)
+**Current project status:** Container already present (lines 113-135 in index.html) - LOW RISK
+```html
+<nav class="navbar ...">
+  <div class="container">  <!-- Already correct -->
+    ...
+  </div>
+</nav>
+```
 
-**Phase to address:** Phase 3 (CI/CD Enhancement)
-
----
-
-## Minor Pitfalls
-
-Annoyances that are easily fixed but worth knowing about.
+**Phase to address:** Bootstrap upgrade phase (verify only)
 
 ---
 
-### Pitfall 9: Relative Path Breakage
+### Minor: Scroll Position and Offset Calculations
 
-**What goes wrong:** Build process outputs files to different directory structure, breaking relative paths:
-- `src="../images/photo.jpg"` no longer resolves
-- CSS `url()` references break
-- Dreamweaver preview stops working
+**Risk level:** LOW
 
-**Prevention:**
-- Maintain exact directory structure between source and output
-- Use absolute paths from root (`/images/`) where possible
-- Test local preview after any path changes
+jQuery's `.offset()` and `.outerHeight()` have slightly different behavior than vanilla equivalents.
 
-**Phase to address:** Phase 1 (Build Setup)
+**Warning signs:**
+- Scroll targets off by pixels
+- Header offset calculations wrong
+- Elements positioned incorrectly
 
----
+**Current usage (lines 203-214):**
+```javascript
+target.offset().top
+$('.navbar:not(.banner--clone)').outerHeight();
+```
 
-### Pitfall 10: Font and Icon Loading Issues
+**Prevention strategy:**
+1. Use `element.getBoundingClientRect()` for positions
+2. Use `element.offsetHeight` for dimensions
+3. Account for scroll position: `rect.top + window.scrollY`
+4. Test scroll targets are accurate
 
-**What goes wrong:** Optimization removes or breaks:
-- Google Fonts loading
-- Adobe Typekit fonts (`xzi7yjp.css`)
-- Icon fonts in `/style/type/icons.css`
-- Font preloading order
-
-**Prevention:**
-- Don't modify font loading in initial phases
-- Test all icon displays after any CSS changes
-- Keep external font references intact
-
-**Phase to address:** Later phases - Low priority, high risk
+**Phase to address:** jQuery removal phase
 
 ---
 
-### Pitfall 11: reCAPTCHA Integration Breaks
+### Minor: scrollUp Plugin Replacement
 
-**What goes wrong:** Contact form's reCAPTCHA Enterprise stops working:
-- Script loading order changed
-- grecaptcha.enterprise not available
-- Token generation fails
-- Form submits fail silently
+**Risk level:** LOW
 
-**Prevention:**
-- Don't modify the inline script in `<head>`
-- Keep reCAPTCHA script as external async load
-- Test form submission after any JS changes
+scrollUp jQuery plugin (lines 167-193) provides scroll-to-top button with animation.
 
-**Phase to address:** All phases - Test contact form after every change
+**Warning signs:**
+- Scroll-to-top button doesn't appear
+- Button doesn't scroll smoothly
+- Animation missing
 
----
+**Prevention strategy:**
+1. Create simple vanilla JS replacement (trivial ~20 lines)
+2. Use CSS `scroll-behavior: smooth` for scroll animation
+3. Use IntersectionObserver or scroll event for show/hide
 
-### Pitfall 12: Local Development Mismatch
-
-**What goes wrong:** Developer setup doesn't match production, leading to:
-- "Works on my machine" issues
-- Dreamweaver user can't run build tools
-- Two different workflows for dev vs owner
-
-**Prevention:**
-- Keep production deployment independent of local build
-- If owner needs to preview, ensure it works without build step
-- Document both workflows clearly
-
-**Phase to address:** Phase 1 (Planning)
+**Phase to address:** jQuery removal phase (lowest priority)
 
 ---
 
-## Phase-Specific Risk Summary
+## Bootstrap 4 to 5 Breaking Changes Summary
 
-| Phase | Critical Risks | Testing Required |
-|-------|---------------|------------------|
-| Build Setup | Revolution Slider breaks, workflow disrupted | All interactive features, owner preview |
-| Image Optimization | Quality loss, format compatibility | A/B quality comparison, cross-browser |
-| CI/CD Enhancement | Cache issues, deployment failures | Full deployment verification |
-| Performance | Breaking existing functionality | Complete regression test |
-
----
-
-## Pre-Modernization Checklist
-
-Before touching anything:
-
-- [ ] Full site backup in S3 or separate location
-- [ ] Screenshot all pages for comparison
-- [ ] Document current owner workflow step-by-step
-- [ ] List all interactive features that must keep working
-- [ ] Test contact form submission (verify it reaches email)
-- [ ] Note current Lighthouse scores for comparison
-- [ ] Have rollback plan ready (git revert strategy)
+| Category | Change | Migration |
+|----------|--------|-----------|
+| **Data attributes** | `data-*` -> `data-bs-*` | Find/replace all |
+| **Margins** | `.ml-*`, `.mr-*` -> `.ms-*`, `.me-*` | Find/replace |
+| **Padding** | `.pl-*`, `.pr-*` -> `.ps-*`, `.pe-*` | Find/replace |
+| **Float** | `.float-left/right` -> `.float-start/end` | Find/replace |
+| **Text align** | `.text-left/right` -> `.text-start/end` | Find/replace |
+| **SR classes** | `.sr-only` -> `.visually-hidden` | Find/replace |
+| **Font weight** | `.font-weight-*` -> `.fw-*` | Find/replace |
+| **Gutters** | `.no-gutters` -> `.g-0` | Find/replace |
+| **Buttons** | `.btn-block` removed | Use `.d-grid` wrapper |
+| **Forms** | `.form-group` removed | Use spacing utilities |
+| **Forms** | Labels need `.form-label` | Add class |
+| **Navbar** | `.navbar-dark` deprecated | Use `data-bs-theme="dark"` |
+| **Close btn** | `.close` -> `.btn-close` | Replace element |
+| **Badges** | `.badge-*` removed | Use `.bg-*` |
+| **Grid** | Added `.xxl` breakpoint | Optional use |
 
 ---
 
-## Testing Matrix
+## jQuery Plugin Replacement Priority
 
-After each phase, verify:
-
-| Feature | How to Test |
-|---------|-------------|
-| Revolution Slider | Homepage loads, slider transitions |
-| Portfolio Grid | Filter buttons change displayed images |
-| Lightbox | Clicking image opens full-size viewer |
-| Smooth Scroll | Nav links scroll to sections |
-| Contact Form | Submit form, verify email received |
-| Mobile Nav | Hamburger menu opens/closes |
-| Image Loading | All 218 images load correctly |
-| Dreamweaver Preview | Owner can edit and preview locally |
+| Plugin | Risk | Replacement | Complexity | Priority |
+|--------|------|-------------|------------|----------|
+| **Cubeportfolio** | HIGH | Isotope.js (vanilla) | Complex - filtering + masonry + events | Phase 1 |
+| **Contact form AJAX** | HIGH | fetch API + vanilla DOM | Medium - 18 jQuery calls | Phase 2 |
+| **SmartMenus** | LOW | Bootstrap 5 native navbar | Simple - BS5 has hover support | Phase 3 |
+| **Headhesive** | LOW | Keep (already vanilla) or CSS sticky | Simple - just update selectors | Phase 3 |
+| **scrollUp** | LOW | Vanilla JS ~20 lines | Trivial | Phase 4 |
+| **jQuery.easing** | LOW | CSS animations or custom function | Simple | With smooth scroll |
 
 ---
 
-## Sources
+## v2.0 Testing Checklist
 
-**jQuery Migration:**
-- [jQuery 3.0 Upgrade Guide](https://jquery.com/upgrade-guide/3.0/)
-- [10 Common jQuery Mistakes](https://www.nexgismo.com/blog/10-common-jquery-mistakes)
+### After Bootstrap 5 CSS Migration
+- [ ] Navbar displays correctly on desktop
+- [ ] Hamburger menu visible on mobile
+- [ ] All spacing/margins look correct
+- [ ] Text alignment preserved
+- [ ] Form layout intact
+- [ ] Responsive breakpoints work (xs, sm, md, lg, xl, xxl)
 
-**Image Optimization:**
-- [WebP vs AVIF Comparison](https://speedvitals.com/blog/webp-vs-avif/)
-- [Image Optimization 2025](https://aibudwp.com/image-optimization-in-2025-webp-avif-srcset-and-preload/)
-- [Ultimate Compression Strategy 2025](https://unifiedimagetools.com/en/articles/ultimate-image-compression-strategy-2025)
+### After Bootstrap 5 JS Migration
+- [ ] Mobile nav collapse/expand works
+- [ ] Nav links close mobile menu when clicked
+- [ ] Scroll spy updates active nav item
+- [ ] No console errors
 
-**CloudFront/Caching:**
-- [AWS CloudFront Cache Control](https://docs.aws.amazon.com/whitepapers/latest/build-static-websites-aws/controlling-how-long-amazon-s3-content-is-cached-by-amazon-cloudfront.html)
-- [CloudFront Invalidation Issues](https://repost.aws/questions/QUG__vuLtlS-Wf_z2iNxOFtw/cloudfront-continues-to-serve-old-content-after-invalidation-and-s3-update)
+### After jQuery Removal
+- [ ] Contact form validates inputs
+- [ ] Contact form submits successfully
+- [ ] Contact form shows success/error messages
+- [ ] Button shows loading state during submit
+- [ ] Sticky header appears on scroll
+- [ ] Smooth scroll works on nav links
+- [ ] Hamburger menu icon animates
 
-**Revolution Slider:**
-- [Slider Revolution Troubleshooting](https://www.sliderrevolution.com/faq/how-to-troubleshoot-slider-revolution/)
-- [SR7 Migration Issues](https://www.sliderrevolution.com/sr7-velocity-frontend-engine-update/)
+### After Cubeportfolio Replacement
+- [ ] Portfolio grid displays correctly
+- [ ] All filter buttons work
+- [ ] Default filter (all) shows all items
+- [ ] Load More button adds items
+- [ ] GLightbox opens on portfolio images
+- [ ] GLightbox works after filtering
+- [ ] GLightbox works on load-more items
+- [ ] Responsive columns at each breakpoint
 
-**Build Tools:**
-- [Vite vs Webpack Comparison](https://dev.to/mohitdecodes/vite-vs-webpack-modern-build-tools-compared-2025-26e)
-- [Why Vite](https://vite.dev/guide/why)
+### Cross-Browser Testing
+- [ ] Chrome (latest)
+- [ ] Firefox (latest)
+- [ ] Safari (latest)
+- [ ] Edge (latest)
+- [ ] iOS Safari (mobile)
+- [ ] Android Chrome (mobile)
 
-**Non-Technical User Workflow:**
-- [Static Sites for Non-Technical Users](https://buttercms.com/blog/static-site-generators-for-non-technical-users/)
-- [Static Site Generator vs CMS](https://buttercms.com/blog/static-site-generator-vs-cms-which-is-right-for-you/)
+---
+
+## v2.0 Sources
+
+### Bootstrap Migration (HIGH confidence)
+- [Bootstrap 5.3 Migration Guide](https://getbootstrap.com/docs/5.3/migration/) - Official documentation
+- [Bootstrap 5.0 Migration Guide](https://getbootstrap.com/docs/5.0/migration/) - Original v5 changes
+- [Bootstrap 5 Navbar Documentation](https://getbootstrap.com/docs/5.3/components/navbar/)
+- [Bootstrap 5 Collapse Documentation](https://getbootstrap.com/docs/5.3/components/collapse/)
+
+### jQuery Migration (HIGH confidence)
+- [jQuery Migrate Plugin](https://github.com/jquery/jquery-migrate) - Official migration helper
+- [jQuery Core 3.0 Upgrade Guide](https://jquery.com/upgrade-guide/3.0/) - Official upgrade guide
+- [MDN - Sending forms through JavaScript](https://developer.mozilla.org/en-US/docs/Learn/Forms/Sending_forms_through_JavaScript) - Fetch API forms
+
+### Plugin Replacements (MEDIUM confidence)
+- [Isotope Documentation](https://isotope.metafizzy.co/) - Official docs (vanilla JS mode)
+- [Masonry Documentation](https://masonry.desandro.com/) - Official docs (vanilla JS mode)
+- [Headhesive.js GitHub](https://github.com/markgoodyear/headhesive.js) - Already vanilla JS
+- [scrollUp GitHub](https://github.com/markgoodyear/scrollup) - jQuery plugin docs
+
+### Vanilla JS DOM (MEDIUM confidence)
+- [SitePoint - DOM Manipulation in Vanilla JavaScript](https://www.sitepoint.com/dom-manipulation-vanilla-javascript-no-jquery/)
+- [Go Make Things - Fetch API](https://gomakethings.com/how-to-use-the-fetch-api-with-vanilla-js/)
+- [DEV Community - Bootstrap Collapsing Menus without jQuery](https://dev.to/ara225/bootstrap-collapsing-menus-without-jquery-4l8l)
+
+---
+
+## v1 Pitfalls (Reference - Completed Phases)
+
+The following pitfalls were identified during v1 research and have been addressed or remain relevant context.
+
+---
+
+### Pitfall: Breaking Revolution Slider During Modernization (RESOLVED)
+
+**Status:** RESOLVED in Phase 8 - Revolution Slider replaced with Embla Carousel
+
+This pitfall was resolved by replacing Revolution Slider entirely rather than trying to maintain compatibility. Embla Carousel is dependency-free and reduced bundle size from ~11MB to ~6KB.
+
+---
+
+### Pitfall: Destroying Dreamweaver Edit Workflow
+
+**Status:** ADDRESSED - Build step enhances rather than replaces HTML editing
+
+The Vite build system was configured to:
+- Keep HTML files editable in-place
+- Use build for asset optimization only
+- Preserve relative paths for Dreamweaver preview
+
+**Ongoing vigilance:** Any v2.0 changes must maintain this workflow.
+
+---
+
+### Pitfall: Image Optimization Quality Destruction
+
+**Status:** ADDRESSED in Phase 3 with conservative settings
+
+Quality settings applied:
+- JPEG: 90 quality
+- WebP: 85 quality
+- AVIF: 85 quality
+
+All images use `<picture>` element with fallbacks.
+
+---
+
+### Pitfall: CloudFront Cache Invalidation Failures
+
+**Status:** ADDRESSED in Phase 2 with content hashing
+
+Build process now generates hashed filenames for assets, making cache invalidation unnecessary for changed assets.
+
+---
+
+### Pitfall: jQuery Migration Breaking Existing Functionality
+
+**Status:** v2.0 ACTIVE - This is the focus of the v2.0 milestone
+
+See v2.0 pitfalls section above for detailed migration guidance.
+
+---
+
+### Pitfall: WebP/AVIF Compatibility Breaking Older Browsers
+
+**Status:** ADDRESSED in Phase 3 with `<picture>` fallbacks
+
+All optimized images use:
+```html
+<picture>
+  <source srcset="photo.avif" type="image/avif">
+  <source srcset="photo.webp" type="image/webp">
+  <img src="photo.jpg" alt="description">
+</picture>
+```
+
+---
+
+### Pitfall: reCAPTCHA Integration Breaks
+
+**Status:** ACTIVE - Must be tested after jQuery removal
+
+The contact form's reCAPTCHA Enterprise integration uses jQuery for DOM manipulation. When migrating to vanilla JS, test:
+- [ ] reCAPTCHA token generation works
+- [ ] Token is included in form submission
+- [ ] Form submission succeeds
+- [ ] Error handling displays correctly
+
+---
+
+*Last updated: 2026-01-20 (v2.0 jQuery/Bootstrap 5 research)*
