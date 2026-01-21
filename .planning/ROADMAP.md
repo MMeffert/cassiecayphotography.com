@@ -68,6 +68,9 @@ Plans:
 **Depends on:** None (independent, but build process extension)
 **Plans:** 1 plan
 
+Plans:
+- [ ] 18-01-PLAN.md — Create sitemap generation script with image extensions and postbuild hook
+
 **Requirements:**
 - SEO-07: Build-time sitemap script
 - SEO-08: Captions and geo_location
