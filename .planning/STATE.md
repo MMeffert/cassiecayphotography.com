@@ -9,19 +9,19 @@ See: .planning/PROJECT.md (updated 2026-01-20)
 
 ## Current Position
 
-Phase: 11 - Portfolio Grid Replacement (COMPLETE)
-Plan: 03 of 3 complete
-Status: Phase complete
-Last activity: 2026-01-21 — Completed 11-03-PLAN.md (Human verification and Cubeportfolio removal)
+Phase: 12 - Navigation & Sticky Header (IN PROGRESS)
+Plan: 01 of 2 complete
+Status: In progress
+Last activity: 2026-01-21 — Completed 12-01-PLAN.md (Sticky header and smooth scroll)
 
-Progress: [██████░░░░░░░░░░░░░░] 2/6 phases
+Progress: [██████░░░░░░░░░░░░░░] 2.5/6 phases
 
 ## Performance Metrics
 
 **Velocity:**
-- Total plans completed: 23
+- Total plans completed: 24
 - Average duration: 5 min
-- Total execution time: 113 min
+- Total execution time: 116 min
 
 **By Phase:**
 
@@ -37,10 +37,11 @@ Progress: [██████░░░░░░░░░░░░░░] 2/6 pha
 | 08-library-modernization | 3 | 22 min | 7 min |
 | 10-bootstrap-5-migration | 1 | 8 min | 8 min |
 | 11-portfolio-grid-replacement | 3 | 12 min | 4 min |
+| 12-navigation-sticky-header | 1 | 3 min | 3 min |
 
 **Recent Trend:**
-- Last 5 plans: 10-01 (8 min), 11-01 (2 min), 11-02 (8 min), 11-03 (2 min)
-- Trend: Phase 11 complete. Cubeportfolio removed, bundle reduced 87KB. Ready for Phase 12.
+- Last 5 plans: 11-01 (2 min), 11-02 (8 min), 11-03 (2 min), 12-01 (3 min)
+- Trend: Phase 12 started. Sticky header now uses vanilla JS IntersectionObserver. Ready for Plan 02 (SmartMenus/Headhesive removal).
 
 *Updated after each plan completion*
 
@@ -96,6 +97,9 @@ Recent decisions affecting current work:
 | 11-02 | portfolio-item-content wrapper | Required for Muuri's item structure |
 | 11-03 | Image load handlers for Muuri | Ensures correct masonry layout calculation as images load |
 | 11-03 | Muuri without imagesLoaded | Muuri's native refresh is sufficient; external library unnecessary |
+| 12-01 | IntersectionObserver with sentinel for sticky | Replaces Headhesive offset checks with modern API |
+| 12-01 | CSS scroll-behavior for smooth scroll | Native browser support, respects prefers-reduced-motion |
+| 12-01 | Event delegation for hamburger menu | Works on both original and cloned navbar elements |
 
 ### Pending Todos
 
@@ -109,12 +113,12 @@ From research - critical pitfalls to monitor during v2.0:
 - ~~**Bootstrap CSS class renames**: `.ml-*` to `.ms-*`, `.text-left` to `.text-start`. Audit all classes before migration.~~ RESOLVED in 10-01
 - **Contact form AJAX migration**: 18 jQuery calls including `$.ajax()` must convert to fetch API.
 - ~~**Cubeportfolio replacement complexity**: Must replicate filtering, responsive columns, and GLightbox integration.~~ RESOLVED in 11-03 - Muuri fully integrated, Cubeportfolio removed (-87KB)
-- **Sticky header SmartMenus callback**: Headhesive's `onStick` callback currently initializes SmartMenus - must remove.
+- ~~**Sticky header SmartMenus callback**: Headhesive's `onStick` callback currently initializes SmartMenus - must remove.~~ RESOLVED in 12-01 - Vanilla JS sticky header no longer uses SmartMenus callback
 - **Dreamweaver workflow**: Build step must enhance, not replace HTML editing.
 
 ## Session Continuity
 
 Last session: 2026-01-21
-Stopped at: Completed 11-03-PLAN.md (Human verification and Cubeportfolio removal)
+Stopped at: Completed 12-01-PLAN.md (Sticky header and smooth scroll)
 Resume file: None
-Next step: /gsd:plan-phase 12 (Navigation & Sticky Header)
+Next step: Execute 12-02-PLAN.md (Remove SmartMenus and Headhesive from bundle)
