@@ -5,23 +5,23 @@
 See: .planning/PROJECT.md (updated 2026-01-20)
 
 **Core value:** The site must remain fast, secure, and easy for Cassie to update.
-**Current focus:** v2.0 — jQuery Removal & Bootstrap 5 Migration
+**Current focus:** v2.0 — jQuery Removal & Bootstrap 5 Migration (COMPLETE)
 
 ## Current Position
 
-Phase: 15 - jQuery Removal & Cleanup (IN PROGRESS)
-Plan: 01 of 2 complete
-Status: In progress
-Last activity: 2026-01-21 — Completed 15-01-PLAN.md (jQuery pattern conversion)
+Phase: 15 - jQuery Removal & Cleanup (COMPLETE)
+Plan: 02 of 2 complete
+Status: Phase complete
+Last activity: 2026-01-21 — Completed 15-02-PLAN.md (jQuery removal)
 
-Progress: [█████████████████░░░] 5/6 phases
+Progress: [████████████████████] 6/6 phases
 
 ## Performance Metrics
 
 **Velocity:**
-- Total plans completed: 28
+- Total plans completed: 29
 - Average duration: 5 min
-- Total execution time: 126 min
+- Total execution time: 131 min
 
 **By Phase:**
 
@@ -40,11 +40,11 @@ Progress: [█████████████████░░░] 5/6 pha
 | 12-navigation-sticky-header | 2 | 7 min | 3.5 min |
 | 13-utility-scripts-conversion | 1 | 1 min | 1 min |
 | 14-contact-form-migration | 1 | 4 min | 4 min |
-| 15-jquery-removal-cleanup | 1 | 1 min | 1 min |
+| 15-jquery-removal-cleanup | 2 | 6 min | 3 min |
 
 **Recent Trend:**
-- Last 5 plans: 12-02 (4 min), 13-01 (1 min), 14-01 (4 min), 15-01 (1 min)
-- Trend: Phase 15 started. Converted all 7 jQuery patterns in custom-scripts.js to vanilla JavaScript.
+- Last 5 plans: 13-01 (1 min), 14-01 (4 min), 15-01 (1 min), 15-02 (5 min)
+- Trend: v2.0 COMPLETE. jQuery fully removed from project (~95KB bundle reduction).
 
 *Updated after each plan completion*
 
@@ -112,6 +112,8 @@ Recent decisions affecting current work:
 | 15-01 | dataset.imageSrc (camelCase) for data attributes | Standard dataset API for data-image-src attribute |
 | 15-01 | offsetHeight for jQuery outerHeight() | Includes padding and border, exact equivalent |
 | 15-01 | insertAdjacentHTML('afterbegin') for prepend | Direct equivalent to jQuery prepend() |
+| 15-02 | Bootstrap bundle as first vendor script | After jQuery removal, bootstrap.bundle.min.js leads |
+| 15-02 | Null checks for Swiper selectors | Prevent errors when optional elements missing |
 
 ### Pending Todos
 
@@ -126,11 +128,12 @@ From research - critical pitfalls to monitor during v2.0:
 - ~~**Contact form AJAX migration**: 18 jQuery calls including `$.ajax()` must convert to fetch API.~~ RESOLVED in 14-01 - fetch API with Constraint Validation API
 - ~~**Cubeportfolio replacement complexity**: Must replicate filtering, responsive columns, and GLightbox integration.~~ RESOLVED in 11-03 - Muuri fully integrated, Cubeportfolio removed (-87KB)
 - ~~**Sticky header SmartMenus callback**: Headhesive's `onStick` callback currently initializes SmartMenus - must remove.~~ RESOLVED in 12-01 - Vanilla JS sticky header no longer uses SmartMenus callback
+- ~~**jQuery removal**: Complete removal of jQuery and all dependent patterns.~~ RESOLVED in 15-02 - jQuery fully removed (~95KB savings)
 - **Dreamweaver workflow**: Build step must enhance, not replace HTML editing.
 
 ## Session Continuity
 
 Last session: 2026-01-21
-Stopped at: Completed 15-01-PLAN.md (jQuery pattern conversion)
+Stopped at: Completed 15-02-PLAN.md (jQuery removal) - v2.0 COMPLETE
 Resume file: None
-Next step: 15-02-PLAN.md (Remove jQuery script tag and verify site works)
+Next step: v2.0 complete. Ready for production deployment or additional features.
