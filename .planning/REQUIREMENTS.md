@@ -16,10 +16,10 @@ Improve search engine discoverability through technical SEO and image optimizati
 - [x] **SEO-03**: Add ImageGallery schema for portfolio rich results — Phase 16 ✓
 - [x] **SEO-04**: Validate JSON-LD with Google Rich Results Test before deploy — Phase 16 ✓
 
-## Social Meta Tags
+## Social Meta Tags ✓
 
-- [ ] **SEO-05**: Add og:image meta tag with 1200x630 preview image
-- [ ] **SEO-06**: Add Twitter Card meta tags (twitter:card, twitter:site, twitter:image)
+- [x] **SEO-05**: Add og:image meta tag with 1200x630 preview image — Phase 17 ✓
+- [x] **SEO-06**: Add Twitter Card meta tags (twitter:card, twitter:title, twitter:description, twitter:image) — Phase 17 ✓
 
 ## Image Sitemap
 
@@ -68,4 +68,4 @@ Improve search engine discoverability through technical SEO and image optimizati
 
 ---
 
-*Last updated: 2026-01-21 (Phase 16 complete)*
+*Last updated: 2026-01-21 (Phase 17 complete)*
