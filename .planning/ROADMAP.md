@@ -85,6 +85,11 @@ Plans:
 
 **Requirements:** UTIL-01, UTIL-02, UTIL-03
 
+**Plans:** 1 plan
+
+Plans:
+- [ ] 13-01-PLAN.md — Implement vanilla JS scroll-to-top button (UTIL-01)
+
 **Success Criteria:**
 1. Scroll-to-top button appears when page is scrolled and scrolls smoothly to top when clicked
 2. All anchor links scroll smoothly to targets using native scrollTo()
@@ -92,7 +97,7 @@ Plans:
 
 **Dependencies:** Phase 10 (Bootstrap 5), Phase 11 (portfolio may use smooth scroll)
 
-**Notes:** CSS scroll-behavior: smooth handles most cases. scrollUp plugin (~2KB) replaced with ~20 lines of vanilla JS.
+**Notes:** UTIL-02 (CSS smooth scroll) and UTIL-03 (jQuery Easing removal) were completed in Phase 12. Only UTIL-01 (scrollUp replacement) remains - ~30 lines of vanilla JS.
 
 ---
 
