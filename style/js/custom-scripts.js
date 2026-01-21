@@ -117,43 +117,87 @@ $(document).ready(function() {
         slideEffect: 'fade'
     });
     /*-----------------------------------------------------------------------------------*/
-    /*	CUBE PORTFOLIO (MOSAIC)
+    /*	PORTFOLIO GRID (Muuri - replaced Cubeportfolio in Phase 11)
     /*-----------------------------------------------------------------------------------*/
-    // Initialize Cubeportfolio - remove lazy loading from portfolio images first
-    // to ensure dimensions are available for mosaic layout calculation
-    var $cubemosaic = $('#cube-grid-mosaic');
-    $cubemosaic.find('img[loading="lazy"]').removeAttr('loading');
+    var portfolioGrid = document.getElementById('portfolio-grid');
+    var grid = null;
 
-    $cubemosaic.cubeportfolio({
-        filters: '#cube-grid-mosaic-filter',
-        loadMore: '#cube-grid-mosaic-more',
-        loadMoreAction: 'click',
-        layoutMode: 'mosaic',
-        mediaQueries: [{width: 1440, cols: 4}, {width: 1024, cols: 4}, {width: 768, cols: 3}, {width: 575, cols: 2}, {width: 320, cols: 1}],
-        defaultFilter: '*',
-        animationType: 'quicksand',
-        gapHorizontal: 0,
-        gapVertical: 0,
-        gridAdjustment: 'responsive',
-        caption: 'fadeIn',
-        displayType: 'bottomToTop',
-        displayTypeSpeed: 100,
-        plugins: {
-            loadMore: {
-                loadItems: 4
+    if (portfolioGrid) {
+        // Remove lazy loading from portfolio images before Muuri init
+        // to ensure accurate dimensions for masonry layout
+        portfolioGrid.querySelectorAll('img[loading="lazy"]').forEach(function(img) {
+            img.removeAttribute('loading');
+        });
+
+        // Initialize Muuri grid
+        grid = new Muuri('#portfolio-grid', {
+            items: '.portfolio-item',
+            layout: {
+                fillGaps: true,      // Enable masonry-style packing (PORT-06)
+                horizontal: false,
+                alignRight: false,
+                alignBottom: false
+            },
+            showDuration: 300,
+            hideDuration: 200,
+            layoutDuration: 300,
+            visibleStyles: {
+                opacity: 1,
+                transform: 'scale(1)'
+            },
+            hiddenStyles: {
+                opacity: 0,
+                transform: 'scale(0.5)'
             }
+        });
+
+        // Filter function with GLightbox integration (PORT-02, PORT-04)
+        function filterPortfolio(category) {
+            grid.filter(function(item) {
+                if (category === '*') return true;
+                var categoryClass = category.replace('.', '');
+                return item.getElement().classList.contains(categoryClass);
+            }, {
+                onFinish: function() {
+                    // Delay lightbox reload to ensure DOM updates complete
+                    setTimeout(function() {
+                        lightbox.reload();
+                    }, 50);
+                }
+            });
         }
 
-    });
-    $cubemosaic.on('onAfterLoadMore.cbp', function(event, newItemsAddedToGrid) {
-        $('.cbp-item-load-more .overlay > a, .cbp-item-load-more .overlay > span').prepend('<span class="bg"></span>');
-        // Reload GLightbox to pick up new images
-        lightbox.reload();
-    });
-    $cubemosaic.on('onFilterComplete.cbp', function() {
-        // Reload GLightbox after filtering to ensure all visible images are included
-        lightbox.reload();
-    });
+        // Bind filter button click handlers (PORT-02)
+        document.querySelectorAll('.filter-btn').forEach(function(btn) {
+            btn.addEventListener('click', function() {
+                var category = this.getAttribute('data-filter');
+
+                // Update active state
+                document.querySelectorAll('.filter-btn').forEach(function(b) {
+                    b.classList.remove('active');
+                });
+                this.classList.add('active');
+
+                // Apply filter with optional View Transitions enhancement (PORT-05)
+                if (document.startViewTransition) {
+                    document.startViewTransition(function() {
+                        filterPortfolio(category);
+                    });
+                } else {
+                    filterPortfolio(category);
+                }
+            });
+        });
+
+        // Debounced resize handler for responsive layout
+        var resizeTimer;
+        window.addEventListener('resize', function() {
+            clearTimeout(resizeTimer);
+            resizeTimer = setTimeout(function() {
+                grid.refreshItems().layout();
+            }, 200);
+        });
+    }
     /*-----------------------------------------------------------------------------------*/
     /*	BACKGROUND IMAGE
     /*-----------------------------------------------------------------------------------*/
