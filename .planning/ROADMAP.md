@@ -130,6 +130,12 @@ Plans:
 
 **Requirements:** JQ-01, JQ-02, JQ-03, JQ-04
 
+**Plans:** 2 plans
+
+Plans:
+- [ ] 15-01-PLAN.md — Convert custom-scripts.js jQuery patterns to vanilla JS
+- [ ] 15-02-PLAN.md — Remove jQuery file, script tag, and Vite config references
+
 **Success Criteria:**
 1. Page loads with no console errors
 2. All interactive features work (portfolio, lightbox, contact form, navigation)
