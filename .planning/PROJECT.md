@@ -8,6 +8,14 @@ A modern, fast, jQuery-free photography portfolio website. Static HTML/CSS/JS ho
 
 **The site must remain fast, secure, and easy for Cassie to update.** Everything else supports this goal.
 
+## Current Milestone: v2.2 Mobile Navigation
+
+**Goal:** Modernize the mobile menu with Bootstrap 5 offcanvas for a better mobile UX.
+
+**Target features:**
+- Replace navbar collapse with offcanvas slide-in drawer
+- Smooth mobile navigation experience
+
 ## Current State (v2.1 Shipped)
 
 **Production bundle:** ~389KB (33% reduction from baseline)
@@ -51,9 +59,11 @@ A modern, fast, jQuery-free photography portfolio website. Static HTML/CSS/JS ho
 
 ### Active
 
-**v2.2+ — Planned features:**
-- [ ] Implement folder-based image galleries (WORK-01 from v1)
+**v2.2 — Mobile Navigation:**
 - [ ] Bootstrap 5 offcanvas mobile menu
+
+**v2.3+ — Planned features:**
+- [ ] Implement folder-based image galleries (WORK-01 from v1)
 - [ ] Dark mode toggle
 
 ### Out of Scope
@@ -109,4 +119,4 @@ A modern, fast, jQuery-free photography portfolio website. Static HTML/CSS/JS ho
 | Image sitemap with postbuild | Automatically regenerates on every build | ✓ Good |
 
 ---
-*Last updated: 2026-01-21 after v2.1 milestone shipped*
+*Last updated: 2026-01-21 after v2.2 milestone start*
