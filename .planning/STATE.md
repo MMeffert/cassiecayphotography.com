@@ -5,42 +5,24 @@
 See: .planning/PROJECT.md (updated 2026-01-21)
 
 **Core value:** The site must remain fast, secure, and easy for Cassie to update.
-**Current focus:** Planning next milestone (v2.1+)
+**Current focus:** v2.1 SEO — Technical SEO and image optimization
 
 ## Current Position
 
-Phase: Ready for next milestone
-Plan: Not started
-Status: v2.0 shipped, ready to plan
-Last activity: 2026-01-21 — v2.0 milestone complete
+Phase: Not started (defining requirements)
+Plan: —
+Status: Defining requirements
+Last activity: 2026-01-21 — Milestone v2.1 started
 
-Progress: v2.0 SHIPPED
+Progress: Defining requirements
 
 ## Milestones
 
 See: .planning/MILESTONES.md
 
+- **v2.1** SEO — IN PROGRESS
 - **v2.0** jQuery Removal & Bootstrap 5 Migration — SHIPPED 2026-01-21
 - **v1.0** Infrastructure & Modernization — SHIPPED 2026-01-20
-
-## Performance Metrics (v2.0)
-
-**Velocity:**
-- Total plans completed: 10 (v2.0)
-- Total phases: 6 (10-15)
-- Total commits: 43
-- Timeline: 2 days
-
-**By Phase:**
-
-| Phase | Plans | Total | Avg/Plan |
-|-------|-------|-------|----------|
-| 10-bootstrap-5-migration | 1 | 8 min | 8 min |
-| 11-portfolio-grid-replacement | 3 | 12 min | 4 min |
-| 12-navigation-sticky-header | 2 | 7 min | 3.5 min |
-| 13-utility-scripts-conversion | 1 | 1 min | 1 min |
-| 14-contact-form-migration | 1 | 4 min | 4 min |
-| 15-jquery-removal-cleanup | 2 | 6 min | 3 min |
 
 ## Accumulated Context
 
@@ -54,9 +36,18 @@ Full decision log archived in phase SUMMARY.md files.
 - **Dreamweaver workflow**: Build step must enhance, not replace HTML editing.
 - **Tech debt**: Orphaned files in repo (style/js/plugins.js, style/js/scripts.js) not loaded in production.
 
-### Deferred Features (v2.1+)
+### SEO Current State
 
-From PROJECT.md Active section:
+Discovered during milestone scoping:
+- Meta description and OG tags already present
+- 84 portfolio images have empty alt text (needs AI-assisted generation)
+- Sitemap only lists homepage (no images)
+- No structured data (JSON-LD)
+- No Twitter card meta tags
+- og:image missing
+
+### Deferred Features (v2.2+)
+
 - Folder-based image galleries (WORK-01 from v1)
 - Bootstrap 5 offcanvas mobile menu
 - Dark mode toggle
@@ -64,6 +55,6 @@ From PROJECT.md Active section:
 ## Session Continuity
 
 Last session: 2026-01-21
-Stopped at: v2.0 milestone complete, archived
+Stopped at: Defining v2.1 requirements
 Resume file: None
-Next step: `/gsd:new-milestone` for v2.1+ planning
+Next step: Complete requirements definition, create roadmap

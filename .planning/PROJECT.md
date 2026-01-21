@@ -8,6 +8,16 @@ A modern, fast, jQuery-free photography portfolio website. Static HTML/CSS/JS ho
 
 **The site must remain fast, secure, and easy for Cassie to update.** Everything else supports this goal.
 
+## Current Milestone: v2.1 SEO
+
+**Goal:** Improve search engine discoverability through technical SEO and image optimization.
+
+**Target features:**
+- Structured data (JSON-LD) for LocalBusiness + Photographer schemas
+- Complete Open Graph and Twitter card meta tags
+- AI-assisted alt text for 84 portfolio images
+- Image sitemap for better indexing
+
 ## Current State (v2.0 Shipped)
 
 **Production bundle:** ~389KB (33% reduction from baseline)
@@ -39,7 +49,14 @@ A modern, fast, jQuery-free photography portfolio website. Static HTML/CSS/JS ho
 
 ### Active
 
-**v2.1+ — Future Enhancements:**
+**v2.1 — SEO:**
+- [ ] Add structured data (JSON-LD) for LocalBusiness and Photographer schemas
+- [ ] Complete Open Graph meta tags (add og:image)
+- [ ] Add Twitter card meta tags
+- [ ] AI-assisted alt text for portfolio images
+- [ ] Generate image sitemap
+
+**Deferred to v2.2+:**
 - [ ] Implement folder-based image galleries (WORK-01 from v1)
 - [ ] Bootstrap 5 offcanvas mobile menu
 - [ ] Dark mode toggle
@@ -94,4 +111,4 @@ A modern, fast, jQuery-free photography portfolio website. Static HTML/CSS/JS ho
 | Folder-based galleries | Reduces HTML editing for common task | — Deferred to v2.1 |
 
 ---
-*Last updated: 2026-01-21 after v2.0 milestone complete*
+*Last updated: 2026-01-21 after v2.1 milestone start*
