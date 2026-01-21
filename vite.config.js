@@ -18,7 +18,6 @@ export default defineConfig({
 
       // Keep vendor JS files external - loaded via script tags
       external: [
-        /^style\/js\/jquery\.min\.js$/,
         /^style\/js\/bootstrap\.bundle\.min\.js$/,
         /^style\/js\/embla-carousel\.umd\.js$/,
         /^style\/js\/embla-carousel-autoplay\.umd\.js$/,
@@ -37,10 +36,6 @@ export default defineConfig({
     viteStaticCopy({
       targets: [
         // Copy vendor JS files that should not be bundled
-        {
-          src: 'style/js/jquery.min.js',
-          dest: 'style/js'
-        },
         {
           src: 'style/js/bootstrap.bundle.min.js',
           dest: 'style/js'
