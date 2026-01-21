@@ -13,6 +13,11 @@
 
 **Requirements:** BS5-01, BS5-02, BS5-03, BS5-04, BS5-05
 
+**Plans:** 1 plan
+
+Plans:
+- [ ] 10-01-PLAN.md — Migrate Bootstrap 4.4.1 to 5.3.x (data attributes, CSS classes, JS bundle)
+
 **Success Criteria:**
 1. Navbar hamburger menu opens and closes on mobile devices
 2. All dropdown menus function correctly on desktop
@@ -118,7 +123,7 @@
 
 | Phase | Name | Requirements | Status |
 |-------|------|--------------|--------|
-| 10 | Bootstrap 5 Migration | 5 | Pending |
+| 10 | Bootstrap 5 Migration | 5 | Planned |
 | 11 | Portfolio Grid Replacement | 6 | Pending |
 | 12 | Navigation & Sticky Header | 4 | Pending |
 | 13 | Utility Scripts Conversion | 3 | Pending |
@@ -148,4 +153,4 @@ All 24 v2.0 requirements mapped:
 ---
 
 *Roadmap created: 2026-01-20*
-*Ready for: /gsd:plan-phase 10*
+*Phase 10 planned: 2026-01-20*
