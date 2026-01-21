@@ -985,6 +985,52 @@ img.octagon {
     -webkit-transform: translateY(-9px) rotate(-45deg);
 }
 /*-----------------------------------------------------------------------------------*/
+/*	06A. OFFCANVAS MOBILE NAVIGATION
+/*-----------------------------------------------------------------------------------*/
+.offcanvas {
+    max-width: 280px;
+}
+.offcanvas-header {
+    padding: 1.5rem;
+    border-bottom: 1px solid rgba(0, 0, 0, 0.08);
+}
+.offcanvas-title {
+    font-family: 'Montserrat', sans-serif;
+    font-size: 18px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: -0.5px;
+    color: #404040;
+}
+.offcanvas-body {
+    padding: 0;
+}
+.offcanvas-body .navbar-nav {
+    padding: 1rem 0;
+}
+.offcanvas-body .nav-item {
+    padding: 0;
+}
+.offcanvas-body .nav-link {
+    padding: 0.8rem 1.5rem;
+    font-size: 15px;
+    font-weight: 700;
+    letter-spacing: -0.5px;
+    color: #404040;
+    border-bottom: 1px solid rgba(0, 0, 0, 0.05);
+    transition: all 0.2s ease-in-out;
+}
+.offcanvas-body .nav-link:hover,
+.offcanvas-body .nav-link.active {
+    color: #4c86e5;
+    background-color: rgba(76, 134, 229, 0.05);
+}
+.offcanvas .btn-close {
+    width: 1em;
+    height: 1em;
+    padding: 0.5rem;
+}
+/*-----------------------------------------------------------------------------------*/
 /*	07. BUTTON
 /*-----------------------------------------------------------------------------------*/
 .btn {
