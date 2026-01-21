@@ -2,70 +2,64 @@
 
 ## What This Is
 
-A comprehensive maintenance and modernization project for Cassie's photography portfolio website. The site is a static HTML/CSS/JS site hosted on AWS (S3 + CloudFront) with a Lambda-powered contact form. This project addresses accumulated tech debt, improves performance, modernizes the frontend tooling, and adds automation to make ongoing maintenance easier—especially for Cassie, who edits the site with Dreamweaver.
+A modern, fast, jQuery-free photography portfolio website. Static HTML/CSS/JS hosted on AWS (S3 + CloudFront) with Lambda-powered contact form. Built for performance and easy maintenance.
 
 ## Core Value
 
-**The site must remain fast, secure, and easy for Cassie to update.** Everything else (modernization, automation) supports this goal. A photography portfolio lives and dies by its images loading quickly and the site staying online.
+**The site must remain fast, secure, and easy for Cassie to update.** Everything else supports this goal.
 
-## Current Milestone: v2.0 jQuery Removal & Bootstrap 5 Migration
+## Current State (v2.0 Shipped)
 
-**Goal:** Remove jQuery dependency entirely by migrating to Bootstrap 5 and replacing all jQuery-dependent plugins with modern vanilla JS alternatives.
-
-**Target features:**
-- Migrate from Bootstrap 4 to Bootstrap 5 (no jQuery dependency)
-- Replace Cubeportfolio with modern portfolio grid (Isotope or CSS grid + vanilla JS)
-- Replace SmartMenus with Bootstrap 5 native navigation or vanilla JS
-- Replace Headhesive sticky header with vanilla JS
-- Replace scrollUp with vanilla JS scroll-to-top
-- Remove jQuery entirely from the build
+**Production bundle:** ~389KB (33% reduction from baseline)
+**Tech stack:** Bootstrap 5.3.3, Muuri, Embla Carousel, GLightbox, vanilla JS
+**Infrastructure:** CDK-managed S3/CloudFront, GitHub Actions CI/CD (OIDC)
+**Dependencies eliminated:** jQuery, Cubeportfolio, SmartMenus, Headhesive, Revolution Slider
 
 ## Requirements
 
 ### Validated
 
-- ✓ Static site hosting on S3 + CloudFront — existing
-- ✓ Contact form with reCAPTCHA spam protection — existing
-- ✓ GitHub Actions CI/CD deployment — existing
-- ✓ SSL/HTTPS via ACM — existing
+**v1.0 — Infrastructure & Modernization:**
+- ✓ Static site hosting on S3 + CloudFront — v1.0
+- ✓ Contact form with reCAPTCHA spam protection — v1.0
+- ✓ GitHub Actions CI/CD deployment (OIDC auth) — v1.0
+- ✓ SSL/HTTPS via ACM — v1.0
+- ✓ Image optimization pipeline — v1.0
+- ✓ Replace Revolution Slider with Embla Carousel — v1.0
+- ✓ Build step with Vite bundling — v1.0
+- ✓ Pre-commit hooks and deploy notifications — v1.0
+
+**v2.0 — jQuery Removal & Bootstrap 5 Migration:**
+- ✓ Migrate from Bootstrap 4 to Bootstrap 5 (no jQuery dependency) — v2.0
+- ✓ Replace Cubeportfolio with Muuri portfolio grid — v2.0
+- ✓ Replace SmartMenus with Bootstrap 5 native navigation — v2.0
+- ✓ Replace Headhesive sticky header with vanilla JS — v2.0
+- ✓ Replace scrollUp with vanilla JS scroll-to-top — v2.0
+- ✓ Remove jQuery entirely from the build — v2.0
 
 ### Active
 
-**v2.0 — jQuery Removal & Bootstrap 5 Migration:**
-- [ ] Migrate from Bootstrap 4 to Bootstrap 5 (no jQuery dependency)
-- [ ] Replace Cubeportfolio with modern portfolio grid solution
-- [ ] Replace SmartMenus with Bootstrap 5 native or vanilla JS navigation
-- [ ] Replace Headhesive sticky header with vanilla JS
-- [ ] Replace scrollUp with vanilla JS scroll-to-top
-- [ ] Remove jQuery entirely from the build
-
-**Deferred to v2.1+:**
+**v2.1+ — Future Enhancements:**
 - [ ] Implement folder-based image galleries (WORK-01 from v1)
+- [ ] Bootstrap 5 offcanvas mobile menu
+- [ ] Dark mode toggle
 
 ### Out of Scope
 
-- Full framework rewrite (React, Vue, etc.) — keeping static HTML structure
-- CMS or headless content management — too much complexity for the use case
-- Mobile app — web-only
-- E-commerce/payments — booking handled externally via Appointy
-- User authentication — public portfolio site
+| Feature | Reason |
+|---------|--------|
+| Full framework rewrite (React, Vue) | Static HTML works, Cassie edits in Dreamweaver |
+| CMS or headless content management | Too much complexity for use case |
+| Mobile app | Web-only |
+| E-commerce/payments | Booking handled externally via Appointy |
+| User authentication | Public portfolio site |
 
 ## Context
-
-**Current State:**
-- Site works but has accumulated tech debt
-- 81MB of images not optimized for web
-- 11MB Revolution Slider library (most functionality unused)
-- jQuery 3.x with multiple plugins of unknown vintage
-- Zero test coverage
-- No build process for frontend assets
-- Domain still pointing to old manually-created CloudFront (CDK infrastructure ready but not fully migrated)
 
 **Cassie's Workflow:**
 - Edits HTML manually in Dreamweaver
 - Commits via Git (finds this difficult)
-- Rarely updates because the process is painful
-- Needs clear feedback that deploys succeeded
+- Deploy notifications provide clear feedback
 
 **Technical Environment:**
 - AWS Account: 241654197557
@@ -75,12 +69,15 @@ A comprehensive maintenance and modernization project for Cassie's photography p
 - SES for email delivery
 - Secrets Manager for reCAPTCHA API key
 
+**Known Tech Debt:**
+- Orphaned files in repo: `style/js/plugins.js` (534KB), `style/js/scripts.js` (59KB) — not loaded in production
+
 ## Constraints
 
-- **Static output**: Site must remain static HTML served from S3/CloudFront — no server-side rendering or dynamic backends (except existing Lambda for contact form)
-- **Cassie-friendly**: Any changes to workflow must not make things harder for her
-- **AWS only**: Stay within existing AWS infrastructure (no new cloud providers)
-- **Budget**: Personal project, minimize ongoing costs (current setup is essentially free-tier)
+- **Static output**: Site must remain static HTML served from S3/CloudFront
+- **Cassie-friendly**: Any changes must not make things harder for her
+- **AWS only**: Stay within existing AWS infrastructure
+- **Budget**: Personal project, minimize ongoing costs (essentially free-tier)
 
 ## Key Decisions
 
@@ -88,10 +85,13 @@ A comprehensive maintenance and modernization project for Cassie's photography p
 |----------|-----------|---------|
 | Keep static HTML structure | Cassie knows HTML, simpler than learning new framework | ✓ Good |
 | Replace Revolution Slider with Embla | 11MB → ~6KB, modern, dependency-free | ✓ Good |
-| Add build step | Enables optimization without changing source files | ✓ Good |
-| Folder-based galleries | Reduces HTML editing for common task (adding photos) | — Deferred to v2.1 |
-| Remove jQuery entirely | ~90KB savings, Bootstrap 5 doesn't need it, fewer dependencies | — Pending |
-| Bootstrap 4 → 5 migration | Modern standards, better accessibility, no jQuery dependency | — Pending |
+| Add build step (Vite) | Enables optimization without changing source files | ✓ Good |
+| Bootstrap 4 → 5 migration | Modern standards, better accessibility, no jQuery dependency | ✓ Good |
+| Muuri for portfolio grid | 24KB, masonry layout, filtering, no jQuery dependency | ✓ Good |
+| Remove jQuery entirely | ~95KB savings, vanilla JS for everything | ✓ Good |
+| Vanilla JS sticky header | IntersectionObserver + CSS, no plugin dependencies | ✓ Good |
+| Fetch API for contact form | Native browser API, no jQuery AJAX needed | ✓ Good |
+| Folder-based galleries | Reduces HTML editing for common task | — Deferred to v2.1 |
 
 ---
-*Last updated: 2026-01-20 after v2.0 milestone start*
+*Last updated: 2026-01-21 after v2.0 milestone complete*
