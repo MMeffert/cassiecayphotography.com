@@ -28,12 +28,12 @@ Improve search engine discoverability through technical SEO and image optimizati
 - [x] **SEO-09**: Update main sitemap.xml to reference image sitemap (sitemap index) — Phase 18 ✓
 - [x] **SEO-10**: Add sitemap generation to postbuild hook — Phase 18 ✓
 
-## Alt Text Generation
+## Alt Text Generation ✓
 
-- [ ] **SEO-11**: Create alt text generation script using Claude Vision API
-- [ ] **SEO-12**: Generate descriptive alt text for all 84 portfolio images
-- [ ] **SEO-13**: Include location and service keywords in alt text (e.g., "Bride and groom first kiss at Madison Arboretum")
-- [ ] **SEO-14**: Update HTML with generated alt text
+- [x] **SEO-11**: Create alt text generation script using Claude Vision API — Phase 19 ✓
+- [x] **SEO-12**: Generate descriptive alt text for all 76 portfolio images — Phase 19 ✓
+- [x] **SEO-13**: Include location and service keywords in alt text (e.g., "Joyful father carrying smiling toddler...in Madison, Wisconsin") — Phase 19 ✓
+- [x] **SEO-14**: Update HTML with generated alt text — Phase 19 ✓
 
 ---
 
@@ -50,7 +50,7 @@ Improve search engine discoverability through technical SEO and image optimizati
 | Requirement | Dependency |
 |-------------|------------|
 | SEO-07 to SEO-10 | `sitemap` npm package (v9.0.0) |
-| SEO-11 to SEO-14 | `@anthropic-ai/sdk` for Claude Vision API |
+| SEO-11 to SEO-14 | `openai` npm package (v6.16.0) for ccproxy compatibility |
 
 ## Cost Estimate
 
@@ -68,4 +68,4 @@ Improve search engine discoverability through technical SEO and image optimizati
 
 ---
 
-*Last updated: 2026-01-21 (Phase 18 complete)*
+*Last updated: 2026-01-21 (v2.1 milestone complete)*
