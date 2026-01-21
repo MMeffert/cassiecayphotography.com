@@ -41,17 +41,18 @@ Modernize the mobile navigation by replacing Bootstrap 5's navbar collapse with 
 
 | Requirement | Phase | Status |
 |-------------|-------|--------|
-| NAV-01 | TBD | Pending |
-| NAV-02 | TBD | Pending |
-| NAV-03 | TBD | Pending |
-| NAV-04 | TBD | Pending |
-| NAV-05 | TBD | Pending |
-| NAV-06 | TBD | Pending |
+| NAV-01 | Phase 20 | Pending |
+| NAV-02 | Phase 20 | Pending |
+| NAV-03 | Phase 20 | Pending |
+| NAV-04 | Phase 20 | Pending |
+| NAV-05 | Phase 20 | Pending |
+| NAV-06 | Phase 20 | Pending |
 
 **Coverage:**
 - v2.2 requirements: 6 total
-- Mapped to phases: 0 (awaiting roadmap)
-- Unmapped: 6
+- Mapped to phases: 6/6 (100%)
+- Unmapped: 0
 
 ---
 *Requirements defined: 2026-01-21*
+*Roadmap created: 2026-01-21*
