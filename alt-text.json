@@ -1,0 +1,464 @@
+{
+  "generated": "2026-01-21T21:05:35.965Z",
+  "model": "claude-sonnet-4-20250514",
+  "proxy": "http://10.0.10.42:8000/claude/v1",
+  "totalImages": 76,
+  "images": [
+    {
+      "filename": "cassiecay-F1.jpg",
+      "fullPath": "images-optimized/jpeg/800w/cassiecay-F1.jpg",
+      "category": "Family",
+      "altText": "Joyful father carrying smiling toddler on shoulders during spring family portrait session in Madison, Wisconsin"
+    },
+    {
+      "filename": "cassiecay-F21-crop.jpg",
+      "fullPath": "images-optimized/jpeg/full/cassiecay-F21-crop.jpg",
+      "category": "Family",
+      "altText": "Joyful family portrait featuring five sisters embracing outdoors in lush Madison, Wisconsin greenery"
+    },
+    {
+      "filename": "cassiecay-NB18-crop.jpg",
+      "fullPath": "images-optimized/jpeg/full/cassiecay-NB18-crop.jpg",
+      "category": "Newborn",
+      "altText": "Tender mother kisses sleeping newborn baby with coral bow in bright Madison Wisconsin portrait session"
+    },
+    {
+      "filename": "cassiecay-F2.jpg",
+      "fullPath": "images-optimized/jpeg/full/cassiecay-F2.jpg",
+      "category": "Family",
+      "altText": "Baby girl with white flower headband sits in vintage tub with oranges, Madison Wisconsin family portrait session."
+    },
+    {
+      "filename": "cassiecay-senior3-crop.jpg",
+      "fullPath": "images-optimized/jpeg/full/cassiecay-senior3-crop.jpg",
+      "category": "Senior",
+      "altText": "Confident high school senior in black dress wading in lake water, Madison Wisconsin senior portrait photography"
+    },
+    {
+      "filename": "cassiecay-NB15-crop.jpg",
+      "fullPath": "images-optimized/jpeg/full/cassiecay-NB15-crop.jpg",
+      "category": "Newborn",
+      "altText": "Peaceful newborn baby with coral bow resting in parent's hands, Madison Wisconsin newborn portrait photography"
+    },
+    {
+      "filename": "cassiecay-F22-crop.jpg",
+      "fullPath": "images-optimized/jpeg/full/cassiecay-F22-crop.jpg",
+      "category": "Family",
+      "altText": "Joyful mother and laughing children embrace during intimate family photography session in Madison, Wisconsin"
+    },
+    {
+      "filename": "cassiecay-F41-full.jpg",
+      "fullPath": "images-optimized/jpeg/full/cassiecay-F41-full.jpg",
+      "category": "Family",
+      "altText": "Mother tenderly kisses daughter's forehead in lush garden setting, Madison Wisconsin family photography session"
+    },
+    {
+      "filename": "cassiecay-F32-crop.jpg",
+      "fullPath": "images-optimized/jpeg/full/cassiecay-F32-crop.jpg",
+      "category": "Family",
+      "altText": "Joyful family of five laughing together on wooden stairs during Madison, Wisconsin family portrait session"
+    },
+    {
+      "filename": "cassiecay-NB14-crop.jpg",
+      "fullPath": "images-optimized/jpeg/full/cassiecay-NB14-crop.jpg",
+      "category": "Newborn",
+      "altText": "Peaceful sleeping newborn with dark hair resting on orange knit blanket during Madison Wisconsin portrait session"
+    },
+    {
+      "filename": "cassiecay-F15.jpg",
+      "fullPath": "images-optimized/jpeg/800w/cassiecay-F15.jpg",
+      "category": "Family",
+      "altText": "Loving mother and daughter share tender moment in golden prairie grass, Madison Wisconsin family photography"
+    },
+    {
+      "filename": "cassiecay-F30-crop.jpg",
+      "fullPath": "images-optimized/jpeg/full/cassiecay-F30-crop.jpg",
+      "category": "Family",
+      "altText": "Joyful family of four laughing together in tall grass field during Madison, Wisconsin family portrait session"
+    },
+    {
+      "filename": "cassiecay-F17.jpg",
+      "fullPath": "images-optimized/jpeg/full/cassiecay-F17.jpg",
+      "category": "Family",
+      "altText": "Pregnant mother and daughter sharing joyful moment beneath blooming magnolia tree, Madison WI family photography"
+    },
+    {
+      "filename": "cassiecay-M8.jpg",
+      "fullPath": "images-optimized/jpeg/800w/cassiecay-M8.jpg",
+      "category": "Milestone",
+      "altText": "Smiling baby girl with bow headband sitting in woven basket during milestone photography session in Madison, Wisconsin"
+    },
+    {
+      "filename": "cassiecay-NB6-crop.jpg",
+      "fullPath": "images-optimized/jpeg/full/cassiecay-NB6-crop.jpg",
+      "category": "Newborn",
+      "altText": "Tender newborn portrait showing protective parents' hands cradling sleeping baby in Madison, Wisconsin photography session"
+    },
+    {
+      "filename": "cassiecay-senior2-crop.jpg",
+      "fullPath": "images-optimized/jpeg/full/cassiecay-senior2-crop.jpg",
+      "category": "Senior",
+      "altText": "Confident brunette senior smiling in golden sunlight among green trees, Madison Wisconsin senior portrait photography"
+    },
+    {
+      "filename": "cassiecay-F3.jpg",
+      "fullPath": "images-optimized/jpeg/full/cassiecay-F3.jpg",
+      "category": "Family",
+      "altText": "Joyful toddler in leopard print coat smiling outdoors during Madison Wisconsin family portrait session"
+    },
+    {
+      "filename": "cassiecay-NB20-crop.jpg",
+      "fullPath": "images-optimized/jpeg/full/cassiecay-NB20-crop.jpg",
+      "category": "Newborn",
+      "altText": "Father lovingly cradles sleeping newborn in tender black and white newborn portrait, Madison Wisconsin"
+    },
+    {
+      "filename": "cassiecay-NB19-crop.jpg",
+      "fullPath": "images-optimized/jpeg/full/cassiecay-NB19-crop.jpg",
+      "category": "Newborn",
+      "altText": "Peaceful sleeping newborn in cozy sweater captured in serene black and white portrait, Madison Wisconsin"
+    },
+    {
+      "filename": "cassiecay-F28-crop.jpg",
+      "fullPath": "images-optimized/jpeg/full/cassiecay-F28-crop.jpg",
+      "category": "Family",
+      "altText": "Joyful family of four embracing in golden prairie field during sunset family portrait session in Madison, Wisconsin"
+    },
+    {
+      "filename": "cassiecay-F4.jpg",
+      "fullPath": "images-optimized/jpeg/full/cassiecay-F4.jpg",
+      "category": "Family",
+      "altText": "Expecting mother in flowing dress poses serenely among trees during Madison, Wisconsin maternity photography session"
+    },
+    {
+      "filename": "cassiecay-M14.jpg",
+      "fullPath": "images-optimized/jpeg/full/cassiecay-M14.jpg",
+      "category": "Milestone",
+      "altText": "Bright-eyed baby milestone portrait capturing precious early months in Madison, Wisconsin studio photography session"
+    },
+    {
+      "filename": "cassiecay-F13.jpg",
+      "fullPath": "images-optimized/jpeg/full/cassiecay-F13.jpg",
+      "category": "Family",
+      "altText": "Joyful toddler between parents on front porch during family portrait session in Madison, Wisconsin"
+    },
+    {
+      "filename": "cassiecay-M20.jpg",
+      "fullPath": "images-optimized/jpeg/full/cassiecay-M20.jpg",
+      "category": "Milestone",
+      "altText": "Sweet baby girl with white bow headband during milestone portrait session in Madison, Wisconsin"
+    },
+    {
+      "filename": "cassiecay-F25-crop.jpg",
+      "fullPath": "images-optimized/jpeg/full/cassiecay-F25-crop.jpg",
+      "category": "Family",
+      "altText": "Mother and baby sharing tender moment during outdoor family portrait session in Madison, Wisconsin"
+    },
+    {
+      "filename": "cassiecay-E1.jpg",
+      "fullPath": "images-optimized/jpeg/full/cassiecay-E1.jpg",
+      "category": "Event",
+      "altText": "Happy couple embracing outdoors during golden hour event portrait session in Madison, Wisconsin"
+    },
+    {
+      "filename": "cassiecay-F24-crop.jpg",
+      "fullPath": "images-optimized/jpeg/full/cassiecay-F24-crop.jpg",
+      "category": "Family",
+      "altText": "Father tenderly embraces young daughter while family gathers for intimate portrait session in Madison, Wisconsin"
+    },
+    {
+      "filename": "cassiecay-F42-crop.jpg",
+      "fullPath": "images-optimized/jpeg/full/cassiecay-F42-crop.jpg",
+      "category": "Family",
+      "altText": "Three-generation family embracing warmly in lush garden setting, Madison Wisconsin family portrait photography"
+    },
+    {
+      "filename": "cassiecay-E5.jpg",
+      "fullPath": "images-optimized/jpeg/800w/cassiecay-E5.jpg",
+      "category": "Event",
+      "altText": "Tender hands cradling diamond engagement ring during intimate wedding event photography session in Madison, Wisconsin"
+    },
+    {
+      "filename": "cassiecay-F5.jpg",
+      "fullPath": "images-optimized/jpeg/full/cassiecay-F5.jpg",
+      "category": "Family",
+      "altText": "Expecting couple tenderly cradles baby bump during intimate maternity session in Madison, Wisconsin"
+    },
+    {
+      "filename": "cassiecay-M25-crop.jpg",
+      "fullPath": "images-optimized/jpeg/full/cassiecay-M25-crop.jpg",
+      "category": "Milestone",
+      "altText": "Curious toddler in sun hat exploring wooden bridge during milestone portrait session in Madison, Wisconsin"
+    },
+    {
+      "filename": "cassiecay-F39-crop.jpg",
+      "fullPath": "images-optimized/jpeg/full/cassiecay-F39-crop.jpg",
+      "category": "Family",
+      "altText": "Expecting couple shares tender moment under willow tree during lakeside family portrait session in Madison, Wisconsin"
+    },
+    {
+      "filename": "cassiecay-M21-crop.jpg",
+      "fullPath": "images-optimized/jpeg/full/cassiecay-M21-crop.jpg",
+      "category": "Milestone",
+      "altText": "Sweet toddler girl standing on wooden chair during golden hour milestone portrait session in Madison, Wisconsin"
+    },
+    {
+      "filename": "cassiecay-F20-crop.jpg",
+      "fullPath": "images-optimized/jpeg/full/cassiecay-F20-crop.jpg",
+      "category": "Family",
+      "altText": "Young woman with glasses smiling warmly against lush foliage backdrop in Madison, Wisconsin family portrait"
+    },
+    {
+      "filename": "cassiecay-F38-crop.jpg",
+      "fullPath": "images-optimized/jpeg/full/cassiecay-F38-crop.jpg",
+      "category": "Family",
+      "altText": "Joyful family embraces their smiling baby during intimate portrait session in Madison, Wisconsin"
+    },
+    {
+      "filename": "cassiecay-NB13.jpg",
+      "fullPath": "images-optimized/jpeg/full/cassiecay-NB13.jpg",
+      "category": "Newborn",
+      "altText": "Peaceful sleeping newborn wrapped in delicate lace during intimate portrait session in Madison, Wisconsin"
+    },
+    {
+      "filename": "cassiecay-F37-crop.jpg",
+      "fullPath": "images-optimized/jpeg/full/cassiecay-F37-crop.jpg",
+      "category": "Family",
+      "altText": "Father and toddler sharing tender moment at pumpkin patch family portrait session in Madison, Wisconsin"
+    },
+    {
+      "filename": "cassiecay-M11.jpg",
+      "fullPath": "images-optimized/jpeg/full/cassiecay-M11.jpg",
+      "category": "Milestone",
+      "altText": "Joyful baby in orange outfit laughing during milestone portrait session in Madison, Wisconsin"
+    },
+    {
+      "filename": "cassiecay-F6.jpg",
+      "fullPath": "images-optimized/jpeg/full/cassiecay-F6.jpg",
+      "category": "Family",
+      "altText": "Joyful family with toddler playing with yellow ball during outdoor portrait session in Madison, Wisconsin"
+    },
+    {
+      "filename": "cassiecay-F36-crop.jpg",
+      "fullPath": "images-optimized/jpeg/full/cassiecay-F36-crop.jpg",
+      "category": "Family",
+      "altText": "Happy family of four embracing among vibrant fall foliage during Madison, Wisconsin family portrait session"
+    },
+    {
+      "filename": "cassiecay-NB9.jpg",
+      "fullPath": "images-optimized/jpeg/full/cassiecay-NB9.jpg",
+      "category": "Newborn",
+      "altText": "Tender father cradles sleeping newborn in intimate black and white newborn portrait, Madison, Wisconsin"
+    },
+    {
+      "filename": "cassiecay-E3.jpg",
+      "fullPath": "images-optimized/jpeg/full/cassiecay-E3.jpg",
+      "category": "Event",
+      "altText": "Couple sharing intimate autumn moment by lake with Madison, Wisconsin skyline during golden hour portrait session"
+    },
+    {
+      "filename": "cassiecay-M23-crop.jpg",
+      "fullPath": "images-optimized/jpeg/full/cassiecay-M23-crop.jpg",
+      "category": "Milestone",
+      "altText": "Baby's tiny feet and hands during cake smash milestone photography session in Madison, Wisconsin"
+    },
+    {
+      "filename": "cassiecay-M12.jpg",
+      "fullPath": "images-optimized/jpeg/full/cassiecay-M12.jpg",
+      "category": "Milestone",
+      "altText": "Toddler walking independently down pathway in heartwarming milestone portrait session in Madison, Wisconsin"
+    },
+    {
+      "filename": "cassiecay-F18-crop.jpg",
+      "fullPath": "images-optimized/jpeg/full/cassiecay-F18-crop.jpg",
+      "category": "Family",
+      "altText": "Father and daughter walking hand-in-hand through evergreen trees, joyful family portrait session in Madison, Wisconsin"
+    },
+    {
+      "filename": "cassiecay-NB4-crop.jpg",
+      "fullPath": "images-optimized/jpeg/800w/cassiecay-NB4-crop.jpg",
+      "category": "Newborn",
+      "altText": "Peaceful sleeping newborn with white flower headband wrapped in sage green blanket, Madison Wisconsin newborn portrait"
+    },
+    {
+      "filename": "cassiecay-F34-crop.jpg",
+      "fullPath": "images-optimized/jpeg/full/cassiecay-F34-crop.jpg",
+      "category": "Family",
+      "altText": "Loving elderly couple shares tender moment during family portrait session in Madison, Wisconsin"
+    },
+    {
+      "filename": "cassiecay-F33-crop.jpg",
+      "fullPath": "images-optimized/jpeg/full/cassiecay-F33-crop.jpg",
+      "category": "Family",
+      "altText": "Father holding toddler in golden sunset field, intimate family portrait session in Madison, Wisconsin"
+    },
+    {
+      "filename": "cassiecay-M24-crop.jpg",
+      "fullPath": "images-optimized/jpeg/full/cassiecay-M24-crop.jpg",
+      "category": "Milestone",
+      "altText": "Joyful baby in tutu sits on wooden bridge with coral balloon, milestone portrait session Madison Wisconsin"
+    },
+    {
+      "filename": "cassiecay-M3.jpg",
+      "fullPath": "images-optimized/jpeg/full/cassiecay-M3.jpg",
+      "category": "Milestone",
+      "altText": "Sweet baby girl with pink flower headband smiling during milestone portrait session in Madison, Wisconsin"
+    },
+    {
+      "filename": "cassiecay-E10-crop.jpg",
+      "fullPath": "images-optimized/jpeg/full/cassiecay-E10-crop.jpg",
+      "category": "Event",
+      "altText": "Intimate couple sharing tender moment during golden hour event photography session in Madison, Wisconsin"
+    },
+    {
+      "filename": "cassiecay-M22-crop.jpg",
+      "fullPath": "images-optimized/jpeg/full/cassiecay-M22-crop.jpg",
+      "category": "Milestone",
+      "altText": "Sweet toddler in tutu sitting on wooden bridge during milestone portrait session in Madison, Wisconsin"
+    },
+    {
+      "filename": "cassiecay-M4.jpg",
+      "fullPath": "images-optimized/jpeg/full/cassiecay-M4.jpg",
+      "category": "Milestone",
+      "altText": "Smiling baby in red tutu and white bow celebrates milestone portrait session in Madison, Wisconsin"
+    },
+    {
+      "filename": "cassiecay-NB10.jpg",
+      "fullPath": "images-optimized/jpeg/full/cassiecay-NB10.jpg",
+      "category": "Newborn",
+      "altText": "Joyful new parents with sleeping baby and golden retriever on bed, newborn photography in Madison, Wisconsin"
+    },
+    {
+      "filename": "cassiecay-senior1-crop.jpg",
+      "fullPath": "images-optimized/jpeg/full/cassiecay-senior1-crop.jpg",
+      "category": "Senior",
+      "altText": "Confident senior poses against stone wall with green foliage in Madison, Wisconsin portrait session"
+    },
+    {
+      "filename": "cassiecay-M7.jpg",
+      "fullPath": "images-optimized/jpeg/full/cassiecay-M7.jpg",
+      "category": "Milestone",
+      "altText": "Baby girl in pink and purple tutu celebrates milestone moment in Madison, WI portrait session"
+    },
+    {
+      "filename": "cassiecay-E13-full.jpg",
+      "fullPath": "images-optimized/jpeg/800w/cassiecay-E13-full.jpg",
+      "category": "Event",
+      "altText": "Couple holding hands walking through golden-lit Christmas tree farm during romantic engagement session in Madison, Wisconsin"
+    },
+    {
+      "filename": "cassiecay-F16.jpg",
+      "fullPath": "images-optimized/jpeg/full/cassiecay-F16.jpg",
+      "category": "Family",
+      "altText": "Mother tenderly embracing two young daughters in intimate black and white family portrait, Madison Wisconsin"
+    },
+    {
+      "filename": "cassiecay-M5.jpg",
+      "fullPath": "images-optimized/jpeg/full/cassiecay-M5.jpg",
+      "category": "Milestone",
+      "altText": "Sweet baby milestone portrait in vintage metal tub with cream lace, Madison Wisconsin photography session"
+    },
+    {
+      "filename": "cassiecay-NB3-crop.jpg",
+      "fullPath": "images-optimized/jpeg/full/cassiecay-NB3-crop.jpg",
+      "category": "Newborn",
+      "altText": "Tender sibling moment with toddler kissing newborn baby in Madison Wisconsin newborn portrait session"
+    },
+    {
+      "filename": "cassiecay-E12-crop.jpg",
+      "fullPath": "images-optimized/jpeg/full/cassiecay-E12-crop.jpg",
+      "category": "Event",
+      "altText": "Happy couple with white dog in autumn foliage during Madison Wisconsin portrait session"
+    },
+    {
+      "filename": "cassiecay-E4.jpg",
+      "fullPath": "images-optimized/jpeg/800w/cassiecay-E4.jpg",
+      "category": "Event",
+      "altText": "Intimate black and white event portrait of contemplative man with clasped hands in Madison, Wisconsin"
+    },
+    {
+      "filename": "cassiecay-NB12.jpg",
+      "fullPath": "images-optimized/jpeg/full/cassiecay-NB12.jpg",
+      "category": "Newborn",
+      "altText": "Loving father cradles swaddled newborn in tender Madison, Wisconsin newborn portrait session"
+    },
+    {
+      "filename": "cassiecay-F10.jpg",
+      "fullPath": "images-optimized/jpeg/800w/cassiecay-F10.jpg",
+      "category": "Family",
+      "altText": "Father and toddler sharing apple during autumn family portrait session in Madison, Wisconsin"
+    },
+    {
+      "filename": "cassiecay-M15.jpg",
+      "fullPath": "images-optimized/jpeg/full/cassiecay-M15.jpg",
+      "category": "Milestone",
+      "altText": "Curious toddler gazing up at apple tree during milestone portrait session in Madison, Wisconsin"
+    },
+    {
+      "filename": "cassiecay-M6.jpg",
+      "fullPath": "images-optimized/jpeg/full/cassiecay-M6.jpg",
+      "category": "Milestone",
+      "altText": "Joyful cake smash milestone portrait session capturing messy celebration in Madison, Wisconsin"
+    },
+    {
+      "filename": "cassiecay-E11-crop.jpg",
+      "fullPath": "images-optimized/jpeg/full/cassiecay-E11-crop.jpg",
+      "category": "Event",
+      "altText": "Intimate couple sharing tender moment during winter portrait session in Madison, Wisconsin"
+    },
+    {
+      "filename": "cassiecay-M17.jpg",
+      "fullPath": "images-optimized/jpeg/full/cassiecay-M17.jpg",
+      "category": "Milestone",
+      "altText": "Joyful toddler gazing up at number balloons during milestone portrait session in Madison, Wisconsin"
+    },
+    {
+      "filename": "cassiecay-NB7-crop.jpg",
+      "fullPath": "images-optimized/jpeg/800w/cassiecay-NB7-crop.jpg",
+      "category": "Newborn",
+      "altText": "Peaceful sleeping newborn in knit hat and sweater, intimate black and white portrait by Madison, WI photographer"
+    },
+    {
+      "filename": "cassiecay-NB8.jpg",
+      "fullPath": "images-optimized/jpeg/full/cassiecay-NB8.jpg",
+      "category": "Newborn",
+      "altText": "Peaceful sleeping newborn with white bow headband, serene newborn portrait photography in Madison, Wisconsin"
+    },
+    {
+      "filename": "cassiecay-F11.jpg",
+      "fullPath": "images-optimized/jpeg/full/cassiecay-F11.jpg",
+      "category": "Family",
+      "altText": "Joyful family of three laughing together on blanket in golden field during Madison, Wisconsin family portrait session"
+    },
+    {
+      "filename": "cassiecay-M19.jpg",
+      "fullPath": "images-optimized/jpeg/full/cassiecay-M19.jpg",
+      "category": "Milestone",
+      "altText": "Joyful baby in pink tutu and white bow during milestone portrait session in Madison, Wisconsin"
+    },
+    {
+      "filename": "cassiecay-M18.jpg",
+      "fullPath": "images-optimized/jpeg/full/cassiecay-M18.jpg",
+      "category": "Milestone",
+      "altText": "Blonde toddler in denim jacket smiling joyfully on wooden steps, milestone portrait session in Madison, Wisconsin"
+    },
+    {
+      "filename": "cassiecay-E8-crop.jpg",
+      "fullPath": "images-optimized/jpeg/full/cassiecay-E8-crop.jpg",
+      "category": "Event",
+      "altText": "Intimate engagement ring detail captured in warm light during Madison, Wisconsin event photography session"
+    },
+    {
+      "filename": "cassiecay-E2.jpg",
+      "fullPath": "images-optimized/jpeg/full/cassiecay-E2.jpg",
+      "category": "Event",
+      "altText": "Romantic couple embracing on lakeside dock during intimate engagement session in Madison, Wisconsin"
+    },
+    {
+      "filename": "cassiecay-F14.jpg",
+      "fullPath": "images-optimized/jpeg/full/cassiecay-F14.jpg",
+      "category": "Family",
+      "altText": "Expecting parents with young son tenderly embracing during maternity family portrait session in Madison, Wisconsin"
+    }
+  ]
+}

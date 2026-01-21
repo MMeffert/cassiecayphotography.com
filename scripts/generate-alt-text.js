@@ -1,25 +1,30 @@
 /**
  * Alt text generation script for Cassie Cay Photography
  *
- * Uses Claude Vision API to generate descriptive, SEO-optimized alt text
- * for all portfolio images in the site.
+ * Uses Claude Vision API (via ccproxy - OpenAI-compatible) to generate
+ * descriptive, SEO-optimized alt text for all portfolio images.
  *
  * Usage:
  *   Generate alt text manifest:
- *     ANTHROPIC_API_KEY=... node scripts/generate-alt-text.js
+ *     node scripts/generate-alt-text.js
  *
  *   Inject alt text into HTML:
  *     node scripts/generate-alt-text.js --inject
+ *
+ * Configuration:
+ *   CCPROXY_URL - Proxy server URL (default: http://10.0.10.42:8000/claude/v1)
  */
 
-import Anthropic from '@anthropic-ai/sdk';
+import OpenAI from 'openai';
 import { readFileSync, writeFileSync, existsSync } from 'fs';
 import { resolve } from 'path';
 import pLimit from 'p-limit';
 
+// ccproxy server configuration (OpenAI-compatible API)
+const BASE_URL = process.env.CCPROXY_URL || 'http://10.0.10.42:8000/claude/v1';
 const MODEL = 'claude-sonnet-4-20250514';
-const CONCURRENCY = 5;
-const DELAY_BETWEEN_BATCHES = 200; // ms
+const CONCURRENCY = 3; // Lower concurrency for vision requests
+const DELAY_BETWEEN_BATCHES = 500; // ms
 
 // Category mapping from filename prefix
 const CATEGORY_MAP = {
@@ -117,7 +122,7 @@ function extractImagesFromHtml() {
 }
 
 /**
- * Generate alt text for a single image using Claude Vision
+ * Generate alt text for a single image using Claude Vision via ccproxy
  */
 async function generateAltTextForImage(client, image) {
   const imagePath = resolve(image.src);
@@ -134,7 +139,7 @@ async function generateAltTextForImage(client, image) {
   // Read and base64 encode the image
   const imageData = readFileSync(imagePath);
   const base64Image = imageData.toString('base64');
-  const mediaType = 'image/jpeg';
+  const dataUrl = `data:image/jpeg;base64,${base64Image}`;
 
   const prompt = `You are generating alt text for a professional photography portfolio website.
 
@@ -153,7 +158,7 @@ Generate concise alt text (10-20 words) that:
 Respond with ONLY the alt text, no quotes or explanation.`;
 
   try {
-    const response = await client.messages.create({
+    const response = await client.chat.completions.create({
       model: MODEL,
       max_tokens: 100,
       messages: [
@@ -161,11 +166,9 @@ Respond with ONLY the alt text, no quotes or explanation.`;
           role: 'user',
           content: [
             {
-              type: 'image',
-              source: {
-                type: 'base64',
-                media_type: mediaType,
-                data: base64Image
+              type: 'image_url',
+              image_url: {
+                url: dataUrl
               }
             },
             {
@@ -177,7 +180,7 @@ Respond with ONLY the alt text, no quotes or explanation.`;
       ]
     });
 
-    const altText = response.content[0].text.trim();
+    const altText = response.choices[0].message.content.trim();
     return {
       ...image,
       altText
@@ -196,14 +199,9 @@ Respond with ONLY the alt text, no quotes or explanation.`;
  * Generate alt text for all images
  */
 async function generateAltTextManifest() {
-  const apiKey = process.env.ANTHROPIC_API_KEY;
-  if (!apiKey) {
-    console.error('Error: ANTHROPIC_API_KEY environment variable required');
-    console.error('Usage: ANTHROPIC_API_KEY=... node scripts/generate-alt-text.js');
-    process.exit(1);
-  }
-
   console.log('\n=== Alt Text Generation ===\n');
+  console.log(`Using proxy: ${BASE_URL}`);
+  console.log(`Model: ${MODEL}\n`);
 
   // Extract images from HTML
   const images = extractImagesFromHtml();
@@ -214,19 +212,21 @@ async function generateAltTextManifest() {
     return;
   }
 
-  // Initialize Anthropic client
-  const client = new Anthropic({ apiKey });
+  // Initialize OpenAI client with ccproxy base URL
+  const client = new OpenAI({
+    apiKey: 'dummy', // Not used by ccproxy, but required by SDK
+    baseURL: BASE_URL
+  });
 
   // Process images with concurrency limit
   const limit = pLimit(CONCURRENCY);
   let processed = 0;
-  const results = [];
 
   const tasks = images.map((image, index) =>
     limit(async () => {
       // Add delay between batches to avoid rate limits
       if (index > 0 && index % CONCURRENCY === 0) {
-        await new Promise(resolve => setTimeout(resolve, DELAY_BETWEEN_BATCHES));
+        await new Promise(r => setTimeout(r, DELAY_BETWEEN_BATCHES));
       }
 
       const result = await generateAltTextForImage(client, image);
@@ -242,6 +242,7 @@ async function generateAltTextManifest() {
   const manifest = {
     generated: new Date().toISOString(),
     model: MODEL,
+    proxy: BASE_URL,
     totalImages: imageResults.length,
     images: imageResults.map(img => ({
       filename: img.filename,
@@ -266,6 +267,10 @@ async function generateAltTextManifest() {
 
 /**
  * Inject alt text from manifest into index.html
+ *
+ * Uses a two-pass approach:
+ * 1. Build a lookup map from src paths to alt text
+ * 2. Match each img tag, check if it has alt="" and a known src, then replace
  */
 function injectAltText() {
   console.log('\n=== Alt Text Injection ===\n');
@@ -283,42 +288,38 @@ function injectAltText() {
   let html = readFileSync(htmlPath, 'utf-8');
   let updated = 0;
 
+  // Build a map of src -> altText for quick lookup
+  const altTextMap = new Map();
   for (const image of manifest.images) {
-    // Escape special regex characters in the path
-    const escapedSrc = image.fullPath.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+    altTextMap.set(image.fullPath, image.altText);
+  }
+
+  // Find all img tags and process them individually
+  // This avoids regex crossing tag boundaries
+  html = html.replace(/<img[\s\S]*?>/g, (imgTag) => {
+    // Check if this img tag has alt=""
+    if (!imgTag.includes('alt=""')) return imgTag;
+
+    // Extract the src attribute
+    const srcMatch = imgTag.match(/src="([^"]+)"/);
+    if (!srcMatch) return imgTag;
+    const src = srcMatch[1];
+
+    // Look up alt text in manifest
+    const altText = altTextMap.get(src);
+    if (!altText) return imgTag;
 
     // Escape special characters for HTML attribute
-    const escapedAlt = image.altText
+    const escapedAlt = altText
       .replace(/&/g, '&amp;')
       .replace(/"/g, '&quot;')
       .replace(/</g, '&lt;')
       .replace(/>/g, '&gt;');
 
-    // Pattern: img tag with this src and alt=""
-    // Using [\s\S]*? for multiline matching
-    // Handle both orderings: src...alt="" and alt=""...src
-    const patterns = [
-      new RegExp(`(<img[\\s\\S]*?src="${escapedSrc}"[\\s\\S]*?)alt=""`, 'g'),
-      new RegExp(`(<img[\\s\\S]*?)alt=""([\\s\\S]*?src="${escapedSrc}")`, 'g')
-    ];
-
-    for (const pattern of patterns) {
-      const before = html;
-      html = html.replace(pattern, (match, prefix, suffix) => {
-        if (suffix) {
-          // Second pattern: alt="" comes before src
-          return `${prefix}alt="${escapedAlt}"${suffix}`;
-        }
-        // First pattern: src comes before alt=""
-        return `${prefix}alt="${escapedAlt}"`;
-      });
-
-      if (html !== before) {
-        updated++;
-        break; // Don't try other patterns if one worked
-      }
-    }
-  }
+    // Replace alt="" with the new alt text within this specific tag
+    updated++;
+    return imgTag.replace('alt=""', `alt="${escapedAlt}"`);
+  });
 
   // Write updated HTML
   writeFileSync(htmlPath, html);
