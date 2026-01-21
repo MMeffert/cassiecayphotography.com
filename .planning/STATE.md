@@ -9,19 +9,19 @@ See: .planning/PROJECT.md (updated 2026-01-20)
 
 ## Current Position
 
-Phase: 12 - Navigation & Sticky Header (COMPLETE)
-Plan: 02 of 2 complete
-Status: Phase complete
-Last activity: 2026-01-21 — Completed 12-02-PLAN.md (Plugin removal)
+Phase: 13 - Utility Scripts Conversion (IN PROGRESS)
+Plan: 01 of 3 complete
+Status: In progress
+Last activity: 2026-01-21 — Completed 13-01-PLAN.md (Scroll-to-top button)
 
-Progress: [███████░░░░░░░░░░░░░] 3/6 phases
+Progress: [████████░░░░░░░░░░░░] 3.5/6 phases
 
 ## Performance Metrics
 
 **Velocity:**
-- Total plans completed: 25
+- Total plans completed: 26
 - Average duration: 5 min
-- Total execution time: 120 min
+- Total execution time: 121 min
 
 **By Phase:**
 
@@ -38,10 +38,11 @@ Progress: [███████░░░░░░░░░░░░░] 3/6 pha
 | 10-bootstrap-5-migration | 1 | 8 min | 8 min |
 | 11-portfolio-grid-replacement | 3 | 12 min | 4 min |
 | 12-navigation-sticky-header | 2 | 7 min | 3.5 min |
+| 13-utility-scripts-conversion | 1 | 1 min | 1 min |
 
 **Recent Trend:**
-- Last 5 plans: 11-02 (8 min), 11-03 (2 min), 12-01 (3 min), 12-02 (4 min)
-- Trend: Phase 12 complete. Removed SmartMenus, Headhesive, jQuery Easing, scrollUp (-36KB). Navigation now fully vanilla JS.
+- Last 5 plans: 11-03 (2 min), 12-01 (3 min), 12-02 (4 min), 13-01 (1 min)
+- Trend: Phase 13 started. UTIL-01 scroll-to-top replaced with vanilla JS IntersectionObserver implementation.
 
 *Updated after each plan completion*
 
@@ -101,6 +102,8 @@ Recent decisions affecting current work:
 | 12-01 | CSS scroll-behavior for smooth scroll | Native browser support, respects prefers-reduced-motion |
 | 12-01 | Event delegation for hamburger menu | Works on both original and cloned navbar elements |
 | 12-02 | Remove all navigation plugins together | SmartMenus, Headhesive, jQuery Easing, scrollUp all replaced by vanilla JS |
+| 13-01 | IntersectionObserver with sentinel at 300px | Efficient scroll detection without scroll event listeners |
+| 13-01 | prefers-reduced-motion for scroll-to-top | Accessibility compliance for motion preferences |
 
 ### Pending Todos
 
@@ -120,6 +123,6 @@ From research - critical pitfalls to monitor during v2.0:
 ## Session Continuity
 
 Last session: 2026-01-21
-Stopped at: Completed 12-02-PLAN.md (Plugin removal)
+Stopped at: Completed 13-01-PLAN.md (Scroll-to-top button)
 Resume file: None
-Next step: Phase 12 complete. Ready for Phase 13 (jQuery Removal - Contact Form)
+Next step: Continue Phase 13 (13-02 Background image, 13-03 Mobile detection)
