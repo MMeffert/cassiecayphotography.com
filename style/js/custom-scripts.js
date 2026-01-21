@@ -47,35 +47,91 @@ $(document).ready(function() {
         setSelectedClass(); // Set initial state
     }
     /*-----------------------------------------------------------------------------------*/
-    /*	STICKY HEADER
+    /*	STICKY HEADER (Vanilla JS - replaces Headhesive)
     /*-----------------------------------------------------------------------------------*/
-    if ($(".navbar").length) {
-        var options = {
-            offset: 350,
-            offsetSide: 'top',
-            classes: {
-                clone: 'banner--clone fixed',
-                stick: 'banner--stick',
-                unstick: 'banner--unstick'
-            },
-            onStick: function() {
-                $($.SmartMenus.Bootstrap.init);
-            },
-            onUnstick: function() {
-                $('.navbar .btn-group').removeClass('open');
+    (function() {
+        var navbar = document.querySelector('.navbar');
+        if (!navbar) return;
+
+        // Create sentinel at activation point (350px from top)
+        var sentinel = document.createElement('div');
+        sentinel.id = 'sticky-sentinel';
+        sentinel.style.cssText = 'position:absolute;top:350px;height:1px;width:100%;pointer-events:none;';
+        document.body.insertBefore(sentinel, document.body.firstChild);
+
+        // Clone navbar for sticky version
+        var clone = navbar.cloneNode(true);
+        clone.classList.add('banner--clone', 'fixed');
+        clone.classList.remove('absolute');
+        document.body.insertBefore(clone, document.body.firstChild);
+
+        // Initialize Bootstrap Collapse on cloned navbar (required for hamburger menu)
+        var cloneCollapse = clone.querySelector('.navbar-collapse');
+        if (cloneCollapse) {
+            new bootstrap.Collapse(cloneCollapse, { toggle: false });
+        }
+
+        // Observe sentinel for sticky activation
+        var stickyObserver = new IntersectionObserver(function(entries) {
+            var entry = entries[0];
+            if (!entry.isIntersecting) {
+                clone.classList.add('banner--stick');
+                clone.classList.remove('banner--unstick');
+            } else {
+                clone.classList.remove('banner--stick');
+                clone.classList.add('banner--unstick');
             }
-        };
-        var banner = new Headhesive('.navbar', options);
-    }
+        }, { threshold: 0 });
+
+        stickyObserver.observe(sentinel);
+
+        // Scroll direction detection for show/hide (NAV-03)
+        var lastScrollY = 0;
+        var ticking = false;
+
+        function onScroll() {
+            var currentScrollY = window.pageYOffset;
+
+            if (clone.classList.contains('banner--stick')) {
+                if (currentScrollY > lastScrollY && currentScrollY > 400) {
+                    clone.classList.add('banner--hidden');
+                } else {
+                    clone.classList.remove('banner--hidden');
+                }
+            }
+
+            lastScrollY = currentScrollY;
+            ticking = false;
+        }
+
+        window.addEventListener('scroll', function() {
+            if (!ticking) {
+                requestAnimationFrame(onScroll);
+                ticking = true;
+            }
+        }, { passive: true });
+    })();
     /*-----------------------------------------------------------------------------------*/
-    /*	HAMBURGER MENU ICON
+    /*	HAMBURGER MENU ICON (Vanilla JS - works on original and cloned navbar)
     /*-----------------------------------------------------------------------------------*/
-	$(".hamburger.animate").on( "click", function() {
-        $(".hamburger.animate").toggleClass("active");
-    });
-    $('.onepage .navbar .nav li a').on('click', function() {
-        $('.navbar .navbar-collapse.show').collapse('hide');
-        $('.hamburger.animate').removeClass('active');
+    document.addEventListener('click', function(e) {
+        // Toggle hamburger animation on both navbars
+        if (e.target.closest('.hamburger.animate')) {
+            document.querySelectorAll('.hamburger.animate').forEach(function(btn) {
+                btn.classList.toggle('active');
+            });
+        }
+
+        // Close mobile nav on link click (one-page sites)
+        if (e.target.closest('.onepage .navbar .nav li a')) {
+            document.querySelectorAll('.navbar .navbar-collapse.show').forEach(function(openNav) {
+                var collapse = bootstrap.Collapse.getInstance(openNav);
+                if (collapse) collapse.hide();
+            });
+            document.querySelectorAll('.hamburger.animate').forEach(function(btn) {
+                btn.classList.remove('active');
+            });
+        }
     });
     /*-----------------------------------------------------------------------------------*/
     /*	SWIPER
@@ -282,35 +338,10 @@ $(document).ready(function() {
 	/*-----------------------------------------------------------------------------------*/
     /*	ONEPAGE NAV LINKS
     /*-----------------------------------------------------------------------------------*/
-	var empty_a = $('.onepage .navbar ul.navbar-nav a[href="#"]');
-	empty_a.on('click', function(e) {
-	    e.preventDefault();
-	});
-    /*-----------------------------------------------------------------------------------*/
-	/*	ONEPAGE SMOOTH SCROLL
-	/*-----------------------------------------------------------------------------------*/
-	$(function() {
-	  setTimeout(function() {
-	    if (location.hash) {
-	      window.scrollTo(0, 0);
-	      var target = location.hash.split('#');
-	      smoothScrollTo($('#'+target[1]));
-	    }
-	  }, 1);
-	  $('a.scroll[href*=#]:not([href=#])').on('click', function() {
-	    if (location.pathname.replace(/^\//,'') == this.pathname.replace(/^\//,'') && location.hostname == this.hostname) {
-	      smoothScrollTo($(this.hash));
-	      return false;
-	    }
-	  });
-	  function smoothScrollTo(target) {
-	    var target = target.length ? target : $('[name=' + this.hash.slice(1) +']');
-
-	    if (target.length) {
-	      $('html,body').animate({
-	        scrollTop: target.offset().top
-	      }, 1500, 'easeInOutExpo');
-	    }
-	  }
-	});
+    var empty_a = document.querySelectorAll('.onepage .navbar ul.navbar-nav a[href="#"]');
+    empty_a.forEach(function(a) {
+        a.addEventListener('click', function(e) {
+            e.preventDefault();
+        });
+    });
 });
