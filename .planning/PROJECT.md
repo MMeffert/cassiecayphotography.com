@@ -8,10 +8,6 @@ A modern, fast, jQuery-free photography portfolio website. Static HTML/CSS/JS ho
 
 **The site must remain fast, secure, and easy for Cassie to update.** Everything else supports this goal.
 
-## Current Milestone: v2.3 (Planning)
-
-**Goal:** TBD - to be defined in next milestone planning session.
-
 ## Current State (v2.2 Shipped)
 
 **Production bundle:** ~389KB (33% reduction from baseline)
@@ -117,4 +113,4 @@ A modern, fast, jQuery-free photography portfolio website. Static HTML/CSS/JS ho
 | Shared offcanvas instance | Both navbars target same element, simpler state management | ✓ Good |
 
 ---
-*Last updated: 2026-01-21 after v2.2 milestone completion*
+*Last updated: 2026-01-21 after v2.2 milestone completion and contact form bug fix*

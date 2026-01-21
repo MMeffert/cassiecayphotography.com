@@ -5,15 +5,15 @@
 See: .planning/PROJECT.md (updated 2026-01-21)
 
 **Core value:** The site must remain fast, secure, and easy for Cassie to update.
-**Current focus:** Planning next milestone (v2.3+)
+**Current focus:** No active milestone - site stable
 
 ## Current Position
 
 Milestone: v2.2 complete
-Status: Ready to plan next milestone
-Last activity: 2026-01-21 — v2.2 milestone archived
+Status: Stable - no active development
+Last activity: 2026-01-21 — Fixed contact form (AWS Secrets Manager configuration)
 
-Next step: Run `/gsd:new-milestone` to start v2.3+
+Next step: Run `/gsd:new-milestone` when ready to add new features
 
 ## Milestones
 
@@ -43,6 +43,6 @@ None - ready for next milestone planning.
 ## Session Continuity
 
 Last session: 2026-01-21
-Stopped at: v2.2 milestone complete and archived
+Stopped at: Contact form bug fix (Secrets Manager configuration)
 Resume file: None
-Next step: Run `/gsd:new-milestone` to start v2.3+ (questioning → research → requirements → roadmap)
+Next step: Site is stable. Run `/gsd:new-milestone` when ready to add new features.
