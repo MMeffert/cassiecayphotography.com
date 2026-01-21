@@ -1,97 +1,144 @@
 # Requirements: Cassie Cay Photography
 
-## v1 Requirements
+**Defined:** 2026-01-19 (v1), Updated 2026-01-20 (v2.0)
+**Core Value:** The site must remain fast, secure, and easy for Cassie to update.
+
+## v1 Requirements (COMPLETE)
 
 ### Bug Fixes
-
-| ID | Requirement | Priority |
-|----|-------------|----------|
-| BUG-01 | Fix broken portfolio image link (`cassiecay-M4-fullpng` -> `cassiecay-M4-full.png`) | High |
-| BUG-02 | Fix duplicate `id="message"` elements in contact form HTML | Medium |
-| BUG-03 | Fix Revolution Slider pause-on-hover for full-page hero (should not pause when cursor over page) | Medium |
+- [x] **BUG-01**: Fix broken portfolio image link — Phase 1 ✓
+- [x] **BUG-02**: Fix duplicate `id="message"` elements — Phase 1 ✓
+- [x] **BUG-03**: Fix slider pause-on-hover — Phase 8 ✓
 
 ### Infrastructure & Security
-
-| ID | Requirement | Priority |
-|----|-------------|----------|
-| INFRA-01 | Complete domain migration (set `skipDomainSetup: false`, delete old CloudFront) | High |
-| INFRA-02 | Update CDK and npm dependencies to latest versions | Medium |
-| INFRA-03 | Remove legacy S3 bucket permission from GitHub OIDC role | Low |
-| INFRA-04 | Add dependency vulnerability scanning (Dependabot security alerts) | Medium |
+- [x] **INFRA-01**: Complete domain migration — Phase 1 ✓
+- [x] **INFRA-02**: Update CDK and npm dependencies — Phase 1 ✓
+- [x] **INFRA-03**: Remove legacy S3 bucket permission — Phase 1 ✓
+- [x] **INFRA-04**: Add dependency vulnerability scanning — Phase 1 ✓
 
 ### Automation & Build
-
-| ID | Requirement | Priority |
-|----|-------------|----------|
-| AUTO-01 | Add build step to bundle and minify CSS/JS | High |
-| AUTO-02 | Add HTML validation in CI (catch broken links, malformed tags before deploy) | Medium |
-| AUTO-03 | Add image validation in CI (missing files, oversized images) | Medium |
-| AUTO-04 | Add pre-commit hooks for local validation | Low |
-| AUTO-05 | Add deploy notifications (email when deploy succeeds/fails) | Medium |
-| AUTO-06 | Add Lighthouse performance check in CI pipeline | Low |
+- [x] **AUTO-01**: Add build step to bundle and minify CSS/JS — Phase 2 ✓
+- [x] **AUTO-02**: Add HTML validation in CI — Phase 4 ✓
+- [x] **AUTO-03**: Add image validation in CI — Phase 4 ✓
+- [x] **AUTO-04**: Add pre-commit hooks — Phase 6 ✓
+- [x] **AUTO-05**: Add deploy notifications — Phase 5 ✓
+- [x] **AUTO-06**: Add Lighthouse performance check — Phase 4 ✓
 
 ### Performance
-
-| ID | Requirement | Priority |
-|----|-------------|----------|
-| PERF-01 | Implement image optimization pipeline (compress existing images, convert to WebP/AVIF) | High |
-| PERF-02 | Add lazy loading for below-fold images | Medium |
-| PERF-03 | Reduce JavaScript bundle size | Medium |
+- [x] **PERF-01**: Implement image optimization pipeline — Phase 3 ✓
+- [x] **PERF-02**: Add lazy loading for below-fold images — Phase 3 ✓
+- [x] **PERF-03**: Reduce JavaScript bundle size — Phase 7 ✓
 
 ### Frontend Modernization
-
-| ID | Requirement | Priority |
-|----|-------------|----------|
-| FRONT-01 | Replace Revolution Slider (11MB) with lightweight alternative (Embla or similar) | Low |
-| FRONT-02 | Replace/update jQuery plugins with modern equivalents | Low |
-| FRONT-03 | Remove unused JavaScript files and code | Medium |
+- [x] **FRONT-01**: Replace Revolution Slider with Embla — Phase 8 ✓
+- [x] **FRONT-02**: Replace jQuery plugins with modern equivalents — Phase 8 ✓
+- [x] **FRONT-03**: Remove unused JavaScript files — Phase 7 ✓
 
 ### Workflow Improvements
+- [x] **WORK-02**: Provide clear deploy feedback — Phase 5 ✓
 
-| ID | Requirement | Priority |
-|----|-------------|----------|
-| WORK-01 | Implement folder-based image galleries (adding photos shouldn't require HTML editing) | Low |
-| WORK-02 | Provide clear deploy feedback for Cassie (notifications, status page, or similar) | Medium |
+**v1 Status:** 20/21 requirements complete (WORK-01 deferred to v2.1)
 
-## v2+ (Out of Scope)
+---
 
-- Full framework rewrite (React, Vue, etc.)
-- CMS or headless content management
-- Mobile app
-- E-commerce/payments
-- User authentication
+## v2.0 Requirements
+
+### Bootstrap 5 Migration
+
+- [ ] **BS5-01**: Update all `data-*` attributes to `data-bs-*` namespace
+- [ ] **BS5-02**: Rename Bootstrap CSS utility classes (`.ml-*` → `.ms-*`, `.mr-*` → `.me-*`, `.float-left` → `.float-start`, etc.)
+- [ ] **BS5-03**: Replace Bootstrap 4 JS bundle with Bootstrap 5.3.x
+- [ ] **BS5-04**: Verify navbar collapse/expand works correctly on mobile
+- [ ] **BS5-05**: Update any deprecated Bootstrap 4 components
+
+### Portfolio Grid Replacement
+
+- [ ] **PORT-01**: Replace Cubeportfolio with CSS Grid + vanilla JS filtering
+- [ ] **PORT-02**: Implement category filtering (all, wedding, portrait, etc.)
+- [ ] **PORT-03**: Maintain responsive grid layout across breakpoints
+- [ ] **PORT-04**: Integrate GLightbox with new portfolio grid
+- [ ] **PORT-05**: Add smooth filter transitions/animations
+- [ ] **PORT-06**: Implement masonry-style layout (variable height items)
+
+### Navigation & Sticky Header
+
+- [ ] **NAV-01**: Replace SmartMenus with Bootstrap 5 native navigation
+- [ ] **NAV-02**: Replace Headhesive with vanilla JS sticky header (IntersectionObserver)
+- [ ] **NAV-03**: Maintain sticky header show/hide on scroll behavior
+- [ ] **NAV-04**: Verify mobile hamburger menu functionality
+
+### Utility Scripts
+
+- [ ] **UTIL-01**: Replace scrollUp jQuery plugin with vanilla JS scroll-to-top
+- [ ] **UTIL-02**: Replace jQuery smooth scroll with native `scrollTo({ behavior: 'smooth' })`
+- [ ] **UTIL-03**: Remove jQuery Easing dependency (use CSS transitions or native easing)
+
+### Contact Form Migration
+
+- [ ] **FORM-01**: Convert jQuery `$.ajax()` to fetch API
+- [ ] **FORM-02**: Maintain reCAPTCHA v2 integration with fetch
+- [ ] **FORM-03**: Convert jQuery DOM selectors to `querySelector`/`querySelectorAll`
+- [ ] **FORM-04**: Maintain form validation and error display behavior
+
+### jQuery Removal
+
+- [ ] **JQ-01**: Remove jQuery 3.x from vendor scripts
+- [ ] **JQ-02**: Remove Popper.js v1 (Bootstrap 5 uses Popper v2 internally)
+- [ ] **JQ-03**: Update Vite config to remove jQuery external declaration
+- [ ] **JQ-04**: Verify no jQuery references remain in any scripts
+
+---
+
+## v2.1+ (Deferred)
+
+- **WORK-01**: Implement folder-based image galleries (deferred from v1)
+- Bootstrap 5 offcanvas mobile menu (enhancement)
+- Portfolio load-more pagination (if needed)
 - Dark mode toggle
-- Blurhash image placeholders
-- Infinite scroll galleries
+
+## Out of Scope
+
+| Feature | Reason |
+|---------|--------|
+| Full framework rewrite (React, Vue) | Static HTML structure works, Cassie edits in Dreamweaver |
+| CMS or headless content management | Too much complexity for use case |
+| Mobile app | Web-only |
+| E-commerce/payments | Booking handled externally via Appointy |
+| User authentication | Public portfolio site |
 
 ## Traceability
 
 | Requirement | Phase | Status |
 |-------------|-------|--------|
-| BUG-01 | Phase 1 | Complete ✓ |
-| BUG-02 | Phase 1 | Complete ✓ |
-| INFRA-01 | Phase 1 | Complete ✓ |
-| INFRA-02 | Phase 1 | Complete ✓ |
-| INFRA-03 | Phase 1 | Complete ✓ |
-| INFRA-04 | Phase 1 | Complete ✓ |
-| AUTO-01 | Phase 2 | Complete ✓ |
-| PERF-01 | Phase 3 | Complete ✓ |
-| PERF-02 | Phase 3 | Complete ✓ |
-| AUTO-02 | Phase 4 | Complete ✓ |
-| AUTO-03 | Phase 4 | Complete ✓ |
-| AUTO-06 | Phase 4 | Complete ✓ |
-| AUTO-05 | Phase 5 | Complete ✓ |
-| WORK-02 | Phase 5 | Complete ✓ |
-| AUTO-04 | Phase 6 | Complete ✓ |
-| PERF-03 | Phase 7 | Complete ✓ |
-| FRONT-03 | Phase 7 | Complete ✓ |
-| FRONT-01 | Phase 8 | Complete ✓ |
-| FRONT-02 | Phase 8 | Complete ✓ |
-| WORK-01 | Phase 9 | Pending |
-| BUG-03 | Phase 8 | Complete ✓ |
+| BS5-01 | Phase 10 | Pending |
+| BS5-02 | Phase 10 | Pending |
+| BS5-03 | Phase 10 | Pending |
+| BS5-04 | Phase 10 | Pending |
+| BS5-05 | Phase 10 | Pending |
+| PORT-01 | Phase 11 | Pending |
+| PORT-02 | Phase 11 | Pending |
+| PORT-03 | Phase 11 | Pending |
+| PORT-04 | Phase 11 | Pending |
+| PORT-05 | Phase 11 | Pending |
+| PORT-06 | Phase 11 | Pending |
+| NAV-01 | Phase 12 | Pending |
+| NAV-02 | Phase 12 | Pending |
+| NAV-03 | Phase 12 | Pending |
+| NAV-04 | Phase 12 | Pending |
+| UTIL-01 | Phase 13 | Pending |
+| UTIL-02 | Phase 13 | Pending |
+| UTIL-03 | Phase 13 | Pending |
+| FORM-01 | Phase 14 | Pending |
+| FORM-02 | Phase 14 | Pending |
+| FORM-03 | Phase 14 | Pending |
+| FORM-04 | Phase 14 | Pending |
+| JQ-01 | Phase 15 | Pending |
+| JQ-02 | Phase 15 | Pending |
+| JQ-03 | Phase 15 | Pending |
+| JQ-04 | Phase 15 | Pending |
 
-**Coverage:** 21/21 v1 requirements mapped to phases
+**v2.0 Coverage:** 24 requirements across 6 phases (Phases 10-15)
 
 ---
-*Requirements extracted: 2026-01-19*
-*Source: PROJECT.md Active Requirements*
+*Requirements defined: 2026-01-19*
+*Updated: 2026-01-20 for v2.0 jQuery removal milestone*
