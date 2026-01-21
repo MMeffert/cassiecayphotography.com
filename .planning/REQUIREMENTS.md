@@ -45,11 +45,11 @@
 
 ### Bootstrap 5 Migration
 
-- [ ] **BS5-01**: Update all `data-*` attributes to `data-bs-*` namespace
-- [ ] **BS5-02**: Rename Bootstrap CSS utility classes (`.ml-*` → `.ms-*`, `.mr-*` → `.me-*`, `.float-left` → `.float-start`, etc.)
-- [ ] **BS5-03**: Replace Bootstrap 4 JS bundle with Bootstrap 5.3.x
-- [ ] **BS5-04**: Verify navbar collapse/expand works correctly on mobile
-- [ ] **BS5-05**: Update any deprecated Bootstrap 4 components
+- [x] **BS5-01**: Update all `data-*` attributes to `data-bs-*` namespace — Phase 10 ✓
+- [x] **BS5-02**: Rename Bootstrap CSS utility classes (`.ml-*` → `.ms-*`, `.mr-*` → `.me-*`, `.float-left` → `.float-start`, etc.) — Phase 10 ✓
+- [x] **BS5-03**: Replace Bootstrap 4 JS bundle with Bootstrap 5.3.x — Phase 10 ✓
+- [x] **BS5-04**: Verify navbar collapse/expand works correctly on mobile — Phase 10 ✓
+- [x] **BS5-05**: Update any deprecated Bootstrap 4 components — Phase 10 ✓
 
 ### Portfolio Grid Replacement
 
@@ -110,11 +110,11 @@
 
 | Requirement | Phase | Status |
 |-------------|-------|--------|
-| BS5-01 | Phase 10 | Pending |
-| BS5-02 | Phase 10 | Pending |
-| BS5-03 | Phase 10 | Pending |
-| BS5-04 | Phase 10 | Pending |
-| BS5-05 | Phase 10 | Pending |
+| BS5-01 | Phase 10 | Complete ✓ |
+| BS5-02 | Phase 10 | Complete ✓ |
+| BS5-03 | Phase 10 | Complete ✓ |
+| BS5-04 | Phase 10 | Complete ✓ |
+| BS5-05 | Phase 10 | Complete ✓ |
 | PORT-01 | Phase 11 | Pending |
 | PORT-02 | Phase 11 | Pending |
 | PORT-03 | Phase 11 | Pending |
@@ -141,4 +141,4 @@
 
 ---
 *Requirements defined: 2026-01-19*
-*Updated: 2026-01-20 for v2.0 jQuery removal milestone*
+*Updated: 2026-01-20 — Phase 10 complete (5 requirements)*
