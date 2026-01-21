@@ -16,7 +16,7 @@
 **Plans:** 1 plan
 
 Plans:
-- [x] 10-01-PLAN.md — Migrate Bootstrap 4.4.1 to 5.3.x (data attributes, CSS classes, JS bundle) ✓
+- [x] 10-01-PLAN.md — Migrate Bootstrap 4.4.1 to 5.3.x (data attributes, CSS classes, JS bundle)
 
 **Success Criteria:**
 1. Navbar hamburger menu opens and closes on mobile devices
@@ -32,9 +32,16 @@ Plans:
 
 ### Phase 11: Portfolio Grid Replacement
 
-**Goal:** Portfolio displays and filters using CSS Grid + vanilla JS instead of Cubeportfolio
+**Goal:** Portfolio displays and filters using Muuri + vanilla JS instead of Cubeportfolio
 
 **Requirements:** PORT-01, PORT-02, PORT-03, PORT-04, PORT-05, PORT-06
+
+**Plans:** 3 plans
+
+Plans:
+- [ ] 11-01-PLAN.md — Add Muuri library and create portfolio grid CSS
+- [ ] 11-02-PLAN.md — Update HTML structure and implement Muuri filtering with GLightbox
+- [ ] 11-03-PLAN.md — Human verification and Cubeportfolio cleanup
 
 **Success Criteria:**
 1. User can filter portfolio by category (all, wedding, portrait, etc.) and images animate smoothly
@@ -44,7 +51,7 @@ Plans:
 
 **Dependencies:** Phase 10 (Bootstrap 5 utilities and grid system)
 
-**Notes:** Most complex phase. CSS Grid with flexbox fallback. May need Isotope (~25KB) if true masonry required.
+**Notes:** Using Muuri 0.9.5 (23.8KB) for masonry layout and filtering. Research confirmed native CSS masonry not production-ready until mid-2026.
 
 ---
 
@@ -123,8 +130,8 @@ Plans:
 
 | Phase | Name | Requirements | Status |
 |-------|------|--------------|--------|
-| 10 | Bootstrap 5 Migration | 5 | Complete ✓ |
-| 11 | Portfolio Grid Replacement | 6 | Pending |
+| 10 | Bootstrap 5 Migration | 5 | Complete |
+| 11 | Portfolio Grid Replacement | 6 | Planned |
 | 12 | Navigation & Sticky Header | 4 | Pending |
 | 13 | Utility Scripts Conversion | 3 | Pending |
 | 14 | Contact Form Migration | 4 | Pending |
@@ -154,3 +161,4 @@ All 24 v2.0 requirements mapped:
 
 *Roadmap created: 2026-01-20*
 *Phase 10 complete: 2026-01-20*
+*Phase 11 planned: 2026-01-21*
