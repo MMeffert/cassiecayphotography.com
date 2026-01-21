@@ -1,6 +1,6 @@
 # Milestone v2.1: SEO
 
-**Status:** In Progress
+**Status:** COMPLETE (2026-01-21)
 **Phases:** 16-19
 **Target:** Improve search engine discoverability through technical SEO and image optimization
 
@@ -88,27 +88,31 @@ Plans:
 
 ---
 
-### Phase 19: AI Alt Text Generation
+### Phase 19: AI Alt Text Generation ✓
 
-**Goal:** All 84 portfolio images have descriptive, SEO-optimized alt text
+**Goal:** All portfolio images have descriptive, SEO-optimized alt text
 
 **Depends on:** None (can run standalone, not in CI/CD)
 **Plans:** 1 plan
+**Status:** COMPLETE (2026-01-21)
+
+Plans:
+- [x] 19-01-PLAN.md — Generate alt text via Claude Vision and inject into HTML
 
 **Requirements:**
 - SEO-11: Alt text generation script
-- SEO-12: Generate for 84 images
+- SEO-12: Generate for portfolio images
 - SEO-13: Location/service keywords
 - SEO-14: HTML update
 
 **Success Criteria:**
-1. Script generates alt text for all 84 portfolio images
-2. Alt text includes location keywords (Madison, WI) and service type
-3. Alt text describes subjects (e.g., "Bride and groom first kiss at Madison Arboretum")
-4. All `alt=""` attributes in index.html updated with generated text
-5. No empty alt attributes on portfolio images
+1. Script generates alt text for all 76 portfolio images ✓
+2. Alt text includes location keywords (Madison, WI) and service type ✓
+3. Alt text describes subjects (e.g., "Joyful father carrying smiling toddler...") ✓
+4. All `alt=""` attributes in index.html updated with generated text ✓
+5. No empty alt attributes on portfolio images ✓ (8 non-portfolio excluded)
 
-**Notes:** Uses Claude Vision API via `@anthropic-ai/sdk`. One-time manual run, ~$0.29 cost. Outputs alt-text.json manifest for review before HTML injection.
+**Notes:** Uses Claude Vision API via ccproxy (OpenAI-compatible). One-time manual run. Outputs alt-text.json manifest with 76 entries.
 
 ---
 
@@ -133,7 +137,7 @@ Plans:
 
 **New Dependencies:**
 - `sitemap` v9.0.0 (Phase 18)
-- `@anthropic-ai/sdk` (Phase 19, dev dependency only)
+- `openai` v6.16.0 (Phase 19, for ccproxy compatibility)
 
 **Estimated Effort:**
 - Phase 16: 2-3 hours
