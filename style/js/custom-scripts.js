@@ -138,10 +138,18 @@ document.addEventListener('DOMContentLoaded', function() {
     /*	SWIPER
     /*-----------------------------------------------------------------------------------*/
     document.querySelectorAll('.basic-slider').forEach(function(element, index) {
-        element.querySelector('.swiper-container').classList.add('basic-slider-' + index);
-        element.querySelector('.swiper-button-prev').classList.add('btn-prev-' + index);
-        element.querySelector('.swiper-button-next').classList.add('btn-next-' + index);
-        element.querySelector('.swiper-pagination').classList.add('basic-slider-pagination-' + index);
+        var container = element.querySelector('.swiper-container');
+        var prevBtn = element.querySelector('.swiper-button-prev');
+        var nextBtn = element.querySelector('.swiper-button-next');
+        var pagination = element.querySelector('.swiper-pagination');
+
+        if (container) container.classList.add('basic-slider-' + index);
+        if (prevBtn) prevBtn.classList.add('btn-prev-' + index);
+        if (nextBtn) nextBtn.classList.add('btn-next-' + index);
+        if (pagination) pagination.classList.add('basic-slider-pagination-' + index);
+
+        if (!container) return; // Skip if no swiper container
+
         var swiper1 = new Swiper('.basic-slider-' + index, {
             slidesPerView: 1,
             spaceBetween: 0,
