@@ -314,4 +314,55 @@ $(document).ready(function() {
             e.preventDefault();
         });
     });
+    /*-----------------------------------------------------------------------------------*/
+    /*  SCROLL TO TOP (Vanilla JS - replaces scrollUp jQuery plugin)
+    /*-----------------------------------------------------------------------------------*/
+    (function() {
+        // Create scroll-to-top button element
+        var scrollUpBtn = document.createElement('div');
+        scrollUpBtn.id = 'scrollUp';
+        scrollUpBtn.innerHTML = '<a href="#" class="btn btn-circle btn-dark"><i class="fa fa-arrow-up"></i></a>';
+
+        // Set initial hidden state (positioning handled by CSS)
+        scrollUpBtn.style.opacity = '0';
+        scrollUpBtn.style.visibility = 'hidden';
+        scrollUpBtn.style.position = 'fixed';
+        scrollUpBtn.style.transition = 'opacity 300ms ease, visibility 300ms ease';
+        scrollUpBtn.style.zIndex = '9999';
+
+        // Create sentinel element for IntersectionObserver at 300px from top
+        var sentinel = document.createElement('div');
+        sentinel.id = 'scroll-up-sentinel';
+        sentinel.style.cssText = 'position:absolute;top:300px;height:1px;width:100%;pointer-events:none;';
+        document.body.insertBefore(sentinel, document.body.firstChild);
+
+        // Use IntersectionObserver to show/hide button
+        var scrollObserver = new IntersectionObserver(function(entries) {
+            var entry = entries[0];
+            if (!entry.isIntersecting) {
+                // Scrolled past 300px - show button
+                scrollUpBtn.style.opacity = '1';
+                scrollUpBtn.style.visibility = 'visible';
+            } else {
+                // Near top - hide button
+                scrollUpBtn.style.opacity = '0';
+                scrollUpBtn.style.visibility = 'hidden';
+            }
+        }, { threshold: 0 });
+
+        scrollObserver.observe(sentinel);
+
+        // Add click handler with accessibility support
+        scrollUpBtn.addEventListener('click', function(e) {
+            e.preventDefault();
+            var prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+            window.scrollTo({
+                top: 0,
+                behavior: prefersReducedMotion ? 'instant' : 'smooth'
+            });
+        });
+
+        // Append button to body
+        document.body.appendChild(scrollUpBtn);
+    })();
 });
