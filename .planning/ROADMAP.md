@@ -107,6 +107,11 @@ Plans:
 
 **Requirements:** FORM-01, FORM-02, FORM-03, FORM-04
 
+**Plans:** 1 plan
+
+Plans:
+- [ ] 14-01-PLAN.md — Convert submitToAPI() from jQuery AJAX to fetch API
+
 **Success Criteria:**
 1. User can submit contact form and receives success/error feedback
 2. Form validation prevents submission of incomplete/invalid data
@@ -145,7 +150,7 @@ Plans:
 | 11 | Portfolio Grid Replacement | 6 | Complete |
 | 12 | Navigation & Sticky Header | 4 | Complete |
 | 13 | Utility Scripts Conversion | 3 | Complete |
-| 14 | Contact Form Migration | 4 | Pending |
+| 14 | Contact Form Migration | 4 | Planned |
 | 15 | jQuery Removal & Cleanup | 4 | Pending |
 
 **Total:** 24 requirements across 6 phases
