@@ -9,19 +9,19 @@ See: .planning/PROJECT.md (updated 2026-01-20)
 
 ## Current Position
 
-Phase: 14 - Contact Form Migration (COMPLETE)
-Plan: 01 of 1 complete
-Status: Phase complete
-Last activity: 2026-01-21 — Completed 14-01-PLAN.md (Contact form fetch API migration)
+Phase: 15 - jQuery Removal & Cleanup (IN PROGRESS)
+Plan: 01 of 2 complete
+Status: In progress
+Last activity: 2026-01-21 — Completed 15-01-PLAN.md (jQuery pattern conversion)
 
-Progress: [████████████░░░░░░░░] 4/6 phases
+Progress: [█████████████████░░░] 5/6 phases
 
 ## Performance Metrics
 
 **Velocity:**
-- Total plans completed: 27
+- Total plans completed: 28
 - Average duration: 5 min
-- Total execution time: 125 min
+- Total execution time: 126 min
 
 **By Phase:**
 
@@ -40,10 +40,11 @@ Progress: [████████████░░░░░░░░] 4/6 pha
 | 12-navigation-sticky-header | 2 | 7 min | 3.5 min |
 | 13-utility-scripts-conversion | 1 | 1 min | 1 min |
 | 14-contact-form-migration | 1 | 4 min | 4 min |
+| 15-jquery-removal-cleanup | 1 | 1 min | 1 min |
 
 **Recent Trend:**
-- Last 5 plans: 12-01 (3 min), 12-02 (4 min), 13-01 (1 min), 14-01 (4 min)
-- Trend: Phase 14 complete. Contact form converted from jQuery AJAX to vanilla JS fetch API with Constraint Validation API.
+- Last 5 plans: 12-02 (4 min), 13-01 (1 min), 14-01 (4 min), 15-01 (1 min)
+- Trend: Phase 15 started. Converted all 7 jQuery patterns in custom-scripts.js to vanilla JavaScript.
 
 *Updated after each plan completion*
 
@@ -108,6 +109,9 @@ Recent decisions affecting current work:
 | 14-01 | Constraint Validation API over alert() | Browser-native validation with better UX and accessibility |
 | 14-01 | fetch with response.ok check | fetch doesn't reject on HTTP errors - must explicitly check |
 | 14-01 | form.reset() over individual clears | Cleaner, more maintainable than clearing 4 fields |
+| 15-01 | dataset.imageSrc (camelCase) for data attributes | Standard dataset API for data-image-src attribute |
+| 15-01 | offsetHeight for jQuery outerHeight() | Includes padding and border, exact equivalent |
+| 15-01 | insertAdjacentHTML('afterbegin') for prepend | Direct equivalent to jQuery prepend() |
 
 ### Pending Todos
 
@@ -127,6 +131,6 @@ From research - critical pitfalls to monitor during v2.0:
 ## Session Continuity
 
 Last session: 2026-01-21
-Stopped at: Completed 14-01-PLAN.md (Contact form fetch API migration)
+Stopped at: Completed 15-01-PLAN.md (jQuery pattern conversion)
 Resume file: None
-Next step: Phase 15 (jQuery removal) - final phase of v2.0 migration
+Next step: 15-02-PLAN.md (Remove jQuery script tag and verify site works)
