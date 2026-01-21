@@ -885,6 +885,11 @@ img.octagon {
     transform: translateY(0%);
     background: rgba(255, 255, 255, 0.9)
 }
+.banner--clone.banner--hidden {
+    -webkit-transform: translateY(-100%);
+    -ms-transform: translateY(-100%);
+    transform: translateY(-100%);
+}
 .navbar.nav-wrapper-dark {
     background: #151515;
 }
@@ -6133,4 +6138,17 @@ list-blue i {
   .modal-dialog {
     max-width: 1140px;
   }
+}
+/*-----------------------------------------------------------------------------------*/
+/*	SMOOTH SCROLLING (replaces jQuery animate)
+/*-----------------------------------------------------------------------------------*/
+@media (prefers-reduced-motion: no-preference) {
+    html {
+        scroll-behavior: smooth;
+    }
+}
+
+/* Offset for fixed header on anchor targets */
+section[id] {
+    scroll-margin-top: 68px;
 }
