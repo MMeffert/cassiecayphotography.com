@@ -69,9 +69,9 @@
 
 ### Utility Scripts
 
-- [ ] **UTIL-01**: Replace scrollUp jQuery plugin with vanilla JS scroll-to-top
-- [ ] **UTIL-02**: Replace jQuery smooth scroll with native `scrollTo({ behavior: 'smooth' })`
-- [ ] **UTIL-03**: Remove jQuery Easing dependency (use CSS transitions or native easing)
+- [x] **UTIL-01**: Replace scrollUp jQuery plugin with vanilla JS scroll-to-top — Phase 13 ✓
+- [x] **UTIL-02**: Replace jQuery smooth scroll with native `scrollTo({ behavior: 'smooth' })` — Phase 12 ✓
+- [x] **UTIL-03**: Remove jQuery Easing dependency (use CSS transitions or native easing) — Phase 12 ✓
 
 ### Contact Form Migration
 
@@ -125,9 +125,9 @@
 | NAV-02 | Phase 12 | Complete ✓ |
 | NAV-03 | Phase 12 | Complete ✓ |
 | NAV-04 | Phase 12 | Complete ✓ |
-| UTIL-01 | Phase 13 | Pending |
-| UTIL-02 | Phase 13 | Pending |
-| UTIL-03 | Phase 13 | Pending |
+| UTIL-01 | Phase 13 | Complete ✓ |
+| UTIL-02 | Phase 12 | Complete ✓ |
+| UTIL-03 | Phase 12 | Complete ✓ |
 | FORM-01 | Phase 14 | Pending |
 | FORM-02 | Phase 14 | Pending |
 | FORM-03 | Phase 14 | Pending |
@@ -144,3 +144,4 @@
 *Updated: 2026-01-20 — Phase 10 complete (5 requirements)*
 *Updated: 2026-01-21 — Phase 11 complete (6 requirements)*
 *Updated: 2026-01-21 — Phase 12 complete (4 requirements)*
+*Updated: 2026-01-21 — Phase 13 complete (3 requirements, 2 completed in Phase 12)*

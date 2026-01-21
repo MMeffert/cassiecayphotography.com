@@ -88,7 +88,7 @@ Plans:
 **Plans:** 1 plan
 
 Plans:
-- [ ] 13-01-PLAN.md — Implement vanilla JS scroll-to-top button (UTIL-01)
+- [x] 13-01-PLAN.md — Implement vanilla JS scroll-to-top button (UTIL-01) ✓
 
 **Success Criteria:**
 1. Scroll-to-top button appears when page is scrolled and scrolls smoothly to top when clicked
@@ -144,7 +144,7 @@ Plans:
 | 10 | Bootstrap 5 Migration | 5 | Complete |
 | 11 | Portfolio Grid Replacement | 6 | Complete |
 | 12 | Navigation & Sticky Header | 4 | Complete |
-| 13 | Utility Scripts Conversion | 3 | Pending |
+| 13 | Utility Scripts Conversion | 3 | Complete |
 | 14 | Contact Form Migration | 4 | Pending |
 | 15 | jQuery Removal & Cleanup | 4 | Pending |
 
@@ -174,3 +174,4 @@ All 24 v2.0 requirements mapped:
 *Phase 10 complete: 2026-01-20*
 *Phase 11 complete: 2026-01-21*
 *Phase 12 complete: 2026-01-21*
+*Phase 13 complete: 2026-01-21*
