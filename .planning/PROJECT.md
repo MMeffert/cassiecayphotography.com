@@ -49,12 +49,13 @@ A modern, fast, jQuery-free photography portfolio website. Static HTML/CSS/JS ho
 
 ### Active
 
-**v2.1 — SEO:**
-- [ ] Add structured data (JSON-LD) for LocalBusiness and Photographer schemas
-- [ ] Complete Open Graph meta tags (add og:image)
-- [ ] Add Twitter card meta tags
-- [ ] AI-assisted alt text for portfolio images
-- [ ] Generate image sitemap
+**v2.1 — SEO (14 requirements):**
+- [ ] SEO-01 to SEO-04: JSON-LD schemas (LocalBusiness, Photographer, ImageGallery)
+- [ ] SEO-05 to SEO-06: Social meta tags (og:image, Twitter Cards)
+- [ ] SEO-07 to SEO-10: Image sitemap generation
+- [ ] SEO-11 to SEO-14: AI alt text for 84 portfolio images
+
+See `.planning/REQUIREMENTS.md` for full specification.
 
 **Deferred to v2.2+:**
 - [ ] Implement folder-based image galleries (WORK-01 from v1)

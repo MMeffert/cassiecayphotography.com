@@ -9,12 +9,12 @@ See: .planning/PROJECT.md (updated 2026-01-21)
 
 ## Current Position
 
-Phase: Not started (defining requirements)
-Plan: —
-Status: Defining requirements
-Last activity: 2026-01-21 — Milestone v2.1 started
+Phase: 16 (Structured Data)
+Plan: Not started
+Status: Ready to plan Phase 16
+Last activity: 2026-01-21 — Roadmap created
 
-Progress: Defining requirements
+Progress: Roadmap complete, 14 requirements across 4 phases (16-19)
 
 ## Milestones
 
@@ -38,13 +38,13 @@ Full decision log archived in phase SUMMARY.md files.
 
 ### SEO Current State
 
-Discovered during milestone scoping:
-- Meta description and OG tags already present
-- 84 portfolio images have empty alt text (needs AI-assisted generation)
-- Sitemap only lists homepage (no images)
-- No structured data (JSON-LD)
-- No Twitter card meta tags
-- og:image missing
+Baseline (discovered during research):
+- ✓ Meta description and OG tags present (partial)
+- ✗ 84 portfolio images have empty alt text → Phase 19
+- ✗ Sitemap only lists homepage (no images) → Phase 18
+- ✗ No structured data (JSON-LD) → Phase 16
+- ✗ No Twitter card meta tags → Phase 17
+- ✗ og:image missing → Phase 17
 
 ### Deferred Features (v2.2+)
 
@@ -55,6 +55,6 @@ Discovered during milestone scoping:
 ## Session Continuity
 
 Last session: 2026-01-21
-Stopped at: Defining v2.1 requirements
+Stopped at: Roadmap complete
 Resume file: None
-Next step: Complete requirements definition, create roadmap
+Next step: Plan and execute Phase 16 (Structured Data)
