@@ -10,18 +10,18 @@ See: .planning/PROJECT.md (updated 2026-01-20)
 ## Current Position
 
 Phase: 11 - Portfolio Grid Replacement
-Plan: 01 of 3 complete
+Plan: 02 of 3 complete
 Status: In progress
-Last activity: 2026-01-21 — Completed 11-01-PLAN.md (Muuri library and CSS)
+Last activity: 2026-01-21 — Completed 11-02-PLAN.md (HTML structure and Muuri integration)
 
 Progress: [████░░░░░░░░░░░░░░░░] 2/6 phases
 
 ## Performance Metrics
 
 **Velocity:**
-- Total plans completed: 21
+- Total plans completed: 22
 - Average duration: 5 min
-- Total execution time: 103 min
+- Total execution time: 111 min
 
 **By Phase:**
 
@@ -36,11 +36,11 @@ Progress: [████░░░░░░░░░░░░░░░░] 2/6 pha
 | 07-javascript-cleanup | 1 | 8 min | 8 min |
 | 08-library-modernization | 3 | 22 min | 7 min |
 | 10-bootstrap-5-migration | 1 | 8 min | 8 min |
-| 11-portfolio-grid-replacement | 1 | 2 min | 2 min |
+| 11-portfolio-grid-replacement | 2 | 10 min | 5 min |
 
 **Recent Trend:**
-- Last 5 plans: 08-02 (3 min), 08-03 (15 min), 10-01 (8 min), 11-01 (2 min)
-- Trend: Phase 11 started - Muuri library and CSS foundation complete
+- Last 5 plans: 08-03 (15 min), 10-01 (8 min), 11-01 (2 min), 11-02 (8 min)
+- Trend: Phase 11 HTML and JS migration complete, ready for human verification
 
 *Updated after each plan completion*
 
@@ -91,6 +91,9 @@ Recent decisions affecting current work:
 | 10-01 | Bootstrap bundle instead of separate files | Combines Bootstrap JS with Popper v2, simplifies script management |
 | 10-01 | Guard SmartMenus keydown handler | Check $.fn.dropdown exists before calling Bootstrap jQuery method |
 | 11-01 | Muuri 0.9.5 | Latest stable version with vanilla JS, no dependencies |
+| 11-02 | View Transitions API as progressive enhancement | Smoother filter animations on supporting browsers |
+| 11-02 | 50ms delay before lightbox reload | Ensures DOM updates complete before GLightbox scans |
+| 11-02 | portfolio-item-content wrapper | Required for Muuri's item structure |
 
 ### Pending Todos
 
@@ -103,13 +106,13 @@ From research - critical pitfalls to monitor during v2.0:
 - ~~**Bootstrap data-* namespace**: `data-toggle` must become `data-bs-toggle`. Silent failure with no console errors.~~ RESOLVED in 10-01
 - ~~**Bootstrap CSS class renames**: `.ml-*` to `.ms-*`, `.text-left` to `.text-start`. Audit all classes before migration.~~ RESOLVED in 10-01
 - **Contact form AJAX migration**: 18 jQuery calls including `$.ajax()` must convert to fetch API.
-- **Cubeportfolio replacement complexity**: Must replicate filtering, responsive columns, and GLightbox integration. IN PROGRESS - Muuri foundation laid in 11-01
+- ~~**Cubeportfolio replacement complexity**: Must replicate filtering, responsive columns, and GLightbox integration.~~ RESOLVED in 11-02 - Muuri integration complete with filtering and GLightbox reload
 - **Sticky header SmartMenus callback**: Headhesive's `onStick` callback currently initializes SmartMenus - must remove.
 - **Dreamweaver workflow**: Build step must enhance, not replace HTML editing.
 
 ## Session Continuity
 
 Last session: 2026-01-21
-Stopped at: Completed 11-01-PLAN.md (Muuri library and CSS)
+Stopped at: Completed 11-02-PLAN.md (HTML structure and Muuri integration)
 Resume file: None
-Next step: Execute 11-02-PLAN.md (Update HTML structure)
+Next step: Execute 11-03-PLAN.md (Human verification and Cubeportfolio removal)
