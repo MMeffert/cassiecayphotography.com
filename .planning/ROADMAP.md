@@ -2,7 +2,7 @@
 
 **Status:** In Progress
 **Phases:** 20
-**Total Plans:** TBD
+**Total Plans:** 1
 
 ## Overview
 
@@ -14,7 +14,10 @@ Modernize the mobile navigation by replacing Bootstrap 5's navbar collapse compo
 
 **Goal:** Mobile users access navigation via smooth slide-in drawer from left side
 **Depends on:** None (modifies existing navbar)
-**Plans:** TBD
+**Plans:** 1 plan
+
+Plans:
+- [ ] 20-01-PLAN.md — Replace navbar collapse with offcanvas drawer
 
 **Requirements:**
 - NAV-01: Replace navbar collapse with offcanvas component (slide from left)
@@ -32,7 +35,7 @@ Modernize the mobile navigation by replacing Bootstrap 5's navbar collapse compo
 5. Clicking any navigation link navigates to section and automatically closes menu
 6. Sticky header clone also uses offcanvas (both navbars share same behavior)
 7. Offcanvas animations are smooth with Bootstrap default transitions
-8. Desktop navigation (≥992px) remains unchanged with horizontal navbar
+8. Desktop navigation (>=992px) remains unchanged with horizontal navbar
 9. No JavaScript errors on offcanvas open/close
 10. Hamburger icon animates (active state) when offcanvas is visible
 
