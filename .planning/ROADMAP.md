@@ -61,6 +61,12 @@ Plans:
 
 **Requirements:** NAV-01, NAV-02, NAV-03, NAV-04
 
+**Plans:** 2 plans
+
+Plans:
+- [ ] 12-01-PLAN.md — Implement vanilla JS sticky header and CSS smooth scroll
+- [ ] 12-02-PLAN.md — Remove obsolete plugins and verify navigation functionality
+
 **Success Criteria:**
 1. Sticky header appears after scrolling past hero section (~350px)
 2. Header hides when scrolling down, shows when scrolling up
