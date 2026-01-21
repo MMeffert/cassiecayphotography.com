@@ -1,0 +1,204 @@
+/*-------------------------------------------------------------------------------------
+  Portfolio Grid CSS - Muuri-based layout
+  Replaces Cubeportfolio with responsive 4/3/2/1 column layout
+-------------------------------------------------------------------------------------*/
+
+/*-----------------------------------------------------------------------------------
+  Portfolio Grid Container
+-----------------------------------------------------------------------------------*/
+#portfolio-grid {
+  position: relative;
+}
+
+/*-----------------------------------------------------------------------------------
+  Portfolio Items - Muuri requires absolute positioning
+-----------------------------------------------------------------------------------*/
+.portfolio-item {
+  position: absolute;
+  width: calc(25% - 0px);
+  display: block;
+  z-index: 1;
+}
+
+.portfolio-item-content {
+  position: relative;
+  width: 100%;
+}
+
+/*-----------------------------------------------------------------------------------
+  Portfolio Item Images
+-----------------------------------------------------------------------------------*/
+.portfolio-item img {
+  max-width: 100%;
+  display: block;
+}
+
+/*-----------------------------------------------------------------------------------
+  Responsive Breakpoints - Match Cubeportfolio configuration
+-----------------------------------------------------------------------------------*/
+
+/* 1440px+ : 4 columns (25%) */
+@media (min-width: 1440px) {
+  .portfolio-item {
+    width: calc(25% - 0px);
+  }
+}
+
+/* 1024-1439px: 4 columns (25%) */
+@media (min-width: 1024px) and (max-width: 1439px) {
+  .portfolio-item {
+    width: calc(25% - 0px);
+  }
+}
+
+/* 768-1023px: 3 columns (33.333%) */
+@media (min-width: 768px) and (max-width: 1023px) {
+  .portfolio-item {
+    width: calc(33.333% - 0px);
+  }
+}
+
+/* 575-767px: 2 columns (50%) */
+@media (min-width: 575px) and (max-width: 767px) {
+  .portfolio-item {
+    width: calc(50% - 0px);
+  }
+}
+
+/* 320-574px: 1 column (100%) */
+@media (min-width: 320px) and (max-width: 574px) {
+  .portfolio-item {
+    width: 100%;
+  }
+}
+
+/* Below 320px: 1 column (100%) */
+@media (max-width: 319px) {
+  .portfolio-item {
+    width: 100%;
+  }
+}
+
+/*-----------------------------------------------------------------------------------
+  Filter Buttons - Match existing .cbp-filter-item styles
+-----------------------------------------------------------------------------------*/
+.portfolio-filter-container {
+  position: relative;
+  z-index: 2;
+  font-size: 0;
+  line-height: 0;
+  margin-bottom: 0;
+}
+
+.filter-btn {
+  display: inline-block;
+  font-size: 13px;
+  font-family: 'Montserrat', sans-serif;
+  letter-spacing: 0;
+  text-transform: uppercase;
+  color: #888;
+  font-weight: 700;
+  line-height: 1;
+  padding: 0;
+  margin: 0 20px 10px 0;
+  -webkit-transition: all 200ms ease-in-out;
+  -o-transition: all 200ms ease-in-out;
+  transition: all 200ms ease-in-out;
+  cursor: pointer;
+  background: none;
+  border: none;
+}
+
+/* Right-aligned filter buttons */
+.text-right .filter-btn,
+.text-md-right .filter-btn {
+  margin: 0 0 0 20px;
+}
+
+/* Center-aligned filter buttons */
+.text-center .filter-btn {
+  margin: 0 10px 10px;
+}
+
+/* Active and hover states */
+.filter-btn.active,
+.filter-btn:hover {
+  color: #4c86e5;
+}
+
+/* Separator dot after each button (except last) */
+.filter-btn:after {
+  content: "";
+  vertical-align: 3px;
+  margin: 0;
+  display: inline-block;
+  width: 3px;
+  height: 3px;
+  margin-left: 17px;
+  border-radius: 50%;
+  background-color: rgba(21, 21, 21, 0.25);
+}
+
+.filter-btn:last-child:after {
+  display: none;
+}
+
+/*-----------------------------------------------------------------------------------
+  Inverse Text (Dark Wrapper) - Filter button styles
+-----------------------------------------------------------------------------------*/
+.inverse-text .filter-btn:not(.active) {
+  color: #FFF !important;
+}
+
+.inverse-text .filter-btn:hover {
+  color: #4c86e5 !important;
+}
+
+.inverse-text .filter-btn:after {
+  background-color: rgba(255, 255, 255, 0.3);
+}
+
+/*-----------------------------------------------------------------------------------
+  Muuri Animation Classes
+-----------------------------------------------------------------------------------*/
+.portfolio-item--visible {
+  opacity: 1;
+  -webkit-transform: scale(1);
+  -ms-transform: scale(1);
+  transform: scale(1);
+}
+
+.portfolio-item--hidden {
+  opacity: 0;
+  -webkit-transform: scale(0.5);
+  -ms-transform: scale(0.5);
+  transform: scale(0.5);
+}
+
+.portfolio-item--positioning {
+  z-index: 2;
+}
+
+.portfolio-item--dragging {
+  z-index: 3;
+}
+
+.portfolio-item--releasing {
+  z-index: 2;
+}
+
+/* Transition for show/hide animations */
+.portfolio-item {
+  -webkit-transition: opacity 300ms ease, -webkit-transform 300ms ease;
+  transition: opacity 300ms ease, -webkit-transform 300ms ease;
+  -o-transition: opacity 300ms ease, -o-transform 300ms ease;
+  transition: opacity 300ms ease, transform 300ms ease;
+  transition: opacity 300ms ease, transform 300ms ease, -webkit-transform 300ms ease, -o-transform 300ms ease;
+}
+
+/* Disable transitions during Muuri layout for smoother positioning */
+.portfolio-item.muuri-item-positioning {
+  -webkit-transition: none;
+  -o-transition: none;
+  transition: none;
+}

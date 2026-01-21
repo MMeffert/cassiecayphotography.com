@@ -19,10 +19,10 @@ export default defineConfig({
       // Keep vendor JS files external - loaded via script tags
       external: [
         /^style\/js\/jquery\.min\.js$/,
-        /^style\/js\/bootstrap\.min\.js$/,
-        /^style\/js\/popper\.min\.js$/,
+        /^style\/js\/bootstrap\.bundle\.min\.js$/,
         /^style\/js\/embla-carousel\.umd\.js$/,
         /^style\/js\/embla-carousel-autoplay\.umd\.js$/,
+        /^style\/js\/muuri\.min\.js$/,
       ],
 
       output: {
@@ -42,11 +42,11 @@ export default defineConfig({
           dest: 'style/js'
         },
         {
-          src: 'style/js/popper.min.js',
+          src: 'style/js/bootstrap.bundle.min.js',
           dest: 'style/js'
         },
         {
-          src: 'style/js/bootstrap.min.js',
+          src: 'style/js/muuri.min.js',
           dest: 'style/js'
         },
         // Copy Embla Carousel (Phase 8 - replaced Revolution Slider)
