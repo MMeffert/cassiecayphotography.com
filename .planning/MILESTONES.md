@@ -1,5 +1,35 @@
 # Project Milestones: Cassie Cay Photography
 
+## v2.1 SEO (Shipped: 2026-01-21)
+
+**Delivered:** Technical SEO improvements with structured data, social sharing meta tags, image sitemap, and AI-generated alt text for all portfolio images.
+
+**Phases completed:** 16-19 (4 plans total)
+
+**Key accomplishments:**
+
+- Added JSON-LD structured data (LocalBusiness + Photographer schemas with Madison, WI coordinates)
+- Added ImageGallery schema referencing portfolio images for rich results
+- Implemented Twitter Card and Open Graph meta tags for social sharing previews
+- Created build-time image sitemap generation with 100 portfolio images
+- Generated AI alt text for 76 portfolio images using Claude Vision API
+- All alt text includes location keywords (Madison, Wisconsin) and photography category
+
+**Stats:**
+
+- 19 files created/modified
+- ~3,000 lines changed
+- 4 phases, 4 plans, 14 commits
+- 1 day (2026-01-21)
+
+**Requirements satisfied:** 14/14 (SEO-01 through SEO-14)
+
+**Git range:** `feat(16-01)` → `docs(v2.1)`
+
+**What's next:** v2.2+ features (folder-based galleries, offcanvas mobile menu, dark mode)
+
+---
+
 ## v2.0 jQuery Removal & Bootstrap 5 Migration (Shipped: 2026-01-21)
 
 **Delivered:** Complete jQuery removal with Bootstrap 5 migration, reducing bundle size by 33% (~190KB) while maintaining all site functionality.
@@ -57,4 +87,4 @@
 
 ---
 
-*Last updated: 2026-01-21*
+*Last updated: 2026-01-21 (v2.1 shipped)*

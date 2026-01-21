@@ -8,22 +8,18 @@ A modern, fast, jQuery-free photography portfolio website. Static HTML/CSS/JS ho
 
 **The site must remain fast, secure, and easy for Cassie to update.** Everything else supports this goal.
 
-## Current Milestone: v2.1 SEO
-
-**Goal:** Improve search engine discoverability through technical SEO and image optimization.
-
-**Target features:**
-- Structured data (JSON-LD) for LocalBusiness + Photographer schemas
-- Complete Open Graph and Twitter card meta tags
-- AI-assisted alt text for 84 portfolio images
-- Image sitemap for better indexing
-
-## Current State (v2.0 Shipped)
+## Current State (v2.1 Shipped)
 
 **Production bundle:** ~389KB (33% reduction from baseline)
 **Tech stack:** Bootstrap 5.3.3, Muuri, Embla Carousel, GLightbox, vanilla JS
 **Infrastructure:** CDK-managed S3/CloudFront, GitHub Actions CI/CD (OIDC)
 **Dependencies eliminated:** jQuery, Cubeportfolio, SmartMenus, Headhesive, Revolution Slider
+
+**SEO features (v2.1):**
+- JSON-LD structured data (LocalBusiness + Photographer + ImageGallery schemas)
+- Twitter Card and Open Graph meta tags for social sharing
+- Image sitemap with 100 portfolio images
+- AI-generated alt text for 76 portfolio images
 
 ## Requirements
 
@@ -47,17 +43,15 @@ A modern, fast, jQuery-free photography portfolio website. Static HTML/CSS/JS ho
 - ✓ Replace scrollUp with vanilla JS scroll-to-top — v2.0
 - ✓ Remove jQuery entirely from the build — v2.0
 
+**v2.1 — SEO:**
+- ✓ SEO-01 to SEO-04: JSON-LD schemas (LocalBusiness, Photographer, ImageGallery) — v2.1
+- ✓ SEO-05 to SEO-06: Social meta tags (og:image, Twitter Cards) — v2.1
+- ✓ SEO-07 to SEO-10: Image sitemap generation (100 images) — v2.1
+- ✓ SEO-11 to SEO-14: AI alt text for 76 portfolio images — v2.1
+
 ### Active
 
-**v2.1 — SEO (14 requirements):**
-- [ ] SEO-01 to SEO-04: JSON-LD schemas (LocalBusiness, Photographer, ImageGallery)
-- [ ] SEO-05 to SEO-06: Social meta tags (og:image, Twitter Cards)
-- [ ] SEO-07 to SEO-10: Image sitemap generation
-- [ ] SEO-11 to SEO-14: AI alt text for 84 portfolio images
-
-See `.planning/REQUIREMENTS.md` for full specification.
-
-**Deferred to v2.2+:**
+**v2.2+ — Planned features:**
 - [ ] Implement folder-based image galleries (WORK-01 from v1)
 - [ ] Bootstrap 5 offcanvas mobile menu
 - [ ] Dark mode toggle
@@ -109,7 +103,10 @@ See `.planning/REQUIREMENTS.md` for full specification.
 | Remove jQuery entirely | ~95KB savings, vanilla JS for everything | ✓ Good |
 | Vanilla JS sticky header | IntersectionObserver + CSS, no plugin dependencies | ✓ Good |
 | Fetch API for contact form | Native browser API, no jQuery AJAX needed | ✓ Good |
-| Folder-based galleries | Reduces HTML editing for common task | — Deferred to v2.1 |
+| Folder-based galleries | Reduces HTML editing for common task | — Deferred to v2.2 |
+| additionalType for Photographer | Per Google recommendation, simpler than nested schema | ✓ Good |
+| ccproxy for Claude Vision | Uses existing infrastructure for AI alt text generation | ✓ Good |
+| Image sitemap with postbuild | Automatically regenerates on every build | ✓ Good |
 
 ---
-*Last updated: 2026-01-21 after v2.1 milestone start*
+*Last updated: 2026-01-21 after v2.1 milestone shipped*
