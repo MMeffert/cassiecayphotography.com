@@ -1,610 +1,801 @@
-# Architecture Research: jQuery Removal Migration
+# Architecture Research: SEO Integration for Vite Static Site
 
-**Project:** Cassie Cay Photography v2.0
-**Researched:** 2026-01-20
-**Confidence:** HIGH (verified via official documentation and code analysis)
+**Project:** Cassie Cay Photography - SEO Milestone
+**Researched:** 2026-01-21
+**Confidence:** HIGH
 
 ## Executive Summary
 
-The jQuery removal and Bootstrap 5 migration integrates cleanly with the existing static HTML + Vite architecture. The migration should follow an **incremental approach** with jQuery as a bridge during transition, replacing dependencies one by one. The existing Vite build system requires minimal changes--primarily updating static copy targets and removing jQuery from external files. The Dreamweaver workflow is preserved since changes affect only script references, not HTML content structure.
+SEO features for this Vite-built photography portfolio integrate through three architectural approaches: inline JSON-LD for structured data, build-time script generation for image sitemaps, and static/dynamic meta tag injection. The existing architecture (single HTML file, Vite build, S3 hosting) supports all SEO features without major structural changes.
 
-## Migration Strategy
+**Key Architectural Decision:** All SEO features can be implemented incrementally without disrupting existing build process. Structured data goes inline, sitemap generation extends build scripts, meta tags remain static (already present).
 
-**Recommendation: Incremental migration with jQuery bridge**
+---
 
-**Rationale:** Big-bang migration risks breaking the entire site if any component fails. Incremental migration allows:
-1. Testing each component replacement independently
-2. Rolling back individual components without full revert
-3. Keeping the site functional throughout the migration
-4. Detecting regressions early in the process
+## Current Architecture Analysis
 
-**jQuery Bridge Approach:**
-During migration, temporarily keep jQuery loaded alongside vanilla JS alternatives. This allows:
-- Old code to continue working while new code is added
-- Gradual replacement of jQuery calls in custom-scripts.js
-- Safe removal of jQuery only after all dependencies are eliminated
+### Build Flow (As-Is)
 
-## Current Architecture
+```
+Source Files
+    ├── index.html (single page app)
+    ├── images-optimized/ (84 portfolio images)
+    │   ├── jpeg/
+    │   ├── webp/
+    │   └── avif/
+    ├── style/ (CSS + vendored JS)
+    └── scripts/ (optimize-images.js, validation scripts)
+         ↓
+    npm run build (vite build)
+         ↓
+    dist/
+    ├── index.html
+    ├── assets/ (hashed JS/CSS)
+    ├── images-optimized/ (copied)
+    ├── style/ (copied)
+    ├── sitemap.xml (existing, manual)
+    └── robots.txt (existing, manual)
+         ↓
+    GitHub Actions deploy
+         ↓
+    S3 + CloudFront
+```
 
-### Script Loading Order (index.html)
+### Existing SEO Foundation
+
+**Already Present:**
+- Basic meta tags (description, keywords, author)
+- Open Graph tags (og:title, og:description, og:type, og:url)
+- Canonical link
+- Manual sitemap.xml (exists in vite.config.js copy targets)
+- robots.txt
+- Semantic HTML5 structure
+- Image lazy loading
+- Optimized image formats (AVIF, WebP, JPEG)
+
+**Missing (SEO Milestone Goals):**
+- JSON-LD structured data (LocalBusiness, ImageGallery)
+- Image sitemap with metadata
+- Schema.org markup for portfolio images
+- Enhanced Open Graph images (og:image missing)
+
+---
+
+## Structured Data Integration
+
+### Recommended Approach: Inline JSON-LD in `<head>`
+
+**Location:** Directly in `index.html` within `<head>` section
+
+**Why Inline:**
+- Google's preferred method ([Google SEO docs](https://developers.google.com/search/docs/appearance/structured-data/intro-structured-data))
+- No build process changes required
+- Easier to maintain and validate
+- No JavaScript execution needed (works with crawlers)
+- Compatible with existing single-page architecture
+
+**Implementation Pattern:**
 
 ```html
-<!-- End of body, before closing </body> tag -->
-<script src="style/js/jquery.min.js"></script>         <!-- 1. jQuery (85KB) -->
-<script src="style/js/popper.min.js"></script>         <!-- 2. Popper.js v1 (20KB) -->
-<script src="style/js/bootstrap.min.js"></script>      <!-- 3. Bootstrap 4.4.1 (60KB) -->
-<script src="style/js/embla-carousel.umd.js"></script> <!-- 4. Embla (already jQuery-free) -->
-<script src="style/js/embla-carousel-autoplay.umd.js"></script>
-<script src="style/js/glightbox.min.js"></script>      <!-- 5. GLightbox (already jQuery-free) -->
-<script src="style/js/custom-plugins.js"></script>     <!-- 6. Bundled jQuery plugins (250KB) -->
-<script src="style/js/custom-scripts.js"></script>     <!-- 7. Site initialization scripts -->
-```
+<head>
+  <!-- Existing meta tags -->
 
-### jQuery Dependencies in custom-plugins.js
-
-| Plugin | Purpose | jQuery Required | Vanilla Alternative |
-|--------|---------|-----------------|---------------------|
-| SmartMenus | Navbar dropdowns | YES | Bootstrap 5 native navbar |
-| Headhesive | Sticky header | NO (already vanilla) | Keep as-is |
-| jQuery Easing | Smooth scroll animations | YES | CSS `scroll-behavior` or native `scrollTo()` |
-| Swiper | Quote slider | NO (supports vanilla) | Already vanilla-compatible |
-| Cubeportfolio | Portfolio grid/filtering | YES | Isotope (vanilla JS mode) |
-| scrollUp | Back-to-top button | YES | Native `scrollTo()` implementation |
-| imagesLoaded | Image load detection | NO (supports vanilla) | Keep or use native `onload` |
-
-### jQuery Dependencies in custom-scripts.js
-
-| Usage | Lines | Replacement |
-|-------|-------|-------------|
-| `$(document).ready()` | 7 | `DOMContentLoaded` event |
-| `$(".selector")` | 52+ | `document.querySelector/querySelectorAll` |
-| `$().on("click", ...)` | 73, 76, 219, 233 | `addEventListener` |
-| `$().toggleClass/addClass/removeClass` | 74, 78, 198, etc. | `classList.toggle/add/remove` |
-| `$().collapse('hide')` | 77 | Bootstrap 5 `Collapse` API |
-| `$().css()` | 160, 209, 214 | `element.style` or `setAttribute` |
-| `$().data()` | 161 | `dataset` API |
-| `$().each()` | 83 | `forEach()` |
-| `$().find()` | 84-88 | `querySelector` |
-| `$().prepend()` | 107, 149 | `insertAdjacentHTML` |
-| `$().outerHeight()` | 203 | `offsetHeight` |
-| `$().animate()` | 243 | CSS transitions or Web Animations API |
-| `$.scrollUp()` | 167-193 | Custom vanilla implementation |
-| `$.SmartMenus.Bootstrap.init` | 62 | Bootstrap 5 native |
-| `new Swiper()` | 89 | Keep (already vanilla) |
-| `$().cubeportfolio()` | 127 | Isotope vanilla initialization |
-
-### HTML Data Attributes (Bootstrap 4)
-
-```html
-<!-- Line 110: Body scroll spy -->
-<body class="onepage" data-spy="scroll" data-target=".navbar">
-
-<!-- Line 120: Mobile hamburger menu -->
-<button class="hamburger animate" data-toggle="collapse" data-target=".navbar-collapse">
-
-<!-- Line 123: Collapsible nav content -->
-<div class="collapse navbar-collapse">
-```
-
-### Vite Configuration (Current)
-
-```javascript
-// vite.config.js - Current external files copied to dist/
-viteStaticCopy({
-  targets: [
-    { src: 'style/js/jquery.min.js', dest: 'style/js' },
-    { src: 'style/js/popper.min.js', dest: 'style/js' },
-    { src: 'style/js/bootstrap.min.js', dest: 'style/js' },
-    { src: 'style/js/embla-carousel.umd.js', dest: 'style/js' },
-    { src: 'style/js/embla-carousel-autoplay.umd.js', dest: 'style/js' },
-    { src: 'style/js/glightbox.min.js', dest: 'style/js' },
-    { src: 'style/js/custom-plugins.js', dest: 'style/js' },
-    { src: 'style/js/custom-scripts.js', dest: 'style/js' },
-    // ... CSS and images
-  ]
-})
-```
-
-## Target Architecture
-
-### Script Loading Order (After Migration)
-
-```html
-<!-- End of body, before closing </body> tag -->
-<script src="style/js/bootstrap.bundle.min.js"></script>  <!-- 1. Bootstrap 5 + Popper (80KB) -->
-<script src="style/js/embla-carousel.umd.js"></script>    <!-- 2. Embla (6KB) -->
-<script src="style/js/embla-carousel-autoplay.umd.js"></script>
-<script src="style/js/glightbox.min.js"></script>         <!-- 3. GLightbox (17KB) -->
-<script src="style/js/isotope.pkgd.min.js"></script>      <!-- 4. Isotope (25KB) -->
-<script src="style/js/imagesloaded.pkgd.min.js"></script> <!-- 5. imagesLoaded (3KB) -->
-<script src="style/js/headhesive.min.js"></script>        <!-- 6. Headhesive (3KB) -->
-<script src="style/js/swiper-bundle.min.js"></script>     <!-- 7. Swiper (140KB or custom build) -->
-<script src="style/js/site.js"></script>                  <!-- 8. Custom initialization -->
-```
-
-**Total estimated size:** ~275KB (vs current ~415KB including jQuery and plugins bundle)
-**Reduction:** ~140KB (~34% smaller)
-
-### HTML Data Attributes (Bootstrap 5)
-
-```html
-<!-- Body scroll spy (Bootstrap 5 syntax) -->
-<body class="onepage" data-bs-spy="scroll" data-bs-target=".navbar">
-
-<!-- Mobile hamburger menu (Bootstrap 5 syntax) -->
-<button class="hamburger animate" data-bs-toggle="collapse" data-bs-target=".navbar-collapse">
-
-<!-- Collapsible nav content (no change needed) -->
-<div class="collapse navbar-collapse">
-```
-
-### Vite Configuration (Target)
-
-```javascript
-// vite.config.js - Updated external files
-viteStaticCopy({
-  targets: [
-    // Bootstrap 5 bundle (includes Popper)
-    { src: 'style/js/bootstrap.bundle.min.js', dest: 'style/js' },
-
-    // Already jQuery-free
-    { src: 'style/js/embla-carousel.umd.js', dest: 'style/js' },
-    { src: 'style/js/embla-carousel-autoplay.umd.js', dest: 'style/js' },
-    { src: 'style/js/glightbox.min.js', dest: 'style/js' },
-
-    // New vanilla JS libraries
-    { src: 'style/js/isotope.pkgd.min.js', dest: 'style/js' },
-    { src: 'style/js/imagesloaded.pkgd.min.js', dest: 'style/js' },
-    { src: 'style/js/headhesive.min.js', dest: 'style/js' },
-    { src: 'style/js/swiper-bundle.min.js', dest: 'style/js' },
-
-    // New unified site script (replaces custom-plugins.js + custom-scripts.js)
-    { src: 'style/js/site.js', dest: 'style/js' },
-
-    // CSS and images unchanged
-    // ...
-  ]
-})
-```
-
-## Migration Path
-
-### Phase Order Rationale
-
-The migration should proceed in this order based on dependency analysis:
-
-1. **Bootstrap 5 first** - Foundation that enables other changes
-2. **Cubeportfolio replacement** - Most complex component, benefits from early attention
-3. **SmartMenus removal** - Becomes redundant after Bootstrap 5 navbar
-4. **Custom scripts conversion** - Depends on above being complete
-5. **jQuery removal** - Final step after all dependencies eliminated
-
-### Dependency Graph
-
-```
-jQuery 3.x
-|-- Bootstrap 4.4.1 (requires jQuery)
-|   |-- navbar collapse functionality
-|   |-- scroll spy
-|-- custom-plugins.js bundle
-|   |-- SmartMenus (requires jQuery)
-|   |-- Cubeportfolio (requires jQuery)
-|   |-- jQuery Easing (requires jQuery)
-|   |-- scrollUp (requires jQuery)
-|
-|   [Already jQuery-free in bundle:]
-|   |-- Headhesive (vanilla JS)
-|   |-- Swiper (supports vanilla)
-|   |-- imagesLoaded (supports vanilla)
-|
-|-- custom-scripts.js
-    |-- All initialization code uses jQuery syntax
-```
-
-### Detailed Phase Breakdown
-
-#### Phase 1: Bootstrap 5 Migration
-
-**Changes:**
-1. Replace `style/css/bootstrap.min.css` with Bootstrap 5 version
-2. Replace `style/js/bootstrap.min.js` + `popper.min.js` with `bootstrap.bundle.min.js`
-3. Update HTML data attributes:
-   - `data-toggle` -> `data-bs-toggle`
-   - `data-target` -> `data-bs-target`
-   - `data-spy` -> `data-bs-spy`
-4. Update CSS class changes (if any used):
-   - `ml-*` -> `ms-*`
-   - `mr-*` -> `me-*`
-   - `pl-*` -> `ps-*`
-   - `pr-*` -> `pe-*`
-   - `text-left` -> `text-start`
-   - `text-right` -> `text-end`
-
-**Note:** jQuery still required at this point for custom-scripts.js
-
-#### Phase 2: Cubeportfolio -> Isotope Migration
-
-**Changes:**
-1. Add `isotope.pkgd.min.js` and `imagesloaded.pkgd.min.js`
-2. Update portfolio HTML markup (minimal changes to CSS classes)
-3. Replace Cubeportfolio initialization with Isotope:
-
-```javascript
-// Before (jQuery/Cubeportfolio)
-$('#cube-grid-mosaic').cubeportfolio({
-  filters: '#cube-grid-mosaic-filter',
-  layoutMode: 'mosaic',
-  // ...
-});
-
-// After (vanilla JS/Isotope)
-var grid = document.querySelector('#cube-grid-mosaic');
-var iso = new Isotope(grid, {
-  itemSelector: '.cbp-item',
-  layoutMode: 'masonry',
-  percentPosition: true,
-  masonry: { columnWidth: '.cbp-item' }
-});
-
-// Filter buttons
-var filterButtons = document.querySelectorAll('#cube-grid-mosaic-filter [data-filter]');
-filterButtons.forEach(function(button) {
-  button.addEventListener('click', function() {
-    var filterValue = this.getAttribute('data-filter');
-    iso.arrange({ filter: filterValue === '*' ? '*' : filterValue });
-  });
-});
-```
-
-4. Update GLightbox to work with Isotope filtering
-
-#### Phase 3: SmartMenus Removal
-
-**Changes:**
-1. Remove SmartMenus from custom-plugins.js
-2. Bootstrap 5 native navbar handles all current functionality:
-   - Mobile collapse toggle
-   - Responsive breakpoints
-   - No dropdown menus on this site (single-level nav)
-
-```javascript
-// Before (SmartMenus integration)
-onStick: function() {
-  $($.SmartMenus.Bootstrap.init);
-}
-
-// After (Bootstrap 5 native - no initialization needed)
-// Navbar collapse works automatically via data-bs-* attributes
-```
-
-#### Phase 4: Custom Scripts Conversion
-
-**Changes:**
-Convert all jQuery syntax in custom-scripts.js to vanilla JS:
-
-```javascript
-// Before
-$(document).ready(function() {
-  $(".hamburger.animate").on("click", function() {
-    $(".hamburger.animate").toggleClass("active");
-  });
-});
-
-// After
-document.addEventListener('DOMContentLoaded', function() {
-  var hamburger = document.querySelector('.hamburger.animate');
-  if (hamburger) {
-    hamburger.addEventListener('click', function() {
-      this.classList.toggle('active');
-    });
+  <!-- JSON-LD Structured Data -->
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "LocalBusiness",
+    "@id": "https://cassiecayphotography.com/#business",
+    "name": "Cassie Cay Photography",
+    "description": "Professional photographer in Madison, Wisconsin specializing in family, newborn, senior, milestone, and event photography",
+    "url": "https://cassiecayphotography.com",
+    "telephone": "",
+    "email": "cassiecayphoto@gmail.com",
+    "address": {
+      "@type": "PostalAddress",
+      "addressLocality": "Waunakee",
+      "addressRegion": "WI",
+      "addressCountry": "US"
+    },
+    "geo": {
+      "@type": "GeoCoordinates",
+      "latitude": 43.1911,
+      "longitude": -89.4526
+    },
+    "areaServed": {
+      "@type": "GeoCircle",
+      "geoMidpoint": {
+        "@type": "GeoCoordinates",
+        "latitude": 43.0731,
+        "longitude": -89.4012
+      },
+      "geoRadius": "50 miles"
+    },
+    "priceRange": "$250-$450",
+    "image": "https://cassiecayphotography.com/images-optimized/jpeg/full/cassiecay-aboutbw.jpg"
   }
-});
+  </script>
+
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "ImageGallery",
+    "name": "Featured Photos",
+    "description": "Portfolio of family, newborn, senior, milestone, and event photography by Cassie Cay",
+    "url": "https://cassiecayphotography.com/#portfolio",
+    "associatedMedia": [
+      {
+        "@type": "ImageObject",
+        "contentUrl": "https://cassiecayphotography.com/images-optimized/jpeg/full/cassiecay-F1-full.jpg",
+        "thumbnail": "https://cassiecayphotography.com/images-optimized/jpeg/800w/cassiecay-F1.jpg",
+        "encodingFormat": "image/jpeg",
+        "caption": "Family photography",
+        "author": {
+          "@type": "Person",
+          "name": "Cassie Meffert"
+        }
+      }
+      // ... additional images
+    ]
+  }
+  </script>
+</head>
 ```
 
-**Key conversions:**
-| jQuery | Vanilla JS |
-|--------|-----------|
-| `$(document).ready(fn)` | `document.addEventListener('DOMContentLoaded', fn)` |
-| `$('.class')` | `document.querySelector('.class')` or `querySelectorAll` |
-| `$el.on('click', fn)` | `el.addEventListener('click', fn)` |
-| `$el.toggleClass('x')` | `el.classList.toggle('x')` |
-| `$el.addClass('x')` | `el.classList.add('x')` |
-| `$el.removeClass('x')` | `el.classList.remove('x')` |
-| `$el.css('prop', val)` | `el.style.prop = val` |
-| `$el.data('key')` | `el.dataset.key` |
-| `$el.each(fn)` | `els.forEach(fn)` |
-| `$el.find('.x')` | `el.querySelector('.x')` |
-| `$el.prepend(html)` | `el.insertAdjacentHTML('afterbegin', html)` |
-| `$el.outerHeight()` | `el.offsetHeight` |
-| `$('html,body').animate({scrollTop: x})` | `window.scrollTo({top: x, behavior: 'smooth'})` |
+**Data Source:** Extract from existing HTML structure
+- Portfolio images already have category classes (cat1=Family, cat2=Milestone, etc.)
+- Image paths already structured in `images-optimized/`
+- Captions can be derived from categories
 
-#### Phase 5: scrollUp Replacement
+**Validation:** Use [Google Rich Results Test](https://search.google.com/test/rich-results) and [Schema Markup Validator](https://validator.schema.org/)
 
-**Changes:**
-Replace jQuery scrollUp plugin with vanilla JS:
+**Build Integration:** None required initially. For future maintainability, consider:
+1. Extract image data to JSON file
+2. Use Vite plugin to inject at build time
+3. For now: manual inline is fastest and Google-recommended
+
+---
+
+## Image Sitemap Generation
+
+### Recommended Approach: Build-Time Node.js Script
+
+**Integration Point:** Extends existing `scripts/` directory pattern
+
+**Architecture:**
+
+```
+npm run build
+    ↓
+1. scripts/optimize-images.js (existing - runs prebuild)
+2. vite build
+3. scripts/generate-image-sitemap.js (NEW - runs postbuild)
+    ↓
+    Scans dist/images-optimized/
+    Reads portfolio image data
+    Generates dist/image-sitemap.xml
+    Updates dist/sitemap.xml (index)
+```
+
+**Why Build-Time Generation:**
+- Images already exist in predictable structure
+- Build script can read actual files from `images-optimized/`
+- No runtime overhead
+- Automatically updates when images change
+- Fits existing prebuild/postbuild hook pattern
+
+**Implementation Approach:**
 
 ```javascript
-// Vanilla scroll-to-top implementation
-(function() {
-  // Create button
-  var scrollBtn = document.createElement('a');
-  scrollBtn.id = 'scrollUp';
-  scrollBtn.innerHTML = '<span style="background:#9A7A7D;" class="btn btn-square btn-full-rounded btn-icon"><i class="fa fa-chevron-up"></i></span>';
-  scrollBtn.style.display = 'none';
-  scrollBtn.style.position = 'fixed';
-  scrollBtn.style.bottom = '20px';
-  scrollBtn.style.right = '20px';
-  scrollBtn.style.zIndex = '1001';
-  scrollBtn.style.cursor = 'pointer';
-  document.body.appendChild(scrollBtn);
+// scripts/generate-image-sitemap.js
+import { SitemapStream, streamToPromise } from 'sitemap';
+import { createWriteStream } from 'fs';
+import { glob } from 'glob';
+import { parse } from 'node-html-parser';
+import { readFile } from 'fs/promises';
 
-  // Show/hide on scroll
-  window.addEventListener('scroll', function() {
-    if (window.scrollY > 300) {
-      scrollBtn.style.display = 'block';
-    } else {
-      scrollBtn.style.display = 'none';
+async function generateImageSitemap() {
+  // 1. Parse index.html to extract portfolio images with categories
+  const html = await readFile('dist/index.html', 'utf-8');
+  const root = parse(html);
+
+  // 2. Extract portfolio items with metadata
+  const portfolioItems = root.querySelectorAll('.portfolio-item');
+  const images = portfolioItems.map(item => ({
+    category: extractCategory(item.getAttribute('class')),
+    fullUrl: extractFullImageUrl(item),
+    thumbUrl: extractThumbnailUrl(item)
+  }));
+
+  // 3. Generate image sitemap using sitemap.js
+  const sitemap = new SitemapStream({
+    hostname: 'https://cassiecayphotography.com',
+    xmlns: {
+      image: 'http://www.google.com/schemas/sitemap-image/1.1'
     }
   });
 
-  // Scroll to top on click
-  scrollBtn.addEventListener('click', function(e) {
-    e.preventDefault();
-    window.scrollTo({ top: 0, behavior: 'smooth' });
+  // 4. Add main portfolio page with all images
+  sitemap.write({
+    url: '/#portfolio',
+    img: images.map(img => ({
+      url: img.fullUrl,
+      caption: getCategoryCaption(img.category),
+      title: `${img.category} Photography by Cassie Cay`,
+      geoLocation: 'Madison, Wisconsin'
+    }))
   });
-})();
+
+  // 5. Write to dist/image-sitemap.xml
+  const data = await streamToPromise(sitemap);
+  await writeFile('dist/image-sitemap.xml', data.toString());
+}
 ```
 
-#### Phase 6: jQuery Removal
+**Google Image Sitemap Spec:**
+- Each `<url>` can contain up to 1,000 `<image:image>` tags ([Google Image Sitemaps docs](https://developers.google.com/search/docs/crawling-indexing/sitemaps/image-sitemaps))
+- Critical tags: `<image:loc>` (required), `<image:caption>`, `<image:title>`, `<image:geo_location>`
+- For photography portfolios, use separate sitemap file ([Best practices 2026](https://www.clickrank.ai/image-sitemap-structure-google-lens/))
 
-**Changes:**
-1. Remove `jquery.min.js` from HTML script tags
-2. Remove jQuery from vite.config.js static copy targets
-3. Delete `style/js/jquery.min.js`
-4. Update rollupOptions.external to remove jQuery pattern
-5. Final testing of all functionality
+**Sitemap Index Pattern:**
 
-### Testing Strategy
-
-**Per-phase testing checklist:**
-
-| Feature | Test |
-|---------|------|
-| Navbar collapse | Mobile menu opens/closes on hamburger click |
-| Navbar links | Smooth scroll to sections works |
-| Sticky header | Header becomes fixed after scrolling 350px |
-| Hero slider | Embla carousel auto-advances (6s interval) |
-| Portfolio grid | Images display in mosaic layout |
-| Portfolio filter | Category buttons filter correctly |
-| Lightbox | Clicking portfolio images opens fullscreen gallery |
-| Quote slider | Swiper cycles through quotes |
-| Background images | `data-image-src` backgrounds load |
-| Scroll to top | Button appears after scrolling, scrolls to top on click |
-| Contact form | Form validation and submission works (jQuery in inline script) |
-
-**Browser testing:**
-- Chrome (latest)
-- Firefox (latest)
-- Safari (latest)
-- Mobile Safari (iOS)
-- Chrome Mobile (Android)
-
-**Automated validation:**
-- Existing `npm run validate:html` - HTML structure
-- Existing `npm run validate:refs` - Asset references
-- Manual visual regression testing (screenshots)
-
-## Vite Configuration Changes
-
-### Before (Current)
-
-```javascript
-// vite.config.js
-external: [
-  /^style\/js\/jquery\.min\.js$/,
-  /^style\/js\/bootstrap\.min\.js$/,
-  /^style\/js\/popper\.min\.js$/,
-  /^style\/js\/embla-carousel\.umd\.js$/,
-  /^style\/js\/embla-carousel-autoplay\.umd\.js$/,
-],
+```xml
+<!-- dist/sitemap.xml (main index) -->
+<?xml version="1.0" encoding="UTF-8"?>
+<sitemapindex xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
+  <sitemap>
+    <loc>https://cassiecayphotography.com/pages-sitemap.xml</loc>
+    <lastmod>2026-01-21</lastmod>
+  </sitemap>
+  <sitemap>
+    <loc>https://cassiecayphotography.com/image-sitemap.xml</loc>
+    <lastmod>2026-01-21</lastmod>
+  </sitemap>
+</sitemapindex>
 ```
 
-### After (Target)
+**Required npm Package:** `sitemap` ([npm: sitemap](https://www.npmjs.com/package/sitemap))
+- Supports image extensions with `xmlns:image` namespace
+- Used by 1.7M+ projects, well-maintained
+- HIGH confidence (verified in official docs)
 
-```javascript
-// vite.config.js
-external: [
-  /^style\/js\/bootstrap\.bundle\.min\.js$/,
-  /^style\/js\/embla-carousel\.umd\.js$/,
-  /^style\/js\/embla-carousel-autoplay\.umd\.js$/,
-  /^style\/js\/glightbox\.min\.js$/,
-  /^style\/js\/isotope\.pkgd\.min\.js$/,
-  /^style\/js\/imagesloaded\.pkgd\.min\.js$/,
-  /^style\/js\/headhesive\.min\.js$/,
-  /^style\/js\/swiper-bundle\.min\.js$/,
-],
-```
+---
 
-### Static Copy Targets Update
+## Meta Tags Enhancement
 
-**Remove:**
-- `style/js/jquery.min.js`
-- `style/js/popper.min.js`
-- `style/js/bootstrap.min.js`
-- `style/js/custom-plugins.js`
+### Recommended Approach: Static Inline (Current) + Validation
 
-**Add:**
-- `style/js/bootstrap.bundle.min.js`
-- `style/js/isotope.pkgd.min.js`
-- `style/js/imagesloaded.pkgd.min.js`
-
-**Rename/Replace:**
-- `style/js/custom-scripts.js` -> `style/js/site.js` (converted to vanilla JS)
-
-## Risk Mitigation
-
-### Rollback Strategy
-
-Each phase should be completed in a separate branch with a working deployment:
-
-```
-main (production)
-|-- feature/bootstrap-5-migration (Phase 1)
-|   |-- Merge only after testing passes
-|-- feature/isotope-migration (Phase 2)
-|   |-- Merge only after testing passes
-|-- feature/vanilla-scripts (Phases 3-5)
-|   |-- Merge only after testing passes
-|-- feature/jquery-removal (Phase 6)
-    |-- Final merge removes jQuery
-```
-
-If any phase fails:
-1. Do not merge to main
-2. Revert branch to last working state
-3. Investigate root cause
-4. Re-attempt with fixes
-
-### Known Risks
-
-| Risk | Likelihood | Impact | Mitigation |
-|------|------------|--------|------------|
-| Bootstrap 5 CSS breaks layout | Medium | High | Audit all Bootstrap classes before migration |
-| Isotope filtering differs from Cubeportfolio | Medium | Medium | Test with all filter combinations |
-| Smooth scroll animation differs | Low | Low | Use CSS `scroll-behavior: smooth` as baseline |
-| Contact form jQuery inline script | High | High | Must convert separately (lines 9-74 in index.html) |
-| Third-party script conflicts | Low | Medium | Test in isolation first |
-
-### Critical: Contact Form Inline Script
-
-The contact form submission (`submitToAPI` function) uses jQuery (`$()` syntax) directly in index.html:
-
+**Current State (Already Good):**
 ```html
-<script>
-function submitToAPI(e) {
-    // Uses: $("#name"), $("#mail"), $("#subject"), $("#comment")
-    // Uses: $.ajax() for form submission
-    // Uses: $("#message").css() and .text()
-    // Uses: $("#submitmessage").prop() and .text()
-}
-</script>
+<meta name="description" content="...">
+<meta property="og:title" content="Cassie Cay Photography">
+<meta property="og:description" content="...">
+<meta property="og:type" content="website">
+<meta property="og:url" content="https://cassiecayphotography.com">
+<link rel="canonical" href="https://cassiecayphotography.com">
 ```
 
-This inline script MUST be converted to vanilla JS before jQuery can be removed:
+**Missing but Critical:**
+```html
+<!-- Add to index.html <head> -->
+<meta property="og:image" content="https://cassiecayphotography.com/images-optimized/jpeg/full/og-image.jpg">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta property="og:image:alt" content="Cassie Cay Photography portfolio">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:image" content="https://cassiecayphotography.com/images-optimized/jpeg/full/og-image.jpg">
+```
+
+**OG Image Specifications ([OpenGraph best practices](https://www.opengraph.xyz/)):**
+- Size: 1200x630px (1.91:1 aspect ratio)
+- Format: JPEG (best compatibility)
+- Max size: 8MB (but aim for <300KB)
+- For photography: Use a compelling portfolio image or brand composite
+
+**No Build Changes Required:**
+- Static meta tags work best for single-page sites
+- Already in `<head>`, crawlers parse correctly
+- Dynamic injection only needed for multi-page apps
+
+**Alternative (Future):** If content becomes dynamic, use `vite-plugin-html-injection` ([GitHub](https://github.com/altrusl/vite-plugin-html-injection)) to inject from external JSON config
+
+---
+
+## Build Process Changes
+
+### Required Modifications
+
+**1. package.json Scripts:**
+
+```json
+{
+  "scripts": {
+    "preprocess": "node scripts/optimize-images.js",
+    "prebuild": "npm run preprocess",
+    "build": "vite build",
+    "postbuild": "node scripts/generate-image-sitemap.js",
+    "validate:seo": "node scripts/validate-structured-data.js"
+  }
+}
+```
+
+**2. New Dependencies:**
+
+```json
+{
+  "devDependencies": {
+    "sitemap": "^8.0.0"
+  }
+}
+```
+
+**3. New Scripts:**
+
+- `scripts/generate-image-sitemap.js` - Build-time sitemap generator
+- `scripts/validate-structured-data.js` - Pre-deploy JSON-LD validation
+
+**4. Vite Config (No changes needed):**
+
+Current `viteStaticCopy` already copies `sitemap.xml` and `robots.txt`. After postbuild script runs, new files automatically included.
+
+**5. GitHub Actions (No changes needed):**
+
+Current workflow runs `npm run build`, which will trigger:
+1. prebuild: optimize images
+2. build: vite build
+3. postbuild: generate image sitemap
+
+Then syncs `dist/` to S3 (already includes all XML files).
+
+---
+
+## Implementation Order (Recommended Phase Sequence)
+
+### Phase 1: Meta Tags (Lowest Risk, Immediate Impact)
+
+**Why First:**
+- Zero build process changes
+- Immediate SEO benefit
+- Easy to validate
+- No deployment risk
+
+**Tasks:**
+1. Add missing og:image meta tags to index.html
+2. Create/select og-image.jpg (1200x630)
+3. Add Twitter Card tags
+4. Test with [OpenGraph Preview](https://www.opengraph.xyz/)
+
+**Estimated Effort:** 30 minutes
+**Risk:** None
+**SEO Impact:** Medium (improves social sharing)
+
+---
+
+### Phase 2: Structured Data (Medium Risk, High Impact)
+
+**Why Second:**
+- Inline JSON-LD in `<head>` (no build changes)
+- Requires content mapping but straightforward
+- High SEO value for local business + portfolio
+- Can validate before deploy
+
+**Tasks:**
+1. Add LocalBusiness JSON-LD to index.html
+2. Add ImageGallery JSON-LD with top 10-20 portfolio images
+3. Validate with Google Rich Results Test
+4. Deploy and test
+
+**Estimated Effort:** 2-3 hours
+**Risk:** Low (validation tools catch errors)
+**SEO Impact:** High (rich results, local search)
+
+**Data Extraction Strategy:**
 
 ```javascript
-function submitToAPI(e) {
-  e.preventDefault();
+// Helper to generate ImageGallery JSON from HTML
+const portfolioItems = document.querySelectorAll('.portfolio-item');
+const images = Array.from(portfolioItems).slice(0, 20).map(item => {
+  const img = item.querySelector('img');
+  const link = item.querySelector('a');
+  const category = item.className.match(/cat\d+/)[0];
 
-  var name = document.getElementById('name');
-  var mail = document.getElementById('mail');
-  var subject = document.getElementById('subject');
-  var comment = document.getElementById('comment');
-  var message = document.getElementById('message');
-  var submitBtn = document.getElementById('submitmessage');
+  return {
+    "@type": "ImageObject",
+    "contentUrl": link.href,
+    "thumbnail": img.src,
+    "encodingFormat": "image/jpeg",
+    "caption": getCategoryName(category)
+  };
+});
+```
 
-  // Validation
-  var nameRe = /[A-Za-z]{1}[A-Za-z]/;
-  if (!nameRe.test(name.value)) {
-    alert("Name cannot be less than 2 characters");
-    return;
-  }
-  if (mail.value === "") {
-    alert("Please enter your email");
-    return;
-  }
-  var emailRe = /^([\w-\.]+@([\w-]+\.)+[\w-]{2,6})?$/;
-  if (!emailRe.test(mail.value)) {
-    alert("Please enter a valid email address");
-    return;
-  }
+---
 
-  // Disable button
-  submitBtn.disabled = true;
-  submitBtn.textContent = 'Sending...';
+### Phase 3: Image Sitemap (Higher Risk, Automation Benefit)
 
-  // reCAPTCHA and fetch
-  grecaptcha.enterprise.ready(function() {
-    grecaptcha.enterprise.execute('6LchXjYsAAAAANiJ_B8AKMUp7vwsJx_8HnKLBzr2', {action: 'contact_submit'})
-      .then(function(token) {
-        var data = {
-          site: 'cassiecayphotography.com',
-          name: name.value,
-          email: mail.value,
-          subject: subject.value,
-          message: comment.value,
-          recaptchaToken: token
-        };
+**Why Third:**
+- Requires build process extension
+- Needs testing to ensure correct XML output
+- Provides long-term automation benefit
+- Lower immediate SEO impact than structured data
 
-        fetch('https://7qcdrfk7uctpaqw36i5z2kwxha0rgrnx.lambda-url.us-east-1.on.aws/', {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify(data)
-        })
-        .then(function(response) {
-          if (!response.ok) throw new Error('Network response was not ok');
-          return response.json();
-        })
-        .then(function() {
-          message.style.color = 'green';
-          message.textContent = 'Message Sent Successfully';
-          name.value = '';
-          mail.value = '';
-          subject.value = '';
-          comment.value = '';
-          submitBtn.disabled = false;
-          submitBtn.textContent = 'Send Message';
-        })
-        .catch(function() {
-          message.style.color = 'red';
-          message.textContent = 'Error. Your message was not sent.';
-          submitBtn.disabled = false;
-          submitBtn.textContent = 'Send Message';
-        });
-      })
-      .catch(function() {
-        message.style.color = 'red';
-        message.textContent = 'reCAPTCHA error. Please try again.';
-        submitBtn.disabled = false;
-        submitBtn.textContent = 'Send Message';
-      });
-  });
+**Tasks:**
+1. Create `scripts/generate-image-sitemap.js`
+2. Install `sitemap` npm package
+3. Add postbuild script to package.json
+4. Test build output locally
+5. Update robots.txt to reference sitemap index
+6. Deploy and submit to Google Search Console
+
+**Estimated Effort:** 4-6 hours (includes testing)
+**Risk:** Medium (build process change, XML validation)
+**SEO Impact:** Medium-High (image search visibility)
+
+**Testing Strategy:**
+1. Run `npm run build` locally
+2. Verify `dist/image-sitemap.xml` exists
+3. Validate XML structure with [XML Sitemap Validator](https://www.xml-sitemaps.com/)
+4. Check Google Search Console after deploy
+
+---
+
+### Phase 4: Validation & Monitoring (Continuous)
+
+**Why Last:**
+- Builds on all previous phases
+- Establishes quality gates
+- Prevents regression
+
+**Tasks:**
+1. Create `scripts/validate-structured-data.js`
+2. Add validation to GitHub Actions (pre-deploy)
+3. Set up Google Search Console monitoring
+4. Schedule monthly SEO audits
+
+**Estimated Effort:** 2-3 hours
+**Risk:** Low
+**SEO Impact:** Low direct, high indirect (prevents errors)
+
+---
+
+## Integration Points Summary
+
+| SEO Feature | Integration Point | Build Impact | Risk | Priority |
+|-------------|------------------|--------------|------|----------|
+| **Meta Tags** | index.html `<head>` | None | None | P0 (now) |
+| **JSON-LD** | index.html `<head>` | None | Low | P0 (now) |
+| **Image Sitemap** | postbuild script | Medium | Medium | P1 (next) |
+| **Validation** | GitHub Actions | Low | Low | P2 (later) |
+
+---
+
+## Architecture Patterns to Follow
+
+### Pattern 1: Static-First, Generate When Needed
+
+**Principle:** Prefer static inline content over build-time generation unless content is dynamic or repetitive.
+
+**Application:**
+- Meta tags: Static (content doesn't change often)
+- JSON-LD: Static for LocalBusiness, consider generation for ImageGallery if >50 images
+- Sitemap: Generated (changes with every image update)
+
+### Pattern 2: Validate Before Deploy
+
+**Principle:** All SEO changes should be validated in CI/CD before reaching production.
+
+**Application:**
+- HTML validation (already exists)
+- JSON-LD validation (add to validate:seo script)
+- Sitemap XML validation (add to postbuild)
+- OpenGraph preview testing (manual for now)
+
+### Pattern 3: Single Source of Truth
+
+**Principle:** Image data should be extracted from existing HTML structure, not duplicated in separate config.
+
+**Application:**
+- Portfolio images defined in index.html (SSOT)
+- Image sitemap script reads from dist/index.html after build
+- JSON-LD extracts metadata from same source
+- No separate image inventory file needed
+
+---
+
+## Anti-Patterns to Avoid
+
+### Anti-Pattern 1: Dynamic Meta Tag Injection (Not Needed Here)
+
+**Problem:** Using Vite plugins to dynamically inject meta tags adds build complexity without benefit for single-page site.
+
+**Why Bad:**
+- Static meta tags work fine for single HTML file
+- Dynamic injection only needed for multi-page or SSR apps
+- Adds build dependencies and potential failure points
+
+**Instead:** Keep meta tags inline in index.html for now. Revisit if site becomes multi-page.
+
+### Anti-Pattern 2: Manual Sitemap Maintenance
+
+**Problem:** Manually updating sitemap.xml when images change.
+
+**Why Bad:**
+- Error-prone (easy to forget)
+- Doesn't scale (84 images, more added over time)
+- Sitemap becomes stale
+
+**Instead:** Automate sitemap generation in build process (Phase 3).
+
+### Anti-Pattern 3: Overly Complex JSON-LD
+
+**Problem:** Generating elaborate schema markup for every single portfolio image.
+
+**Why Bad:**
+- Bloated HTML size
+- Diminishing SEO returns beyond 20-30 images
+- Google's limit: 1000 images per URL anyway
+
+**Instead:** Include representative sample (10-20 top images) in ImageGallery schema. Full inventory goes in image sitemap.
+
+### Anti-Pattern 4: Separate SEO Config Files
+
+**Problem:** Creating separate JSON files for SEO data that duplicate index.html content.
+
+**Why Bad:**
+- Creates synchronization problems
+- Extra maintenance burden
+- Data drift between HTML and config
+
+**Instead:** Extract from HTML (single source of truth) or embed inline.
+
+---
+
+## Scalability Considerations
+
+### At Current Scale (84 images, 1 page)
+
+**Structured Data:**
+- Inline JSON-LD: 10-20 representative images
+- Total size: ~5-10KB added to HTML
+- Performance impact: Negligible
+
+**Image Sitemap:**
+- All 84 images in single sitemap
+- Well under 1000 image limit
+- File size: ~15-20KB
+- No need for sitemap sharding
+
+**Build Time:**
+- Image sitemap generation: <1 second
+- No impact on Vite build
+
+### At 500 images, 1 page
+
+**Structured Data:**
+- Still inline, still 10-20 representative images
+- No change needed
+
+**Image Sitemap:**
+- All 500 images in single sitemap
+- Still under 1000 limit
+- File size: ~80-100KB
+- Build time: ~2-3 seconds
+
+### At 1000+ images, multiple galleries
+
+**Structured Data:**
+- Consider splitting into multiple ImageGallery schemas per category
+- Each gallery page gets own JSON-LD
+
+**Image Sitemap:**
+- Need sitemap sharding (multiple image sitemaps)
+- Sitemap index with multiple image sitemap files
+- Build script enhancement needed
+
+**At this scale, likely need multi-page architecture anyway.**
+
+---
+
+## Performance Impact
+
+### HTML Size Impact
+
+| Component | Size | Impact |
+|-----------|------|--------|
+| Current index.html | ~45KB | Baseline |
+| + JSON-LD LocalBusiness | +1KB | Negligible |
+| + JSON-LD ImageGallery (20 images) | +8KB | Minimal |
+| + Enhanced meta tags | +0.5KB | Negligible |
+| **Total** | **~54.5KB** | **<1% impact on load time** |
+
+### Build Time Impact
+
+| Phase | Current | With SEO | Impact |
+|-------|---------|----------|--------|
+| Image optimization (prebuild) | 15-30s | 15-30s | None |
+| Vite build | 5-10s | 5-10s | None |
+| Sitemap generation (postbuild) | 0s | <1s | Negligible |
+| **Total** | **20-40s** | **20-41s** | **<5% increase** |
+
+### Runtime Performance
+
+- JSON-LD: Parsed by crawlers, not executed by browser (zero runtime cost)
+- Sitemaps: Not loaded by users (zero runtime cost)
+- Meta tags: Minimal parsing overhead (negligible)
+
+**Conclusion:** SEO enhancements add <10KB to HTML and <1s to build, with zero runtime performance impact.
+
+---
+
+## Validation & Testing Strategy
+
+### Pre-Deploy Validation (Automated)
+
+**HTML Validation:**
+```bash
+npm run validate:html  # Already exists
+```
+
+**JSON-LD Validation:**
+```bash
+npm run validate:seo    # New script needed
+```
+
+**Sitemap Validation:**
+```javascript
+// In scripts/generate-image-sitemap.js
+import { XMLValidator } from 'fast-xml-parser';
+
+const isValid = XMLValidator.validate(sitemapXML);
+if (!isValid) {
+  throw new Error('Invalid sitemap XML');
 }
 ```
 
-## Dreamweaver Workflow Preservation
+### Post-Deploy Validation (Manual)
 
-The migration preserves Cassie's Dreamweaver workflow:
+**Structured Data:**
+1. [Google Rich Results Test](https://search.google.com/test/rich-results)
+2. [Schema Markup Validator](https://validator.schema.org/)
 
-| Aspect | Impact | Notes |
-|--------|--------|-------|
-| HTML content editing | None | Content structure unchanged |
-| Adding images | None | Same image paths and markup |
-| CSS class usage | Minimal | Some Bootstrap utility classes renamed |
-| Script references | One-time update | Script src paths change once |
-| Portfolio items | Minimal | May need `data-filter` attribute updates |
+**Open Graph:**
+1. [OpenGraph Preview](https://www.opengraph.xyz/)
+2. [Facebook Sharing Debugger](https://developers.facebook.com/tools/debug/)
 
-**Training needed:**
-- One-time update to script references in HTML template
-- If Bootstrap utility class renames affect existing content
+**Sitemaps:**
+1. [XML Sitemap Validator](https://www.xml-sitemaps.com/validate-xml-sitemap.html)
+2. Google Search Console → Sitemaps → Submit
+
+### Continuous Monitoring
+
+**Google Search Console:**
+- Rich results status
+- Image indexing status
+- Coverage reports
+- Performance metrics
+
+**Lighthouse CI (Already in GitHub Actions):**
+- SEO score tracking
+- Best practices validation
+- Automated regression detection
+
+---
+
+## Dependency Analysis
+
+### New Dependencies Required
+
+```json
+{
+  "devDependencies": {
+    "sitemap": "^8.0.0"          // Image sitemap generation
+  }
+}
+```
+
+**Confidence:** HIGH (sitemap.js used by 1.7M+ projects)
+
+### Optional Dependencies (Future)
+
+```json
+{
+  "devDependencies": {
+    "vite-plugin-html-injection": "^1.0.1",  // If meta tags become dynamic
+    "fast-xml-parser": "^4.3.0"              // For sitemap validation
+  }
+}
+```
+
+**Confidence:** MEDIUM (not immediately needed)
+
+---
+
+## Risk Assessment
+
+### Low Risk (Implement Immediately)
+
+- Adding meta tags to index.html
+- Adding JSON-LD to index.html
+- Creating OG image
+
+**Mitigation:** Validate before deploy, easy to revert
+
+### Medium Risk (Test Thoroughly)
+
+- Build-time sitemap generation
+- postbuild script integration
+
+**Mitigation:**
+- Test locally before committing
+- Add validation step
+- Monitor build in GitHub Actions
+
+### Known Pitfalls
+
+**Pitfall 1: Invalid JSON-LD Syntax**
+- **Detection:** Google Rich Results Test shows errors
+- **Prevention:** Use linter, test in validator before deploy
+- **Recovery:** Fix and redeploy (fast iteration)
+
+**Pitfall 2: Build Script Failure in CI**
+- **Detection:** GitHub Actions build fails
+- **Prevention:** Test postbuild script locally with `npm run build`
+- **Recovery:** Fix script, commit (CI prevents bad deploy)
+
+**Pitfall 3: Sitemap Not Updated After Image Changes**
+- **Detection:** Google Search Console shows stale image count
+- **Prevention:** Ensure postbuild runs after vite build
+- **Recovery:** Re-run build, sitemap regenerates
+
+---
 
 ## Sources
 
-**Bootstrap 5 Migration:**
-- [Bootstrap 5 Migration Guide](https://getbootstrap.com/docs/5.3/migration/) - HIGH confidence
-- [Bootstrap 5 vs Bootstrap 4 Key Differences](https://www.vincentschmalbach.com/bootstrap-5-vs-bootstrap-4-key-differences-and-migration-guide/) - MEDIUM confidence
-- [Bootstrap 5 data-bs-* Attribute Change](https://www.vincentschmalbach.com/bootstrap-5-change-from-data-to-data-bs-attributes/) - HIGH confidence
+### Structured Data & JSON-LD
+- [SEO Optimization for React + Vite Apps](https://dev.to/ali_dz/optimizing-seo-in-a-react-vite-project-the-ultimate-guide-3mbh)
+- [Using structured data for SEO in 2026](https://comms.thisisdefinition.com/insights/ultimate-guide-to-structured-data-for-seo)
+- [JSON-LD For SEO: A Beginner's Guide](https://www.gtechme.com/insights/json-ld-for-seo-structured-data-guide/)
+- [Schema.org ImageGallery Type](https://schema.org/ImageGallery)
+- [Schema.org Photograph Type](https://schema.org/Photograph)
+- [JSON-LD Template For Photography Business](https://www.mikecassidyphotography.com/post/a-structured-data-json-ld-template-for-your-photography-business)
 
-**Isotope:**
-- [Isotope Official Documentation](https://isotope.metafizzy.co/) - HIGH confidence
-- [Isotope vanilla JS usage](https://isotope.metafizzy.co/extras.html) - HIGH confidence
+### Image Sitemaps
+- [Google Image Sitemaps Documentation](https://developers.google.com/search/docs/crawling-indexing/sitemaps/image-sitemaps)
+- [Best Image Sitemap Structure for Google Lens 2026](https://www.clickrank.ai/image-sitemap-structure-google-lens/)
+- [XML Image Sitemap Explained](https://www.xml-sitemaps.com/images-sitemap.html)
+- [sitemap.js npm package](https://www.npmjs.com/package/sitemap)
+- [sitemap.js GitHub](https://github.com/ekalinin/sitemap.js/)
 
-**Headhesive:**
-- [Headhesive.js](https://webscripts.softpedia.com/blog/Script-of-the-Day-Headhesive-js-455192.shtml) - Already vanilla JS, HIGH confidence
+### Vite Integration
+- [vite-plugin-sitemap](https://github.com/jbaubree/vite-plugin-sitemap)
+- [vite-plugin-html-injection](https://github.com/altrusl/vite-plugin-html-injection)
+- [vite-plugin-meta-tags](https://github.com/byr0n3/vite-plugin-meta-tags)
 
-**Swiper:**
-- [Swiper Getting Started](https://swiperjs.com/get-started) - HIGH confidence, no jQuery dependency
+### Open Graph & Meta Tags
+- [The Open Graph Protocol](https://ogp.me/)
+- [Open Graph Meta Tags Best Practices](https://digitalguider.com/blog/open-graph-meta-tags/)
+- [Open Graph Preview Tool](https://www.opengraph.xyz/)
 
-**Vanilla JS Scroll:**
-- [Vanilla JavaScript Scroll to Top](https://dev.to/dailydevtips1/vanilla-javascript-scroll-to-top-3mkd) - MEDIUM confidence
-- [You Might Not Need jQuery](https://youmightnotneedjquery.com/) - HIGH confidence for syntax conversions
+---
+
+## Conclusion
+
+**Recommended Architecture:** Hybrid approach combining static inline content (JSON-LD, meta tags) with build-time generation (image sitemap). This leverages existing build infrastructure while minimizing complexity.
+
+**Key Strengths:**
+- No major architectural changes needed
+- Incremental implementation path (can ship Phase 1 tomorrow)
+- Low risk (validation gates, easy rollback)
+- Scales to 1000+ images before requiring refactor
+
+**Implementation Sequence:**
+1. **Now:** Meta tags + JSON-LD (static inline, zero risk)
+2. **Next:** Image sitemap (build-time, medium complexity)
+3. **Later:** Validation automation (quality gates)
+
+**Total Effort Estimate:** 8-12 hours across 3 phases
+**SEO Impact:** High (rich results, image search, local visibility)
+**Performance Impact:** Negligible (<10KB HTML, <1s build time)
+**Maintenance Burden:** Low (automated sitemap, static structured data)
+
+**Ready for roadmap creation.** All SEO features architecturally feasible with existing Vite static site infrastructure.
