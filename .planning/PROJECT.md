@@ -8,6 +8,18 @@ A comprehensive maintenance and modernization project for Cassie's photography p
 
 **The site must remain fast, secure, and easy for Cassie to update.** Everything else (modernization, automation) supports this goal. A photography portfolio lives and dies by its images loading quickly and the site staying online.
 
+## Current Milestone: v2.0 jQuery Removal & Bootstrap 5 Migration
+
+**Goal:** Remove jQuery dependency entirely by migrating to Bootstrap 5 and replacing all jQuery-dependent plugins with modern vanilla JS alternatives.
+
+**Target features:**
+- Migrate from Bootstrap 4 to Bootstrap 5 (no jQuery dependency)
+- Replace Cubeportfolio with modern portfolio grid (Isotope or CSS grid + vanilla JS)
+- Replace SmartMenus with Bootstrap 5 native navigation or vanilla JS
+- Replace Headhesive sticky header with vanilla JS
+- Replace scrollUp with vanilla JS scroll-to-top
+- Remove jQuery entirely from the build
+
 ## Requirements
 
 ### Validated
@@ -19,37 +31,16 @@ A comprehensive maintenance and modernization project for Cassie's photography p
 
 ### Active
 
-**Bug Fixes:**
-- [ ] Fix broken portfolio image link (`cassiecay-M4-fullpng` → `cassiecay-M4-full.png`)
-- [ ] Fix duplicate `id="message"` elements in contact form HTML
+**v2.0 — jQuery Removal & Bootstrap 5 Migration:**
+- [ ] Migrate from Bootstrap 4 to Bootstrap 5 (no jQuery dependency)
+- [ ] Replace Cubeportfolio with modern portfolio grid solution
+- [ ] Replace SmartMenus with Bootstrap 5 native or vanilla JS navigation
+- [ ] Replace Headhesive sticky header with vanilla JS
+- [ ] Replace scrollUp with vanilla JS scroll-to-top
+- [ ] Remove jQuery entirely from the build
 
-**Infrastructure & Security:**
-- [ ] Complete domain migration (set `skipDomainSetup: false`, delete old CloudFront)
-- [ ] Update CDK and npm dependencies to latest versions
-- [ ] Remove legacy S3 bucket permission from GitHub OIDC role
-- [ ] Add dependency vulnerability scanning (Dependabot security alerts)
-
-**Automation & Build Checks:**
-- [ ] Add build step to bundle and minify CSS/JS
-- [ ] Add HTML validation in CI (catch broken links, malformed tags before deploy)
-- [ ] Add image validation in CI (missing files, oversized images)
-- [ ] Add pre-commit hooks for local validation
-- [ ] Add deploy notifications (email when deploy succeeds/fails)
-- [ ] Add Lighthouse performance check in CI pipeline
-
-**Performance:**
-- [ ] Implement image optimization pipeline (compress existing images, convert to WebP)
-- [ ] Add lazy loading for below-fold images
-- [ ] Reduce JavaScript bundle size
-
-**Frontend Modernization:**
-- [ ] Replace Revolution Slider (11MB) with lightweight alternative (Swiper or similar)
-- [ ] Replace/update jQuery plugins with modern equivalents
-- [ ] Remove unused JavaScript files and code
-
-**Workflow Improvements:**
-- [ ] Implement folder-based image galleries (adding photos shouldn't require HTML editing)
-- [ ] Provide clear deploy feedback for Cassie (notifications, status page, or similar)
+**Deferred to v2.1+:**
+- [ ] Implement folder-based image galleries (WORK-01 from v1)
 
 ### Out of Scope
 
@@ -95,10 +86,12 @@ A comprehensive maintenance and modernization project for Cassie's photography p
 
 | Decision | Rationale | Outcome |
 |----------|-----------|---------|
-| Keep static HTML structure | Cassie knows HTML, simpler than learning new framework | — Pending |
-| Replace Revolution Slider with Swiper | 11MB → ~200KB, modern, well-maintained | — Pending |
-| Add build step | Enables optimization without changing source files | — Pending |
-| Folder-based galleries | Reduces HTML editing for common task (adding photos) | — Pending |
+| Keep static HTML structure | Cassie knows HTML, simpler than learning new framework | ✓ Good |
+| Replace Revolution Slider with Embla | 11MB → ~6KB, modern, dependency-free | ✓ Good |
+| Add build step | Enables optimization without changing source files | ✓ Good |
+| Folder-based galleries | Reduces HTML editing for common task (adding photos) | — Deferred to v2.1 |
+| Remove jQuery entirely | ~90KB savings, Bootstrap 5 doesn't need it, fewer dependencies | — Pending |
+| Bootstrap 4 → 5 migration | Modern standards, better accessibility, no jQuery dependency | — Pending |
 
 ---
-*Last updated: 2026-01-19 after initialization*
+*Last updated: 2026-01-20 after v2.0 milestone start*

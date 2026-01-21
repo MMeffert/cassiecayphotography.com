@@ -2,19 +2,19 @@
 
 ## Project Reference
 
-See: .planning/PROJECT.md (updated 2026-01-19)
+See: .planning/PROJECT.md (updated 2026-01-20)
 
 **Core value:** The site must remain fast, secure, and easy for Cassie to update.
-**Current focus:** Phase 8 - Library Modernization COMPLETE
+**Current focus:** v2.0 — jQuery Removal & Bootstrap 5 Migration
 
 ## Current Position
 
-Phase: 8 of 9 (Library Modernization)
-Plan: 3 of 3 in current phase
-Status: Phase complete - Cleanup and verification done, ~373KB JS saved
-Last activity: 2026-01-20 - Completed 08-03 Cleanup and Human Verification
+Phase: Not started (defining requirements)
+Plan: —
+Status: Researching jQuery removal ecosystem
+Last activity: 2026-01-20 — Milestone v2.0 started
 
-Progress: [==================] 95%
+Progress: [░░░░░░░░░░░░░░░░░░] 0%
 
 ## Performance Metrics
 
@@ -103,6 +103,6 @@ From research - critical pitfalls to monitor:
 
 ## Session Continuity
 
-Last session: 2026-01-20T23:25:00Z
-Stopped at: Completed 08-03-PLAN.md - Cleanup and human verification
+Last session: 2026-01-20
+Stopped at: Starting v2.0 milestone - jQuery Removal & Bootstrap 5 Migration
 Resume file: None
