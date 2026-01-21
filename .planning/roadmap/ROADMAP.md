@@ -19,7 +19,7 @@ Decimal phases appear between their surrounding integers in numeric order.
 - [x] **Phase 5: Notifications & Feedback** ✓ Complete 2026-01-20 - Deploy notifications and status for Mitchell
 - [x] **Phase 6: Pre-commit Hooks** ✓ Complete 2026-01-20 - Local validation before CI
 - [x] **Phase 7: JavaScript Cleanup** ✓ Complete 2026-01-20 - Remove unused code, reduce bundle size
-- [ ] **Phase 8: Library Modernization** - Replace Revolution Slider and heavy plugins (OPTIONAL)
+- [x] **Phase 8: Library Modernization** - Replace Revolution Slider and heavy plugins (OPTIONAL) ✓ Complete 2026-01-20
 - [ ] **Phase 9: Workflow Enhancement** - Folder-based galleries (OPTIONAL)
 
 ## Phase Details
@@ -158,9 +158,9 @@ Plans:
 **Plans**: 3 plans
 
 Plans:
-- [ ] 08-01-PLAN.md — Replace LightGallery with GLightbox
-- [ ] 08-02-PLAN.md — Replace Revolution Slider with Embla Carousel
-- [ ] 08-03-PLAN.md — Cleanup and human verification
+- [x] 08-01-PLAN.md — Replace LightGallery with GLightbox ✓
+- [x] 08-02-PLAN.md — Replace Revolution Slider with Embla Carousel ✓
+- [x] 08-03-PLAN.md — Cleanup and human verification ✓
 
 ### Phase 9: Workflow Enhancement (OPTIONAL)
 **Goal**: Cassie can add photos to galleries by dropping images in folders
@@ -263,7 +263,7 @@ Phases 1-2 sequential, then parallel tracks possible per diagram above.
 | 5. Notifications & Feedback | 1/1 | Complete | 2026-01-20 |
 | 6. Pre-commit Hooks | 1/1 | Complete | 2026-01-20 |
 | 7. JavaScript Cleanup | 1/1 | Complete | 2026-01-20 |
-| 8. Library Modernization | 0/3 | Planned | - |
+| 8. Library Modernization | 3/3 | Complete | 2026-01-20 |
 | 9. Workflow Enhancement | 0/1 | Not started | - |
 
 ---
