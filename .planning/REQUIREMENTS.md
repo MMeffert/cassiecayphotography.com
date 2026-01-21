@@ -53,12 +53,12 @@
 
 ### Portfolio Grid Replacement
 
-- [ ] **PORT-01**: Replace Cubeportfolio with CSS Grid + vanilla JS filtering
-- [ ] **PORT-02**: Implement category filtering (all, wedding, portrait, etc.)
-- [ ] **PORT-03**: Maintain responsive grid layout across breakpoints
-- [ ] **PORT-04**: Integrate GLightbox with new portfolio grid
-- [ ] **PORT-05**: Add smooth filter transitions/animations
-- [ ] **PORT-06**: Implement masonry-style layout (variable height items)
+- [x] **PORT-01**: Replace Cubeportfolio with CSS Grid + vanilla JS filtering — Phase 11 ✓
+- [x] **PORT-02**: Implement category filtering (all, wedding, portrait, etc.) — Phase 11 ✓
+- [x] **PORT-03**: Maintain responsive grid layout across breakpoints — Phase 11 ✓
+- [x] **PORT-04**: Integrate GLightbox with new portfolio grid — Phase 11 ✓
+- [x] **PORT-05**: Add smooth filter transitions/animations — Phase 11 ✓
+- [x] **PORT-06**: Implement masonry-style layout (variable height items) — Phase 11 ✓
 
 ### Navigation & Sticky Header
 
@@ -115,12 +115,12 @@
 | BS5-03 | Phase 10 | Complete ✓ |
 | BS5-04 | Phase 10 | Complete ✓ |
 | BS5-05 | Phase 10 | Complete ✓ |
-| PORT-01 | Phase 11 | Pending |
-| PORT-02 | Phase 11 | Pending |
-| PORT-03 | Phase 11 | Pending |
-| PORT-04 | Phase 11 | Pending |
-| PORT-05 | Phase 11 | Pending |
-| PORT-06 | Phase 11 | Pending |
+| PORT-01 | Phase 11 | Complete ✓ |
+| PORT-02 | Phase 11 | Complete ✓ |
+| PORT-03 | Phase 11 | Complete ✓ |
+| PORT-04 | Phase 11 | Complete ✓ |
+| PORT-05 | Phase 11 | Complete ✓ |
+| PORT-06 | Phase 11 | Complete ✓ |
 | NAV-01 | Phase 12 | Pending |
 | NAV-02 | Phase 12 | Pending |
 | NAV-03 | Phase 12 | Pending |
@@ -142,3 +142,4 @@
 ---
 *Requirements defined: 2026-01-19*
 *Updated: 2026-01-20 — Phase 10 complete (5 requirements)*
+*Updated: 2026-01-21 — Phase 11 complete (6 requirements)*
