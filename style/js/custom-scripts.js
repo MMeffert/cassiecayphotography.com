@@ -119,7 +119,11 @@ $(document).ready(function() {
     /*-----------------------------------------------------------------------------------*/
     /*	CUBE PORTFOLIO (MOSAIC)
     /*-----------------------------------------------------------------------------------*/
+    // Initialize Cubeportfolio - remove lazy loading from portfolio images first
+    // to ensure dimensions are available for mosaic layout calculation
     var $cubemosaic = $('#cube-grid-mosaic');
+    $cubemosaic.find('img[loading="lazy"]').removeAttr('loading');
+
     $cubemosaic.cubeportfolio({
         filters: '#cube-grid-mosaic-filter',
         loadMore: '#cube-grid-mosaic-more',

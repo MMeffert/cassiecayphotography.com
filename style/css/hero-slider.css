@@ -41,24 +41,16 @@
   object-fit: cover;
 }
 
-/* Text Overlay - Static positioning */
+/* Text Overlay - Vertically centered, right-aligned */
 .hero-overlay {
   position: absolute;
-  top: 20px;
-  right: 20px;
+  top: 50%;
+  right: 40px;
+  transform: translateY(-50%);
   text-align: right;
   color: white;
   z-index: 10;
   pointer-events: none;
-}
-
-.hero-tagline {
-  display: block;
-  text-transform: uppercase;
-  letter-spacing: 3px;
-  font-size: 16px;
-  font-weight: 500;
-  margin-bottom: 10px;
 }
 
 .hero-title {
@@ -68,6 +60,15 @@
   font-size: 50px;
   font-weight: 700;
   line-height: 1;
+  margin-bottom: 10px;
+}
+
+.hero-tagline {
+  display: block;
+  text-transform: uppercase;
+  letter-spacing: 3px;
+  font-size: 16px;
+  font-weight: 500;
 }
 
 /* Responsive text sizing */
@@ -87,8 +88,11 @@
   .hero-title {
     font-size: 30px;
   }
+  .hero-tagline {
+    font-size: 12px;
+    letter-spacing: 2px;
+  }
   .hero-overlay {
-    top: 10px;
-    right: 10px;
+    right: 15px;
   }
 }
