@@ -9,12 +9,12 @@ See: .planning/PROJECT.md (updated 2026-01-20)
 
 ## Current Position
 
-Phase: Not started (defining requirements)
+Phase: 10 - Bootstrap 5 Migration
 Plan: —
-Status: Researching jQuery removal ecosystem
-Last activity: 2026-01-20 — Milestone v2.0 started
+Status: Roadmap complete, ready for planning
+Last activity: 2026-01-20 — v2.0 Roadmap created (6 phases, 24 requirements)
 
-Progress: [░░░░░░░░░░░░░░░░░░] 0%
+Progress: [░░░░░░░░░░░░░░░░░░░░] 0/6 phases
 
 ## Performance Metrics
 
@@ -93,16 +93,18 @@ None.
 
 ### Blockers/Concerns
 
-From research - critical pitfalls to monitor:
+From research - critical pitfalls to monitor during v2.0:
 
-- **Revolution Slider fragility**: RESOLVED in 08-02/08-03 - Revolution Slider completely removed, replaced by Embla
-- **Dreamweaver workflow**: Build step must enhance, not replace HTML editing
-- **Image quality**: Use conservative settings on photography portfolio (JPEG 85+, AVIF 60+) - ADDRESSED in 03-01 (AVIF 85, WebP 85, JPEG 90)
-- **CloudFront cache**: 1-year cache on assets requires content hashing or invalidation - ADDRESSED in 02-01 (content hashing enabled)
-- **Quality review**: Deferred review - monitor for issues in production
+- **Bootstrap data-* namespace**: `data-toggle` must become `data-bs-toggle`. Silent failure with no console errors.
+- **Bootstrap CSS class renames**: `.ml-*` to `.ms-*`, `.text-left` to `.text-start`. Audit all classes before migration.
+- **Contact form AJAX migration**: 18 jQuery calls including `$.ajax()` must convert to fetch API.
+- **Cubeportfolio replacement complexity**: Must replicate filtering, responsive columns, and GLightbox integration.
+- **Sticky header SmartMenus callback**: Headhesive's `onStick` callback currently initializes SmartMenus - must remove.
+- **Dreamweaver workflow**: Build step must enhance, not replace HTML editing.
 
 ## Session Continuity
 
 Last session: 2026-01-20
-Stopped at: Starting v2.0 milestone - jQuery Removal & Bootstrap 5 Migration
+Stopped at: v2.0 roadmap created - ready for Phase 10 planning
 Resume file: None
+Next step: /gsd:plan-phase 10
