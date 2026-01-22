@@ -1,6 +1,6 @@
 # Project Milestones: Cassie Cay Photography
 
-## v2.3 Tech Debt Cleanup (In Progress)
+## v2.3 Tech Debt Cleanup (Shipped: 2026-01-22)
 
 **Goal:** Remove orphaned JS files and unused CSS to reduce bundle size.
 
@@ -8,10 +8,13 @@
 
 | Phase | Description | Status |
 |-------|-------------|--------|
-| 21 | Delete orphaned JS files (plugins.js, scripts.js) | Pending |
-| 22 | Extract Swiper CSS & remove plugins.css | Pending |
+| 21 | Delete orphaned JS files (plugins.js, scripts.js) | ✅ Complete |
+| 22 | Extract Swiper CSS & remove plugins.css | ✅ Complete |
 
-**Expected savings:** ~762KB (593KB JS + 169KB CSS)
+**Savings achieved:**
+- 593KB JS (plugins.js + scripts.js deleted)
+- 169KB CSS (plugins.css replaced with 14KB swiper.css)
+- **Total: ~762KB**
 
 ---
 
