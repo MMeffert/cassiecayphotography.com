@@ -2,19 +2,27 @@
 
 ## v2.3 Tech Debt Cleanup (Shipped: 2026-01-22)
 
-**Goal:** Remove orphaned JS files and unused CSS to reduce bundle size.
+**Delivered:** Removed ~762KB of orphaned JS and unused CSS from the codebase.
 
-**Phases:** 21-22
+**Phases completed:** 21-22 (2 plans total)
 
-| Phase | Description | Status |
-|-------|-------------|--------|
-| 21 | Delete orphaned JS files (plugins.js, scripts.js) | ✅ Complete |
-| 22 | Extract Swiper CSS & remove plugins.css | ✅ Complete |
+**Key accomplishments:**
 
-**Savings achieved:**
-- 593KB JS (plugins.js + scripts.js deleted)
-- 169KB CSS (plugins.css replaced with 14KB swiper.css)
-- **Total: ~762KB**
+- Deleted orphaned plugins.js (534KB) and scripts.js (59KB)
+- Extracted Swiper CSS (14KB) from plugins.css (183KB)
+- Verified all removed code had zero references
+- Tested on local dev and production
+
+**Stats:**
+
+- 10 files created/modified
+- 2,279 lines removed, 131 lines added
+- 2 phases, 2 plans
+- Same day delivery (2026-01-22)
+
+**Git range:** `feat(21)` → `docs: mark v2.3 complete`
+
+**Archive:** [v2.3-ROADMAP.md](milestones/v2.3-ROADMAP.md)
 
 ---
 
