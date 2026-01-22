@@ -1,5 +1,20 @@
 # Project Milestones: Cassie Cay Photography
 
+## v2.3 Tech Debt Cleanup (In Progress)
+
+**Goal:** Remove orphaned JS files and unused CSS to reduce bundle size.
+
+**Phases:** 21-22
+
+| Phase | Description | Status |
+|-------|-------------|--------|
+| 21 | Delete orphaned JS files (plugins.js, scripts.js) | Pending |
+| 22 | Extract Swiper CSS & remove plugins.css | Pending |
+
+**Expected savings:** ~762KB (593KB JS + 169KB CSS)
+
+---
+
 ## v2.2 Mobile Navigation (Shipped: 2026-01-21)
 
 **Delivered:** Modern mobile navigation with Bootstrap 5 offcanvas drawer that slides from the left, providing a native mobile app-like experience.

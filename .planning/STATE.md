@@ -5,20 +5,21 @@
 See: .planning/PROJECT.md (updated 2026-01-21)
 
 **Core value:** The site must remain fast, secure, and easy for Cassie to update.
-**Current focus:** No active milestone - site stable
+**Current focus:** v2.3 Tech Debt Cleanup
 
 ## Current Position
 
-Milestone: v2.2 complete
-Status: Stable - no active development
-Last activity: 2026-01-21 — Fixed contact form (AWS Secrets Manager configuration)
+Milestone: v2.3 Tech Debt Cleanup
+Status: Phase 21 ready
+Last activity: 2026-01-22 — Created v2.3 milestone planning
 
-Next step: Run `/gsd:new-milestone` when ready to add new features
+Next step: Execute Phase 21 (delete orphaned JS files)
 
 ## Milestones
 
 See: .planning/MILESTONES.md
 
+- **v2.3** Tech Debt Cleanup — IN PROGRESS (Phases 21-22)
 - **v2.2** Mobile Navigation — SHIPPED 2026-01-21 (Phase 20)
 - **v2.1** SEO — SHIPPED 2026-01-21 (Phases 16-19)
 - **v2.0** jQuery Removal & Bootstrap 5 Migration — SHIPPED 2026-01-21 (Phases 1-15)
@@ -42,7 +43,7 @@ None - ready for next milestone planning.
 
 ## Session Continuity
 
-Last session: 2026-01-21
-Stopped at: Contact form bug fix (Secrets Manager configuration)
-Resume file: None
-Next step: Site is stable. Run `/gsd:new-milestone` when ready to add new features.
+Last session: 2026-01-22
+Stopped at: Created v2.3 milestone planning
+Resume file: .planning/v2.3/phase-21.md
+Next step: Execute Phase 21 — delete orphaned JS files (plugins.js, scripts.js)
