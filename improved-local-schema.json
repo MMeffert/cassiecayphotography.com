@@ -1,0 +1,118 @@
+{
+  "@context": "https://schema.org",
+  "@type": "LocalBusiness",
+  "additionalType": "https://schema.org/Photographer",
+  "name": "Cassie Cay Photography",
+  "description": "Professional photographer in Madison, Wisconsin specializing in family, newborn, senior, milestone, and event photography.",
+  "url": "https://cassiecayphotography.com",
+  "telephone": "+1-XXX-XXX-XXXX",
+  "email": "cassie@cassiecayphotography.com",
+  "image": "https://cassiecayphotography.com/images-optimized/webp/full/cassiecaylogobw2.webp",
+  "priceRange": "$$",
+  "address": {
+    "@type": "PostalAddress",
+    "streetAddress": "123 Main Street",
+    "addressLocality": "Waunakee",
+    "addressRegion": "WI",
+    "postalCode": "53597",
+    "addressCountry": "US"
+  },
+  "geo": {
+    "@type": "GeoCoordinates",
+    "latitude": 43.0731,
+    "longitude": -89.4012
+  },
+  "areaServed": [
+    {
+      "@type": "City",
+      "name": "Madison",
+      "containedInPlace": {
+        "@type": "State",
+        "name": "Wisconsin"
+      }
+    },
+    {
+      "@type": "City", 
+      "name": "Waunakee",
+      "containedInPlace": {
+        "@type": "State",
+        "name": "Wisconsin"
+      }
+    },
+    {
+      "@type": "City",
+      "name": "Sun Prairie", 
+      "containedInPlace": {
+        "@type": "State",
+        "name": "Wisconsin"
+      }
+    },
+    {
+      "@type": "City",
+      "name": "Middleton",
+      "containedInPlace": {
+        "@type": "State", 
+        "name": "Wisconsin"
+      }
+    }
+  ],
+  "openingHours": [
+    "Mo-Fr 09:00-17:00",
+    "Sa 10:00-16:00"
+  ],
+  "knowsAbout": [
+    "Family Photography",
+    "Newborn Photography", 
+    "Senior Portraits",
+    "Milestone Photography",
+    "Event Photography",
+    "Wedding Photography",
+    "Maternity Photography",
+    "Fresh 48 Photography"
+  ],
+  "sameAs": [
+    "https://www.facebook.com/cassiecayphotography",
+    "https://www.instagram.com/cassiecayphotography"
+  ],
+  "aggregateRating": {
+    "@type": "AggregateRating",
+    "ratingValue": "5.0",
+    "reviewCount": "25"
+  },
+  "hasOfferCatalog": {
+    "@type": "OfferCatalog",
+    "name": "Photography Services",
+    "itemListElement": [
+      {
+        "@type": "Offer",
+        "itemOffered": {
+          "@type": "Service",
+          "name": "Full Session Photography",
+          "description": "45-60 minute session with 70+ high-resolution digital images"
+        },
+        "price": "350.00",
+        "priceCurrency": "USD"
+      },
+      {
+        "@type": "Offer", 
+        "itemOffered": {
+          "@type": "Service",
+          "name": "Senior Portrait Photography",
+          "description": "60-90 minute session with 70+ digital images, unlimited outfit changes"
+        },
+        "price": "400.00",
+        "priceCurrency": "USD"
+      },
+      {
+        "@type": "Offer",
+        "itemOffered": {
+          "@type": "Service", 
+          "name": "Newborn Photography",
+          "description": "1-3 hour lifestyle session with 70+ digital high-resolution images"
+        },
+        "price": "450.00",
+        "priceCurrency": "USD"
+      }
+    ]
+  }
+}
