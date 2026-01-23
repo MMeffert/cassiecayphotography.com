@@ -73,6 +73,21 @@ Contact Mitchell — he can help remove photos and their optimized versions.
 
 ---
 
+## Uploading Client Photos (Zip Files)
+
+Client photo downloads are stored separately from the website. To upload:
+
+1. Go to **aws.amazon.com** and sign in
+2. Search for **S3** and open it
+3. Click on **cassiecayphotography.com-site-content**
+4. Click on the **ClientPhotos** folder
+5. Click **"Upload"** → drag in your zip file → click **"Upload"**
+
+The download link will be:
+`https://cassiecayphotography.com/ClientPhotos/YourFileName.zip`
+
+---
+
 ## If Something Breaks
 
 Don't panic! Mitchell can revert any change. Just let him know what happened.
