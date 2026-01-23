@@ -30,5 +30,19 @@ Your changes will automatically go live in about 2-3 minutes!
 - If something breaks, don't panic! Mitchell can fix it by reverting the change
 - Test your changes by visiting cassiecayphotography.com after a few minutes
 
-## Need to Add/Remove Photos?
-For now, let Mitchell know and he can help with that part. The photos require some special processing to keep the site fast.
+## Adding New Photos
+
+1. Go to the `new-photos/` folder in GitHub
+2. Click "Add file" → "Upload files"
+3. Drag in your photos (use names like `cassiecay-F44.jpg`)
+4. Click "Commit changes"
+5. Wait 2-3 minutes for processing
+6. Open `index.html` and find the new image blocks at the bottom of the portfolio section
+7. Cut each block (from `MOVE THIS BLOCK START` to `MOVE THIS BLOCK END`)
+8. Paste where you want it in the portfolio
+9. Update the category if needed: change `family` to `milestone`, `senior`, `newborn`, or `couples`
+10. Update the alt text: replace `[ADD DESCRIPTION]` with a description of the photo
+11. Commit your changes
+
+## Removing Photos
+For now, let Mitchell know and he can help with that part.
