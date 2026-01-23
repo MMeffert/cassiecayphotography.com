@@ -1,0 +1,83 @@
+name: Update Gallery
+
+on:
+  push:
+    paths: ['gallery-config.json', 'images/**']
+  pull_request:
+    paths: ['gallery-config.json', 'images/**']
+
+jobs:
+  update-gallery:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      
+      - name: Generate Gallery HTML
+        run: |
+          python3 << 'EOF'
+          import json
+          import os
+          
+          with open('gallery-config.json') as f:
+              config = json.load(f)
+          
+          html = '''<!DOCTYPE html>
+          <html><head><title>Gallery</title>
+          <style>
+          .gallery { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 20px; padding: 20px; }
+          .item { border: 1px solid #ddd; padding: 10px; text-align: center; }
+          .item img { max-width: 100%; height: 200px; object-fit: cover; }
+          .position { background: #f0f0f0; padding: 5px; margin-bottom: 10px; font-weight: bold; }
+          </style></head><body><div class="gallery">'''
+          
+          for i, item in enumerate(config['gallery']):
+              html += f'''
+              <div class="item">
+                  <div class="position">Position {i+1}</div>
+                  <img src="images/{item['filename']}" alt="{item['title']}">
+                  <h3>{item['title']}</h3>
+                  <p>{item['description']}</p>
+              </div>'''
+          
+          html += '</div></body></html>'
+          
+          with open('gallery.html', 'w') as f:
+              f.write(html)
+          EOF
+      
+      - name: Upload Preview (PR only)
+        if: github.event_name == 'pull_request'
+        uses: actions/upload-artifact@v4
+        with:
+          name: gallery-preview
+          path: gallery.html
+      
+      - name: Comment PR with Preview
+        if: github.event_name == 'pull_request'
+        uses: actions/github-script@v7
+        with:
+          script: |
+            const fs = require('fs');
+            const config = JSON.parse(fs.readFileSync('gallery-config.json', 'utf8'));
+            
+            let preview = '## 🖼️ Gallery Preview\n\n';
+            preview += '**New gallery order:**\n';
+            config.gallery.forEach((item, i) => {
+              preview += `${i+1}. **${item.title}** (${item.filename})\n`;
+            });
+            preview += '\n📎 Download the preview HTML from the workflow artifacts to see the visual layout.';
+            
+            github.rest.issues.createComment({
+              issue_number: context.issue.number,
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              body: preview
+            });
+      
+      - name: Deploy to GitHub Pages
+        if: github.ref == 'refs/heads/main'
+        uses: peaceiris/actions-gh-pages@v3
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          publish_dir: .
+          publish_branch: gh-pages

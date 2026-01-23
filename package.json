@@ -30,7 +30,6 @@
   },
   "homepage": "https://github.com/MMeffert/cassiecayphotography.com#readme",
   "devDependencies": {
-    "@anthropic-ai/sdk": "^0.71.2",
     "autoprefixer": "^10.4.23",
     "cli-progress": "^3.12.0",
     "cssnano": "^7.1.2",
@@ -39,7 +38,6 @@
     "html-validate": "^10.6.0",
     "husky": "^9.1.7",
     "node-html-parser": "^7.0.2",
-    "openai": "^6.16.0",
     "p-limit": "^7.2.0",
     "postcss": "^8.5.6",
     "sharp": "^0.34.5",

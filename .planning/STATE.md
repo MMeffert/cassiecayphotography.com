@@ -5,15 +5,15 @@
 See: .planning/PROJECT.md (updated 2026-01-22)
 
 **Core value:** The site must remain fast, secure, and easy for Cassie to update.
-**Current focus:** Planning next milestone
+**Current focus:** v2.4 Decap CMS Integration
 
 ## Current Position
 
-Milestone: v2.3 complete
-Status: Ready for next milestone
-Last activity: 2026-01-22 — v2.3 Tech Debt Cleanup shipped
+Milestone: v2.4 in progress
+Status: Planning/Research
+Last activity: 2026-01-23 — Started Decap CMS integration
 
-Next step: Run `/gsd:new-milestone` when ready to add new features
+Next step: Research Decap CMS setup and create implementation plan
 
 ## Milestones
 
