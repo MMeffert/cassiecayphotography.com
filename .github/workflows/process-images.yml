@@ -67,12 +67,13 @@ jobs:
       - name: Generate HTML snippets
         if: steps.check.outputs.has_images == 'true'
         run: |
-          # Find newly added images and generate HTML
-          for img in images-optimized/jpeg/full/cassiecay-*.jpg; do
-            filename=$(basename "$img" .jpg)
-            
-            # Check if this image is already in index.html
-            if grep -q "$filename" index.html; then
+          # Get list of images that were just moved
+          MOVED_IMAGES=$(git diff --name-only HEAD~1 HEAD -- images/ | grep -E '\.(jpg|jpeg|png)$' | xargs -I {} basename {} | sed 's/\.[^.]*$//')
+          
+          for filename in $MOVED_IMAGES; do
+            # Skip if already in index.html
+            if grep -q "href=\"images-optimized/jpeg/full/$filename.jpg\"" index.html; then
+              echo "Skipping $filename - already in index.html"
               continue
             fi
             
@@ -80,34 +81,33 @@ jobs:
             
             # Check if 800w variant exists
             if [ -f "images-optimized/jpeg/800w/$filename.jpg" ]; then
-              # Responsive version
               cat >> new-images.html << EOF
-          <!-- ========== MOVE THIS BLOCK START ========== -->
-          <!-- Image: $filename | Category: family (options: family, milestone, senior, newborn, couples) -->
-          <div class="portfolio-item family">
-            <div class="portfolio-item-content">
-              <figure class="overlay overlay2"><a href="images-optimized/jpeg/full/$filename.jpg">
-                <picture>
-                  <source
-                    srcset="images-optimized/avif/800w/$filename.avif 800w"
-                    sizes="(max-width: 600px) 100vw, (max-width: 1200px) 50vw, 400px"
-                    type="image/avif">
-                  <source
-                    srcset="images-optimized/webp/800w/$filename.webp 800w"
-                    sizes="(max-width: 600px) 100vw, (max-width: 1200px) 50vw, 400px"
-                    type="image/webp">
-                  <img
-                    src="images-optimized/jpeg/800w/$filename.jpg"
-                    srcset="images-optimized/jpeg/800w/$filename.jpg 800w"
-                    sizes="(max-width: 600px) 100vw, (max-width: 1200px) 50vw, 400px"
-                    alt="[ADD DESCRIPTION]"
-                    loading="lazy">
-                </picture>
-              </a></figure>
-            </div>
-          </div>
-          <!-- ========== MOVE THIS BLOCK END ========== -->
-          EOF
+<!-- ========== MOVE THIS BLOCK START ========== -->
+<!-- Image: $filename | Category: family (options: family, milestone, senior, newborn, couples) -->
+<div class="portfolio-item family">
+  <div class="portfolio-item-content">
+    <figure class="overlay overlay2"><a href="images-optimized/jpeg/full/$filename.jpg">
+      <picture>
+        <source
+          srcset="images-optimized/avif/800w/$filename.avif 800w"
+          sizes="(max-width: 600px) 100vw, (max-width: 1200px) 50vw, 400px"
+          type="image/avif">
+        <source
+          srcset="images-optimized/webp/800w/$filename.webp 800w"
+          sizes="(max-width: 600px) 100vw, (max-width: 1200px) 50vw, 400px"
+          type="image/webp">
+        <img
+          src="images-optimized/jpeg/800w/$filename.jpg"
+          srcset="images-optimized/jpeg/800w/$filename.jpg 800w"
+          sizes="(max-width: 600px) 100vw, (max-width: 1200px) 50vw, 400px"
+          alt="[ADD DESCRIPTION]"
+          loading="lazy">
+      </picture>
+    </a></figure>
+  </div>
+</div>
+<!-- ========== MOVE THIS BLOCK END ========== -->
+EOF
             fi
           done
 
