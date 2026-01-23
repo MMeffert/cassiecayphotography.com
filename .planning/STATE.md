@@ -5,20 +5,22 @@
 See: .planning/PROJECT.md (updated 2026-01-22)
 
 **Core value:** The site must remain fast, secure, and easy for Cassie to update.
-**Current focus:** v2.4 Decap CMS Integration
+**Current focus:** v2.4 GitHub-based Content Management
 
 ## Current Position
 
-Milestone: v2.4 in progress
-Status: Planning/Research
-Last activity: 2026-01-23 — Started Decap CMS integration
-
-Next step: Research Decap CMS setup and create implementation plan
+Milestone: v2.4 complete
+Status: Shipped
+Last activity: 2026-01-23 — GitHub Actions workflow for photo uploads
 
 ## Milestones
 
 See: .planning/MILESTONES.md
 
+- **v2.4** GitHub Content Management — SHIPPED 2026-01-23
+  - Text editing via GitHub web UI
+  - Photo uploads via `new-photos/` folder with automated processing
+  - Categories renamed to readable names (family, milestone, senior, newborn, couples)
 - **v2.3** Tech Debt Cleanup — SHIPPED 2026-01-22 (Phases 21-22)
 - **v2.2** Mobile Navigation — SHIPPED 2026-01-21 (Phase 20)
 - **v2.1** SEO — SHIPPED 2026-01-21 (Phases 16-19)
@@ -29,21 +31,20 @@ See: .planning/MILESTONES.md
 
 ### Decisions
 
-Decisions logged in PROJECT.md Key Decisions table.
-Full decision log archived in phase SUMMARY.md files and milestone archives.
+- Chose GitHub web UI over Decap CMS for simplicity
+- Photo workflow: upload to `new-photos/` → auto-process → manual HTML placement
+- Image quality: 85 AVIF, 85 WebP, 90 JPEG
 
 ### Open Blockers/Concerns
 
-None - ready for next milestone planning.
+None
 
-### Deferred Features (v2.3+)
+### Deferred Features
 
-- Folder-based image galleries (WORK-01 from v1)
+- Folder-based image galleries
 - Dark mode toggle
 
 ## Session Continuity
 
-Last session: 2026-01-22
-Stopped at: v2.3 milestone complete
-Resume file: None
-Next step: Run `/gsd:new-milestone` when ready to add new features
+Last session: 2026-01-23
+Stopped at: v2.4 milestone complete
