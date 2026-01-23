@@ -1,0 +1,111 @@
+import { defineConfig } from 'vite'
+import { viteStaticCopy } from 'vite-plugin-static-copy'
+import { resolve } from 'path'
+
+export default defineConfig({
+  root: '.',
+  publicDir: false, // Don't copy public folder (we manage assets explicitly)
+
+  build: {
+    outDir: 'dist',
+    emptyOutDir: true,
+    cssCodeSplit: false,
+
+    rollupOptions: {
+      input: {
+        main: resolve(__dirname, 'index.html'),
+      },
+
+      // Keep vendor JS files external - loaded via script tags
+      external: [
+        /^style\/js\/bootstrap\.bundle\.min\.js$/,
+        /^style\/js\/embla-carousel\.umd\.js$/,
+        /^style\/js\/embla-carousel-autoplay\.umd\.js$/,
+        /^style\/js\/muuri\.min\.js$/,
+      ],
+
+      output: {
+        assetFileNames: 'assets/[name]-[hash][extname]',
+        chunkFileNames: 'assets/[name]-[hash].js',
+        entryFileNames: 'assets/[name]-[hash].js',
+      }
+    }
+  },
+
+  plugins: [
+    viteStaticCopy({
+      targets: [
+        // Copy vendor JS files that should not be bundled
+        {
+          src: 'style/js/bootstrap.bundle.min.js',
+          dest: 'style/js'
+        },
+        {
+          src: 'style/js/muuri.min.js',
+          dest: 'style/js'
+        },
+        // Copy Embla Carousel (Phase 8 - replaced Revolution Slider)
+        {
+          src: 'style/js/embla-carousel.umd.js',
+          dest: 'style/js'
+        },
+        {
+          src: 'style/js/embla-carousel-autoplay.umd.js',
+          dest: 'style/js'
+        },
+        // Copy GLightbox (Phase 8 - replaced LightGallery)
+        {
+          src: 'style/js/glightbox.min.js',
+          dest: 'style/js'
+        },
+        // Copy custom JS files (Phase 7 - extracted from plugins.js and scripts.js)
+        {
+          src: 'style/js/custom-plugins.js',
+          dest: 'style/js'
+        },
+        {
+          src: 'style/js/custom-scripts.js',
+          dest: 'style/js'
+        },
+        // Copy CSS files
+        {
+          src: 'style/css',
+          dest: 'style'
+        },
+        {
+          src: 'style/style.css',
+          dest: 'style'
+        },
+        {
+          src: 'style/type',
+          dest: 'style'
+        },
+        // Copy images directory (original - safety during migration)
+        {
+          src: 'images',
+          dest: '.'
+        },
+        // Copy optimized images directory (AVIF, WebP, JPEG in responsive widths)
+        {
+          src: 'images-optimized',
+          dest: '.'
+        },
+        // Copy other static files
+        {
+          src: 'robots.txt',
+          dest: '.'
+        },
+        {
+          src: 'sitemap.xml',
+          dest: '.'
+        },
+      ]
+    })
+  ],
+
+  // Dev server configuration
+  server: {
+    open: true, // Open browser on start
+    port: 3000,
+  },
+})

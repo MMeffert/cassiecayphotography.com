@@ -1,0 +1,53 @@
+{
+  "name": "cassiecayphotography",
+  "version": "1.0.0",
+  "description": "Cassie Cay Photography portfolio website",
+  "type": "module",
+  "private": true,
+  "scripts": {
+    "dev": "vite",
+    "build": "vite build",
+    "preview": "vite preview",
+    "preprocess": "node scripts/optimize-images.js",
+    "prebuild": "npm run preprocess",
+    "postbuild": "npm run generate:sitemap",
+    "generate:sitemap": "node scripts/generate-sitemap.js",
+    "validate:html": "node scripts/validate-html.js",
+    "validate:refs": "node scripts/check-references.js",
+    "validate:images": "node scripts/check-image-sizes.js",
+    "validate:staged": "node scripts/validate-staged.js",
+    "prepare": "husky"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/MMeffert/cassiecayphotography.com.git"
+  },
+  "keywords": [],
+  "author": "Cassie Meffert",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/MMeffert/cassiecayphotography.com/issues"
+  },
+  "homepage": "https://github.com/MMeffert/cassiecayphotography.com#readme",
+  "devDependencies": {
+    "autoprefixer": "^10.4.23",
+    "cli-progress": "^3.12.0",
+    "cssnano": "^7.1.2",
+    "fs-extra": "^11.3.3",
+    "glob": "^13.0.0",
+    "html-validate": "^10.6.0",
+    "husky": "^9.1.7",
+    "node-html-parser": "^7.0.2",
+    "p-limit": "^7.2.0",
+    "postcss": "^8.5.6",
+    "sharp": "^0.34.5",
+    "sitemap": "^9.0.0",
+    "vite": "^7.3.1",
+    "vite-plugin-static-copy": "^3.1.5"
+  },
+  "dependencies": {
+    "embla-carousel": "^8.6.0",
+    "embla-carousel-autoplay": "^8.6.0",
+    "glightbox": "^3.3.1"
+  }
+}

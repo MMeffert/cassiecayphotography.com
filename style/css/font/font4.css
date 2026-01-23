@@ -1,0 +1,51 @@
+body,
+.font-body,
+.map-info *,
+.font-title,
+h1,
+h2,
+h3,
+h4,
+h5,
+h6,
+.lead,
+.lead2,
+.badge,
+.blockquote-footer,
+.navbar,
+.btn,
+.tp-caption:not(.font-body):not(.font-title),
+.erinyen .tp-tab-title,
+.cbp-filter-item,
+.meta,
+a.more,
+.swiper-slide .caption-bg p,
+.overlay-nav li a,
+.nav-tabs .nav-link,
+.tabs-wrapper.filtered .nav-tabs .nav-link,
+.countdown p,
+.counter p,
+.page-navi a {
+    font-family: 'Overpass', sans-serif;
+}
+.navbar-nav .nav-link {
+    font-size: 16px;
+}
+.dropdown-item,
+.mega-menu-content a {
+    font-size: 15px;
+}
+.navbar.text-uppercase .navbar-nav .nav-link {
+    font-size: 14px;
+}
+.navbar.text-uppercase .dropdown-item,
+.navbar.text-uppercase .mega-menu-content a {
+    font-size: 13px;
+}
+.btn {
+    font-size: 14px;
+}
+blockquote.larger p {
+    font-size: 24px;
+    line-height: 38px;
+}

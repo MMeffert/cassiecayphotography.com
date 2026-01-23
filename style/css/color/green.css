@@ -1,0 +1,210 @@
+::-moz-selection {
+    background: #d1f1eb;
+}
+::selection {
+    background: #d1f1eb;
+}
+.overlay.color span.bg {
+    background: rgba(26, 187, 156, 0.8);
+}
+a.hover:hover {
+    border-bottom: 1px solid #1abb9c;
+}
+a {
+    color: #1abb9c;
+}
+a:hover,
+a:focus {
+    text-decoration: none;
+    color: #1abb9c;
+}
+.color-wrapper {
+    background: #1abb9c;
+}
+.navbar-nav .nav-link:hover,
+.navbar-nav .nav-link.active,
+.navbar-nav .nav-link.highlighted {
+    color: #1abb9c;
+}
+.navbar .social-mute a:hover i {
+    color: #1abb9c;
+}
+.btn {
+    background: #1abb9c;
+}
+.btn:hover,
+.btn:focus,
+.btn:active,
+.btn.active {
+    background: #12ac8e;
+}
+.btn.btn-border {
+    border: 2px solid #1abb9c;
+    color: #1abb9c;
+}
+.btn.btn-border:hover,
+.btn.btn-border:focus,
+.btn.btn-border:active,
+.btn.btn-border.active {
+    border: 2px solid #1abb9c;
+    background: #1abb9c;
+    color: #FFF;
+}
+.btn-group .dropdown-menu>li>a:hover,
+.btn-group .dropdown-menu>li>a:focus {
+    color: #1abb9c;
+}
+.image-list li a:hover {
+    color: #1abb9c
+}
+.list-group-item.active {
+    background-color: #1abb9c;
+    border-color: #1abb9c
+}
+.cbp-filter-item.cbp-filter-item-active,
+.cbp-filter-item:hover {
+    color: #1abb9c;
+}
+.swiper-container-wrapper .swiper-pagination .swiper-pagination-bullet:hover,
+.swiper-container-wrapper .swiper-pagination .swiper-pagination-bullet.swiper-pagination-bullet-active {
+    background: #1abb9c
+}
+.post-title a:hover,
+.more:hover,
+.meta a:hover {
+    color: #1abb9c;
+}
+.post-nav-wrapper a:hover {
+    color: #1abb9c;
+}
+.sidebox a:not(.btn):hover {
+    color: #1abb9c
+}
+#comments .info h6 a:hover {
+    color: #1abb9c;
+}
+.social-mute a:hover i {
+    color: #1abb9c;
+}
+.inverse-text .social-mute a:hover i {
+    color: rgba(255, 255, 255, 0.75) !important;
+}
+.icon-color {
+    color: #1abb9c
+}
+.box.box-border:hover,
+.box.box-border:hover:before {
+    border-color: #1abb9c
+}
+.overlay.caption-dark .meta a:hover {
+    color: #1abb9c !important;
+}
+.accordion-wrapper.lined .card-header a,
+.accordion-wrapper.lined .card-header a:hover,
+.accordion-wrapper.lined .card-header a.collapsed:hover {
+    color: #1abb9c;
+    border-color: #1abb9c;
+}
+.nav-tabs .nav-item.show .nav-link,
+.nav-tabs .nav-item .nav-link:hover,
+.nav-tabs .nav-item .nav-link.active {
+    color: #1abb9c;
+    border-color: #1abb9c !important;
+}
+.tooltip-inner {
+    background-color: #1abb9c;
+}
+.tooltip.bs-tooltip-auto[x-placement^=top] .arrow::before,
+.tooltip.bs-tooltip-top .arrow::before {
+    border-top-color: #1abb9c;
+}
+.tooltip.bs-tooltip-auto[x-placement^=right] .arrow::before,
+.tooltip.bs-tooltip-right .arrow::before {
+    border-right-color: #1abb9c;
+}
+.tooltip.bs-tooltip-auto[x-placement^=bottom] .arrow::before,
+.tooltip.bs-tooltip-bottom .arrow::before {
+    border-bottom-color: #1abb9c;
+}
+.tooltip.bs-tooltip-auto[x-placement^=left] .arrow::before,
+.tooltip.bs-tooltip-left .arrow::before {
+    border-left-color: #1abb9c;
+}
+textarea:focus,
+textarea.form-control:focus,
+input[type="text"]:focus,
+input[type="password"]:focus,
+input[type="datetime"]:focus,
+input[type="datetime-local"]:focus,
+input[type="date"]:focus,
+input[type="month"]:focus,
+input[type="time"]:focus,
+input[type="week"]:focus,
+input[type="number"]:focus,
+input[type="email"]:focus,
+input[type="url"]:focus,
+input[type="search"]:focus,
+input[type="tel"]:focus,
+input[type="color"]:focus,
+.uneditable-input:focus {
+    border-color: #1abb9c
+}
+.custom-control-input:active~.custom-control-label::before,
+.custom-checkbox .custom-control-input:checked~.custom-control-label::before,
+.custom-radio .custom-control-input:checked~.custom-control-label::before {
+    background-color: #1abb9c
+}
+.ratings:after {
+    color: #1abb9c;
+}
+.pagination ul>li>a:hover,
+.pagination ul>.active>a {
+    color: #1abb9c;
+}
+.pagination.bordered ul>li>a:hover,
+.pagination.bordered ul>.active>a {
+    color: #1abb9c;
+}
+.page-navi:not(.bg) a:hover {
+    color: #1abb9c
+}
+.inverse-text .pagination:not(.bg) ul>li>a:hover,
+.inverse-text .page-navi:not(.bg) a:hover,
+.inverse-text .nav-tabs .nav-link:hover,
+.inverse-text .cbp-filter-item:hover {
+    color: #1abb9c !important;
+}
+.inverse-text .accordion-wrapper.lined .card-header a:hover,
+.inverse-text .tabs-wrapper:not(.lined) .nav-tabs .nav-link:not(.active):hover {
+    color: #1abb9c !important;
+    border-color: #1abb9c !important;
+}
+.inverse-text .box.box-border:hover,
+.inverse-text .box.box-border:hover:before {
+    border-color: #1abb9c
+}
+.color-default,
+.list-default>li:before,
+.list-default i {
+    color: #1abb9c !important;
+}
+.bg-default {
+    background-color: #1abb9c !important;
+}
+.border-default {
+    border-color: #1abb9c !important;
+}
+.progressbar.default svg path:last-child {
+    stroke: #1abb9c !important;
+}
+.progressbar.border.default {
+    border-color: #1abb9c !important;
+}
+.circle.default .progressbar-text {
+    color: #1abb9c !important;
+}
+@media (min-width: 992px) {
+    .navbar-nav>li>.dropdown-menu {
+        border-top: 2px solid #1abb9c;
+    }
+}

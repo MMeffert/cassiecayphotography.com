@@ -1,0 +1,142 @@
+body,
+.font-body,
+.map-info *,
+.font-title,
+h1,
+h2,
+h3,
+h4,
+h5,
+h6,
+.lead,
+.lead2,
+.badge,
+.blockquote-footer,
+.navbar,
+.btn,
+.tp-caption:not(.font-body):not(.font-title),
+.erinyen .tp-tab-title,
+.cbp-filter-item,
+.meta,
+a.more,
+.swiper-slide .caption-bg p,
+.overlay-nav li a,
+.nav-tabs .nav-link,
+.tabs-wrapper.filtered .nav-tabs .nav-link,
+.countdown p,
+.counter p,
+.page-navi a {
+    font-family: 'IBM Plex Sans Condensed', sans-serif;
+}
+body * {
+	letter-spacing: normal !important;
+}
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+    font-weight: 600;
+}
+h1.text-uppercase,
+h2.text-uppercase,
+h3.text-uppercase,
+h4.text-uppercase,
+h5.text-uppercase,
+h6.text-uppercase,
+.section-title-upper {
+    letter-spacing: 1px !important;
+}
+h2.post-title {
+    font-size: 20px;
+    line-height: 30px;
+}
+.title-color {
+    font-size: 15px;
+    line-height: 25px;
+}
+.navbar-nav .nav-link,
+.navbar.text-uppercase .navbar-nav .nav-link,
+.dropdown-item,
+.mega-menu-content a,
+.meta,
+a.more,
+.btn,
+.badge,
+.dropcap,
+.blockquote-footer,
+.cbp-filter-item,
+.icon .number,
+.overlay-nav li a,
+.nav-tabs .nav-link,
+.tabs-wrapper.filtered .nav-tabs .nav-link,
+label:not(.custom-control-label),
+.pagination ul>li>a,
+.page-navi a {
+	font-weight: 600;
+}
+.meta,
+a.more,
+.cbp-filter-item,
+.tabs-wrapper.filtered .nav-tabs .nav-link,
+.btn,
+.nav-tabs .nav-link,
+.accordion-wrapper .card-header>* {
+    font-size: 14px;
+    letter-spacing: 1px !important;
+}
+.meta * {
+	letter-spacing: 1px !important;
+}
+.meta.larger {
+	font-size: 16px;
+}
+.meta.price.price-l {
+    font-size: 19px;
+}
+blockquote p {
+    font-size: 19px;
+    line-height: 31px;
+}
+.navbar-nav .nav-link {
+    font-size: 17px;
+}
+.dropdown-item,
+.mega-menu-content a {
+    font-size: 15px;
+}
+.navbar.text-uppercase .navbar-nav .nav-link {
+    font-size: 15px;
+    letter-spacing: 1px !important;
+}
+.navbar.text-uppercase .dropdown-item,
+.navbar.text-uppercase .mega-menu-content a {
+    font-size: 13px;
+    letter-spacing: 1px !important;
+}
+blockquote.larger p {
+    font-size: 26px;
+    line-height: 40px;
+}
+.lead {
+    font-size: 20px;
+    line-height: 32px;
+}
+.lead.larger {
+    font-size: 22px;
+    line-height: 34px;
+}
+.lead2 {
+    font-size: 18px;
+    line-height: 30px;
+}
+.widget-title {
+    font-size: 15px;
+    line-height: 25px;
+    letter-spacing: 1px !important;
+}
+.btn,
+.page-navi a {   
+    letter-spacing: 1px !important;
+}

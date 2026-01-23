@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html><head><title>Gallery</title>
+<style>
+.gallery { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 20px; padding: 20px; }
+.item { border: 1px solid #ddd; padding: 10px; text-align: center; }
+.item img { max-width: 100%; height: 200px; object-fit: cover; }
+.position { background: #f0f0f0; padding: 5px; margin-bottom: 10px; font-weight: bold; }
+</style></head><body><div class="gallery">
+    <div class="item">
+        <div class="position">Position 1</div>
+        <img src="images/sunset-beach.jpg" alt="Sunset at the Beach">
+        <h3>Sunset at the Beach</h3>
+        <p>Golden hour magic</p>
+    </div>
+    <div class="item">
+        <div class="position">Position 2</div>
+        <img src="images/mountain-peak.jpg" alt="Mountain Peak">
+        <h3>Mountain Peak</h3>
+        <p>Early morning climb</p>
+    </div>
+    <div class="item">
+        <div class="position">Position 3</div>
+        <img src="images/city-lights.jpg" alt="City Lights">
+        <h3>City Lights</h3>
+        <p>Downtown at night</p>
+    </div></div></body></html>

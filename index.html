@@ -1,0 +1,1580 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+        <!-- Google reCAPTCHA Enterprise (invisible) -->
+    <script src="https://www.google.com/recaptcha/enterprise.js?render=6LchXjYsAAAAANiJ_B8AKMUp7vwsJx_8HnKLBzr2" async defer></script>
+
+    <!-- Submit contact form through API -->
+    <script>
+        async function submitToAPI(e) {
+            e.preventDefault();
+
+            const form = document.getElementById('contact-form');
+            const submitBtn = document.getElementById('submitmessage');
+            const messageEl = document.getElementById('message');
+
+            // Use browser-native form validation (Constraint Validation API)
+            if (!form.checkValidity()) {
+                form.reportValidity();
+                return;
+            }
+
+            // Disable button and show loading state
+            submitBtn.disabled = true;
+            submitBtn.textContent = 'Sending...';
+
+            try {
+                // Wait for reCAPTCHA to be ready
+                await new Promise(resolve => grecaptcha.enterprise.ready(resolve));
+
+                // Execute reCAPTCHA Enterprise
+                const token = await grecaptcha.enterprise.execute(
+                    '6LchXjYsAAAAANiJ_B8AKMUp7vwsJx_8HnKLBzr2',
+                    { action: 'contact_submit' }
+                );
+
+                // Prepare form data
+                const data = {
+                    site: 'cassiecayphotography.com',
+                    name: document.getElementById('name').value,
+                    email: document.getElementById('mail').value,
+                    subject: document.getElementById('subject').value,
+                    message: document.getElementById('comment').value,
+                    recaptchaToken: token
+                };
+
+                // Submit to API using fetch
+                const response = await fetch(
+                    'https://7qcdrfk7uctpaqw36i5z2kwxha0rgrnx.lambda-url.us-east-1.on.aws/',
+                    {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify(data)
+                    }
+                );
+
+                if (!response.ok) {
+                    throw new Error(`Server error: ${response.status}`);
+                }
+
+                // Success
+                messageEl.style.color = 'green';
+                messageEl.textContent = 'Message Sent Successfully';
+                form.reset();
+
+            } catch (error) {
+                // Error handling
+                messageEl.style.color = 'red';
+                if (error.message && error.message.includes('reCAPTCHA')) {
+                    messageEl.textContent = 'reCAPTCHA error. Please try again.';
+                } else {
+                    messageEl.textContent = 'Error. Your message was not sent.';
+                }
+            } finally {
+                // Always re-enable button
+                submitBtn.disabled = false;
+                submitBtn.textContent = 'Send Message';
+            }
+        }
+    </script>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="description" content="Cassie Cay Photography - Professional photographer in Madison, Wisconsin specializing in family, newborn, senior, milestone, and event photography. Capturing beautiful moments that last a lifetime.">
+<meta name="keywords" content="photographer, Madison, Wisconsin, Waunakee, family photography, newborn photography, senior portraits, milestone photos, wedding photography, event photography">
+<meta name="author" content="Cassie Meffert">
+<meta property="og:title" content="Cassie Cay Photography">
+<meta property="og:description" content="Professional photographer in Madison, Wisconsin specializing in family, newborn, senior, milestone, and event photography.">
+<meta property="og:type" content="website">
+<meta property="og:url" content="https://cassiecayphotography.com">
+<meta property="og:image" content="https://cassiecayphotography.com/images/cassiecay-background1.jpg">
+<meta property="og:image:width" content="2000">
+<meta property="og:image:height" content="1333">
+<meta property="og:image:alt" content="Cassie Cay Photography - Madison Wisconsin photographer specializing in family and event photography">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="Cassie Cay Photography | Madison, WI Professional Photographer">
+<meta name="twitter:description" content="Professional photographer in Madison, Wisconsin specializing in family, newborn, senior, milestone, and event photography.">
+<meta name="twitter:image" content="https://cassiecayphotography.com/images/cassiecay-background1.jpg">
+<meta name="twitter:image:alt" content="Cassie Cay Photography - Madison Wisconsin photographer specializing in family and event photography">
+<link rel="canonical" href="https://cassiecayphotography.com">
+<link rel="shortcut icon" href="images/favicon.ico">
+<title>Cassie Cay Photography | Madison, WI Professional Photographer</title>
+<link rel="stylesheet" type="text/css" href="style/css/bootstrap.min.css">
+<link rel="stylesheet" type="text/css" href="style/css/swiper.css">
+<link rel="stylesheet" type="text/css" href="style/css/hero-slider.css">
+<link rel="stylesheet" type="text/css" href="style/type/icons.css">
+<link rel="stylesheet" type="text/css" href="style/css/glightbox.css">
+<link rel="stylesheet" type="text/css" href="style/style.css">
+<link rel="stylesheet" type="text/css" href="style/css/portfolio-grid.css">
+<link rel="stylesheet" type="text/css" href="style/css/color/oasis.css">
+<link href="https://fonts.googleapis.com/css?family=Muli:300,300i,400,400i,600,600i,700,700i" rel="stylesheet" type="text/css">
+<link rel="stylesheet" href="https://use.typekit.net/xzi7yjp.css">
+    <!-- Global site tag (gtag.js) - Google Analytics -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-TQDYZMGR2H"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  gtag('config', 'G-TQDYZMGR2H');
+</script>
+<style>
+  .grecaptcha-badge { visibility: hidden; }
+</style>
+<!-- JSON-LD Structured Data for SEO -->
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "LocalBusiness",
+  "additionalType": "https://schema.org/Photographer",
+  "name": "Cassie Cay Photography",
+  "description": "Professional photographer in Madison, Wisconsin specializing in family, newborn, senior, milestone, and event photography.",
+  "url": "https://cassiecayphotography.com",
+  "telephone": "",
+  "email": "cassie@cassiecayphotography.com",
+  "image": "https://cassiecayphotography.com/images-optimized/webp/full/cassiecaylogobw2.webp",
+  "priceRange": "$$",
+  "address": {
+    "@type": "PostalAddress",
+    "addressLocality": "Madison",
+    "addressRegion": "WI",
+    "addressCountry": "US"
+  },
+  "geo": {
+    "@type": "GeoCoordinates",
+    "latitude": 43.0731,
+    "longitude": -89.4012
+  },
+  "areaServed": [
+    {
+      "@type": "City",
+      "name": "Madison",
+      "containedInPlace": {
+        "@type": "State",
+        "name": "Wisconsin"
+      }
+    },
+    {
+      "@type": "City",
+      "name": "Waunakee",
+      "containedInPlace": {
+        "@type": "State",
+        "name": "Wisconsin"
+      }
+    }
+  ],
+  "knowsAbout": [
+    "Family Photography",
+    "Newborn Photography",
+    "Senior Portraits",
+    "Milestone Photography",
+    "Event Photography",
+    "Wedding Photography"
+  ],
+  "sameAs": [
+    "https://www.facebook.com/cassiecayphotography",
+    "https://www.instagram.com/cassiecayphotography"
+  ]
+}
+</script>
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "ImageGallery",
+  "name": "Cassie Cay Photography Portfolio",
+  "description": "Professional photography portfolio featuring family, newborn, senior, and event photography in Madison, Wisconsin",
+  "url": "https://cassiecayphotography.com/#portfolio",
+  "creator": {
+    "@type": "Person",
+    "name": "Cassie Meffert",
+    "jobTitle": "Photographer"
+  },
+  "image": [
+    {
+      "@type": "ImageObject",
+      "contentUrl": "https://cassiecayphotography.com/images-optimized/jpeg/full/cassiecay-F1.jpg",
+      "name": "Family portrait"
+    },
+    {
+      "@type": "ImageObject",
+      "contentUrl": "https://cassiecayphotography.com/images-optimized/jpeg/full/cassiecay-NB18.jpg",
+      "name": "Newborn photography"
+    },
+    {
+      "@type": "ImageObject",
+      "contentUrl": "https://cassiecayphotography.com/images-optimized/jpeg/full/cassiecay-senior3.jpg",
+      "name": "Senior portrait"
+    },
+    {
+      "@type": "ImageObject",
+      "contentUrl": "https://cassiecayphotography.com/images-optimized/jpeg/full/cassiecay-F2.jpg",
+      "name": "Family photography"
+    },
+    {
+      "@type": "ImageObject",
+      "contentUrl": "https://cassiecayphotography.com/images-optimized/jpeg/full/cassiecay-Event3.jpg",
+      "name": "Event photography"
+    },
+    {
+      "@type": "ImageObject",
+      "contentUrl": "https://cassiecayphotography.com/images-optimized/jpeg/full/cassiecay-M2.jpg",
+      "name": "Milestone photography"
+    }
+  ]
+}
+</script>
+</head>
+<body class="onepage" data-bs-spy="scroll" data-bs-target=".navbar">
+<div class="content-wrapper">
+  <nav class="navbar transparent absolute nav-wrapper-dark inverse-text navbar-expand-lg text-uppercase">
+    <div class="container">
+      <div class="navbar-header">
+        <div class="navbar-brand"><a href="index.html"><picture>
+          <source srcset="images-optimized/avif/full/cassiecaylogobw2.avif" type="image/avif">
+          <source srcset="images-optimized/webp/full/cassiecaylogobw2.webp" type="image/webp">
+          <img src="images-optimized/webp/full/cassiecaylogobw2.webp" alt="Cassie Cay Photography logo">
+        </picture></a></div>
+        <div class="navbar-hamburger ms-auto d-lg-none d-xl-none"><button class="hamburger animate" data-bs-toggle="offcanvas" data-bs-target="#offcanvasNav" aria-controls="offcanvasNav" aria-label="Toggle navigation"><span></span></button></div>
+      </div>
+      <!-- /.navbar-header -->
+      <div class="collapse navbar-collapse d-none d-lg-block">
+        <ul class="nav navbar-nav ms-auto">
+          <li class="nav-item"><a class="nav-link scroll" href="#home">Home</a></li>
+          <li class="nav-item"><a class="nav-link scroll" href="#about">About</a></li>
+          <li class="nav-item"><a class="nav-link scroll" href="#portfolio">Portfolio</a></li>
+          <li class="nav-item"><a class="nav-link scroll" href="#services">Services</a></li>
+          <li class="nav-item"><a class="nav-link scroll" href="#contact">Schedule</a></li>
+          <li class="nav-item"><a class="nav-link scroll" href="#contact">Contact</a></li>
+        </ul>
+        <!-- /.navbar-nav -->
+      </div>
+      <!-- /.navbar-collapse --> 
+    </div>
+    <!-- /.container --> 
+  </nav>
+  <!-- /.navbar -->
+  <!-- Offcanvas Mobile Navigation -->
+  <div class="offcanvas offcanvas-start" tabindex="-1" id="offcanvasNav" aria-labelledby="offcanvasNavLabel">
+    <div class="offcanvas-header">
+      <h5 class="offcanvas-title" id="offcanvasNavLabel">Menu</h5>
+      <button type="button" class="btn-close" data-bs-dismiss="offcanvas" aria-label="Close"></button>
+    </div>
+    <div class="offcanvas-body">
+      <ul class="nav navbar-nav flex-column">
+        <li class="nav-item"><a class="nav-link scroll" href="#home">Home</a></li>
+        <li class="nav-item"><a class="nav-link scroll" href="#about">About</a></li>
+        <li class="nav-item"><a class="nav-link scroll" href="#portfolio">Portfolio</a></li>
+        <li class="nav-item"><a class="nav-link scroll" href="#services">Services</a></li>
+        <li class="nav-item"><a class="nav-link scroll" href="#contact">Schedule</a></li>
+        <li class="nav-item"><a class="nav-link scroll" href="#contact">Contact</a></li>
+      </ul>
+    </div>
+  </div>
+  <!-- /.offcanvas -->
+  <section id="home" class="pt-0 mt-0">
+    <div class="hero-slider embla">
+      <div class="embla__viewport">
+        <div class="embla__container">
+          <div class="embla__slide">
+            <img src="images-optimized/jpeg/full/cassiecay-slider7.jpg" alt="Cassie Cay Photography">
+          </div>
+          <div class="embla__slide">
+            <img src="images-optimized/jpeg/full/cassiecay-slider2.jpg" alt="Cassie Cay Photography">
+          </div>
+        </div>
+      </div>
+      <div class="hero-overlay">
+        <span class="hero-title">Cassie Cay Photography</span>
+        <span class="hero-tagline">capturing beautiful moments</span>
+      </div>
+    </div>
+  </section>
+  <!-- /section -->
+  <section id="about">
+    <div class="wrapper dark-wrapper inverse-text">
+      <div class="container inner">
+        <h2 class="section-title section-title-upper text-center">A Little About Me</h2>
+        <div class="space20"></div>
+        <div class="row">
+          <div class="col-lg-5 text-md-center">
+            <figure><picture>
+              <source srcset="images-optimized/avif/full/cassiecay-aboutbw.avif" type="image/avif">
+              <source srcset="images-optimized/webp/full/cassiecay-aboutbw.webp" type="image/webp">
+              <img src="images-optimized/jpeg/full/cassiecay-aboutbw.jpg" alt="" loading="lazy">
+            </picture></figure>
+          </div>
+          <!-- /column -->
+          <div class="space30 d-lg-none d-xl-none"></div>
+          <div class="col-lg-7">
+            <p class="lead larger">Hey there! I'm Cassie Meffert, a Madison area photographer with a passion to share my photography art.</p>
+            <p>I first got started with photography when I was pregnant with my first child. Believe it or not, I bought the camera for my husband! It wasn't long before I was taking every opportunity to document my new babe's life. However, the real inspiration came six short months later when my sister passed away from breast cancer. It allowed me to reflect on the every day beauty of special moments and memories of the time we had together. It sparked a fire in me to capture those personal moments I reflected on. I also became sensitized to so many picturesque scenes around me that had previously been the mundane. I am so excited to be able to share my vision with you! </p>
+            <ul class="social social-mute social-s">
+              <li><a href="https://www.instagram.com/cassie.cay.photography/?hl=en"><i class="fa fa-instagram"></i></a></li>
+              <li><a href="https://500px.com/p/cassiecayphoto"><i class="fa fa-500px"></i></a></li>
+              <li><a href="https://www.facebook.com/cassie.cay.photography"><i class="fa fa-facebook-f"></i></a></li>
+            </ul>
+          </div>
+          <!-- /column --> 
+        </div>
+        <!-- /.row --> 
+      </div>
+      <!-- /.container --> 
+    </div>
+    <!-- /.wrapper -->
+    <div class="wrapper image-wrapper bg-image inverse-text" data-image-src="images-optimized/jpeg/1800w/cassiecay-background1.jpg">
+      <div class="container inner pt-150 pb-150">
+        <h2 class="heading text-center">I take photographs to<br class="d-none d-md-block" />
+          inspire & reflect</h2>
+      </div>
+      <!-- /.container --> 
+    </div>
+    <!-- /.wrapper --> 
+  </section>
+  <!-- /section -->
+      <section id="portfolio">
+      <div class="wrapper dark-wrapper inverse-text">
+        <div class="container inner pb-30">
+      <h2 class="section-title text-center">Featured Photos</h2>
+    </div>
+    <!-- /.container -->
+    <div id="portfolio-filter" class="portfolio-filter-container text-center">
+      <div data-filter="*" class="filter-btn active">All</div>
+      <div data-filter=".couples" class="filter-btn">Couples</div>
+      <div data-filter=".family" class="filter-btn">Family</div>
+      <div data-filter=".milestone" class="filter-btn">Milestone</div>
+      <div data-filter=".newborn" class="filter-btn">Newborn</div>
+      <div data-filter=".senior" class="filter-btn">Senior</div>
+    </div>
+    <div class="clearfix"></div>
+    <div class="space20"></div>
+    <div id="portfolio-grid" class="portfolio-grid light-gallery">
+      <div class="portfolio-item family">
+      <div class="portfolio-item-content">
+        <figure class="overlay overlay2"><a href="images-optimized/jpeg/full/cassiecay-F1.jpg">
+      <picture>
+        <source
+          srcset="images-optimized/avif/800w/cassiecay-F1.avif 800w"
+          sizes="(max-width: 600px) 100vw, (max-width: 1200px) 50vw, 400px"
+          type="image/avif">
+        <source
+          srcset="images-optimized/webp/800w/cassiecay-F1.webp 800w"
+          sizes="(max-width: 600px) 100vw, (max-width: 1200px) 50vw, 400px"
+          type="image/webp">
+        <img
+          src="images-optimized/jpeg/800w/cassiecay-F1.jpg"
+          srcset="images-optimized/jpeg/800w/cassiecay-F1.jpg 800w"
+          sizes="(max-width: 600px) 100vw, (max-width: 1200px) 50vw, 400px"
+          alt="Joyful father carrying smiling toddler on shoulders during spring family portrait session in Madison, Wisconsin"
+          loading="lazy">
+      </picture></a></figure>
+      </div>
+    </div>
+    <!--/.portfolio-item -->
+        <div class="portfolio-item family">
+      <div class="portfolio-item-content">
+        <figure class="overlay overlay2"><a href="images-optimized/jpeg/full/cassiecay-F21.jpg">
+      <picture>
+        <source srcset="images-optimized/avif/full/cassiecay-F21.avif" type="image/avif">
+        <source srcset="images-optimized/webp/full/cassiecay-F21.webp" type="image/webp">
+        <img src="images-optimized/jpeg/full/cassiecay-F21.jpg" alt="Joyful family portrait featuring five sisters embracing outdoors in lush Madison, Wisconsin greenery" loading="lazy">
+      </picture></a></figure>
+      </div>
+    </div>
+    <!--/.portfolio-item -->
+        <div class="portfolio-item newborn">
+      <div class="portfolio-item-content">
+        <figure class="overlay overlay2"><a href="images-optimized/jpeg/full/cassiecay-NB18.jpg">
+      <picture>
+        <source srcset="images-optimized/avif/full/cassiecay-NB18.avif" type="image/avif">
+        <source srcset="images-optimized/webp/full/cassiecay-NB18.webp" type="image/webp">
+        <img src="images-optimized/jpeg/full/cassiecay-NB18.jpg" alt="Tender mother kisses sleeping newborn baby with coral bow in bright Madison Wisconsin portrait session" loading="lazy">
+      </picture></a></figure>
+      </div>
+    </div>
+    <!--/.portfolio-item -->
+      <div class="portfolio-item milestone">
+      <div class="portfolio-item-content">
+        <figure class="overlay overlay2"><a href="images-optimized/jpeg/full/cassiecay-F2.jpg">
+      <picture>
+        <source srcset="images-optimized/avif/full/cassiecay-F2.avif" type="image/avif">
+        <source srcset="images-optimized/webp/full/cassiecay-F2.webp" type="image/webp">
+        <img src="images-optimized/jpeg/full/cassiecay-F2.jpg" alt="Baby girl with white flower headband sits in vintage tub with oranges, Madison Wisconsin family portrait session." loading="lazy">
+      </picture></a></figure>
+      </div>
+    </div>
+    <!--/.portfolio-item -->
+      <div class="portfolio-item senior">
+      <div class="portfolio-item-content">
+        <figure class="overlay overlay2"><a href="images-optimized/jpeg/full/cassiecay-senior3.jpg">
+      <picture>
+        <source srcset="images-optimized/avif/full/cassiecay-senior3.avif" type="image/avif">
+        <source srcset="images-optimized/webp/full/cassiecay-senior3.webp" type="image/webp">
+        <img src="images-optimized/jpeg/full/cassiecay-senior3.jpg" alt="Confident high school senior in black dress wading in lake water, Madison Wisconsin senior portrait photography" loading="lazy">
+      </picture></a></figure>
+      </div>
+    </div>
+    <!--/.portfolio-item -->
+        <div class="portfolio-item newborn">
+      <div class="portfolio-item-content">
+        <figure class="overlay overlay2"><a href="images-optimized/jpeg/full/cassiecay-NB15.jpg">
+      <picture>
+        <source srcset="images-optimized/avif/full/cassiecay-NB15.avif" type="image/avif">
+        <source srcset="images-optimized/webp/full/cassiecay-NB15.webp" type="image/webp">
+        <img src="images-optimized/jpeg/full/cassiecay-NB15.jpg" alt="Peaceful newborn baby with coral bow resting in parent's hands, Madison Wisconsin newborn portrait photography" loading="lazy">
+      </picture></a></figure>
+      </div>
+    </div>
+    <!--/.portfolio-item -->
+        <div class="portfolio-item family">
+      <div class="portfolio-item-content">
+        <figure class="overlay overlay2"><a href="images-optimized/jpeg/full/cassiecay-F22.jpg">
+      <picture>
+        <source srcset="images-optimized/avif/full/cassiecay-F22.avif" type="image/avif">
+        <source srcset="images-optimized/webp/full/cassiecay-F22.webp" type="image/webp">
+        <img src="images-optimized/jpeg/full/cassiecay-F22.jpg" alt="Joyful mother and laughing children embrace during intimate family photography session in Madison, Wisconsin" loading="lazy">
+      </picture></a></figure>
+      </div>
+    </div>
+    <!--/.portfolio-item -->
+        <div class="portfolio-item family">
+      <div class="portfolio-item-content">
+        <figure class="overlay overlay2"><a href="images-optimized/jpeg/full/cassiecay-F41.jpg">
+      <picture>
+        <source srcset="images-optimized/avif/full/cassiecay-F41.avif" type="image/avif">
+        <source srcset="images-optimized/webp/full/cassiecay-F41.webp" type="image/webp">
+        <img src="images-optimized/jpeg/full/cassiecay-F41.jpg" alt="Mother tenderly kisses daughter's forehead in lush garden setting, Madison Wisconsin family photography session" loading="lazy">
+      </picture></a></figure>
+      </div>
+    </div>
+    <!--/.portfolio-item -->
+        <div class="portfolio-item family">
+      <div class="portfolio-item-content">
+        <figure class="overlay overlay2"><a href="images-optimized/jpeg/full/cassiecay-F32.jpg">
+      <picture>
+        <source srcset="images-optimized/avif/full/cassiecay-F32.avif" type="image/avif">
+        <source srcset="images-optimized/webp/full/cassiecay-F32.webp" type="image/webp">
+        <img src="images-optimized/jpeg/full/cassiecay-F32.jpg" alt="Joyful family of five laughing together on wooden stairs during Madison, Wisconsin family portrait session" loading="lazy">
+      </picture></a></figure>
+      </div>
+    </div>
+    <!--/.portfolio-item -->
+        <div class="portfolio-item newborn">
+      <div class="portfolio-item-content">
+        <figure class="overlay overlay2"><a href="images-optimized/jpeg/full/cassiecay-NB14.jpg">
+      <picture>
+        <source srcset="images-optimized/avif/full/cassiecay-NB14.avif" type="image/avif">
+        <source srcset="images-optimized/webp/full/cassiecay-NB14.webp" type="image/webp">
+        <img src="images-optimized/jpeg/full/cassiecay-NB14.jpg" alt="Peaceful sleeping newborn with dark hair resting on orange knit blanket during Madison Wisconsin portrait session" loading="lazy">
+      </picture></a></figure>
+      </div>
+    </div>
+    <!--/.portfolio-item -->
+        <div class="portfolio-item family">
+      <div class="portfolio-item-content">
+        <figure class="overlay overlay2"><a href="images-optimized/jpeg/full/cassiecay-F15.jpg">
+      <picture>
+        <source
+          srcset="images-optimized/avif/800w/cassiecay-F15.avif 800w"
+          sizes="(max-width: 600px) 100vw, (max-width: 1200px) 50vw, 400px"
+          type="image/avif">
+        <source
+          srcset="images-optimized/webp/800w/cassiecay-F15.webp 800w"
+          sizes="(max-width: 600px) 100vw, (max-width: 1200px) 50vw, 400px"
+          type="image/webp">
+        <img
+          src="images-optimized/jpeg/800w/cassiecay-F15.jpg"
+          srcset="images-optimized/jpeg/800w/cassiecay-F15.jpg 800w"
+          sizes="(max-width: 600px) 100vw, (max-width: 1200px) 50vw, 400px"
+          alt="Loving mother and daughter share tender moment in golden prairie grass, Madison Wisconsin family photography"
+          loading="lazy">
+      </picture></a></figure>
+      </div>
+    </div>
+    <!--/.portfolio-item -->
+        <div class="portfolio-item family">
+      <div class="portfolio-item-content">
+        <figure class="overlay overlay2"><a href="images-optimized/jpeg/full/cassiecay-F30.jpg">
+      <picture>
+        <source srcset="images-optimized/avif/full/cassiecay-F30.avif" type="image/avif">
+        <source srcset="images-optimized/webp/full/cassiecay-F30.webp" type="image/webp">
+        <img src="images-optimized/jpeg/full/cassiecay-F30.jpg" alt="Joyful family of four laughing together in tall grass field during Madison, Wisconsin family portrait session" loading="lazy">
+      </picture></a></figure>
+      </div>
+    </div>
+    <!--/.portfolio-item -->
+        <div class="portfolio-item family">
+      <div class="portfolio-item-content">
+        <figure class="overlay overlay2"><a href="images-optimized/jpeg/full/cassiecay-F17.jpg">
+      <picture>
+        <source srcset="images-optimized/avif/full/cassiecay-F17.avif" type="image/avif">
+        <source srcset="images-optimized/webp/full/cassiecay-F17.webp" type="image/webp">
+        <img src="images-optimized/jpeg/full/cassiecay-F17.jpg" alt="Pregnant mother and daughter sharing joyful moment beneath blooming magnolia tree, Madison WI family photography" loading="lazy">
+      </picture></a></figure>
+      </div>
+    </div>
+    <!--/.portfolio-item -->
+        <div class="portfolio-item milestone">
+      <div class="portfolio-item-content">
+        <figure class="overlay overlay2"><a href="images-optimized/jpeg/full/cassiecay-M8.jpg">
+      <picture>
+        <source
+          srcset="images-optimized/avif/800w/cassiecay-M8.avif 800w"
+          sizes="(max-width: 600px) 100vw, (max-width: 1200px) 50vw, 400px"
+          type="image/avif">
+        <source
+          srcset="images-optimized/webp/800w/cassiecay-M8.webp 800w"
+          sizes="(max-width: 600px) 100vw, (max-width: 1200px) 50vw, 400px"
+          type="image/webp">
+        <img
+          src="images-optimized/jpeg/800w/cassiecay-M8.jpg"
+          srcset="images-optimized/jpeg/800w/cassiecay-M8.jpg 800w"
+          sizes="(max-width: 600px) 100vw, (max-width: 1200px) 50vw, 400px"
+          alt="Smiling baby girl with bow headband sitting in woven basket during milestone photography session in Madison, Wisconsin"
+          loading="lazy">
+      </picture></a></figure>
+      </div>
+    </div>
+    <!--/.portfolio-item -->
+      <div class="portfolio-item newborn">
+      <div class="portfolio-item-content">
+        <figure class="overlay overlay2"><a href="images-optimized/jpeg/full/cassiecay-NB6.jpg">
+      <picture>
+        <source srcset="images-optimized/avif/full/cassiecay-NB6.avif" type="image/avif">
+        <source srcset="images-optimized/webp/full/cassiecay-NB6.webp" type="image/webp">
+        <img src="images-optimized/jpeg/full/cassiecay-NB6.jpg" alt="Tender newborn portrait showing protective parents' hands cradling sleeping baby in Madison, Wisconsin photography session" loading="lazy">
+      </picture></a></figure>
+      </div>
+    </div>
+    <!--/.portfolio-item -->
+      <div class="portfolio-item senior">
+      <div class="portfolio-item-content">
+        <figure class="overlay overlay2"><a href="images-optimized/jpeg/full/cassiecay-senior2.jpg">
+      <picture>
+        <source srcset="images-optimized/avif/full/cassiecay-senior2.avif" type="image/avif">
+        <source srcset="images-optimized/webp/full/cassiecay-senior2.webp" type="image/webp">
+        <img src="images-optimized/jpeg/full/cassiecay-senior2.jpg" alt="Confident brunette senior smiling in golden sunlight among green trees, Madison Wisconsin senior portrait photography" loading="lazy">
+      </picture></a></figure>
+      </div>
+    </div>
+    <!--/.portfolio-item -->
+      <div class="portfolio-item family">
+      <div class="portfolio-item-content">
+        <figure class="overlay overlay2"><a href="images-optimized/jpeg/full/cassiecay-F3.jpg">
+      <picture>
+        <source srcset="images-optimized/avif/full/cassiecay-F3.avif" type="image/avif">
+        <source srcset="images-optimized/webp/full/cassiecay-F3.webp" type="image/webp">
+        <img src="images-optimized/jpeg/full/cassiecay-F3.jpg" alt="Joyful toddler in leopard print coat smiling outdoors during Madison Wisconsin family portrait session" loading="lazy">
+      </picture></a></figure>
+      </div>
+    </div>
+    <!--/.portfolio-item -->
+        <div class="portfolio-item newborn">
+      <div class="portfolio-item-content">
+        <figure class="overlay overlay2"><a href="images-optimized/jpeg/full/cassiecay-NB20.jpg">
+      <picture>
+        <source srcset="images-optimized/avif/full/cassiecay-NB20.avif" type="image/avif">
+        <source srcset="images-optimized/webp/full/cassiecay-NB20.webp" type="image/webp">
+        <img src="images-optimized/jpeg/full/cassiecay-NB20.jpg" alt="Father lovingly cradles sleeping newborn in tender black and white newborn portrait, Madison Wisconsin" loading="lazy">
+      </picture></a></figure>
+      </div>
+    </div>
+    <!--/.portfolio-item -->
+        <div class="portfolio-item newborn">
+      <div class="portfolio-item-content">
+        <figure class="overlay overlay2"><a href="images-optimized/jpeg/full/cassiecay-NB19.jpg">
+      <picture>
+        <source srcset="images-optimized/avif/full/cassiecay-NB19.avif" type="image/avif">
+        <source srcset="images-optimized/webp/full/cassiecay-NB19.webp" type="image/webp">
+        <img src="images-optimized/jpeg/full/cassiecay-NB19.jpg" alt="Peaceful sleeping newborn in cozy sweater captured in serene black and white portrait, Madison Wisconsin" loading="lazy">
+      </picture></a></figure>
+      </div>
+    </div>
+    <!--/.portfolio-item -->
+        <div class="portfolio-item family">
+      <div class="portfolio-item-content">
+        <figure class="overlay overlay2"><a href="images-optimized/jpeg/full/cassiecay-F28.jpg">
+      <picture>
+        <source srcset="images-optimized/avif/full/cassiecay-F28.avif" type="image/avif">
+        <source srcset="images-optimized/webp/full/cassiecay-F28.webp" type="image/webp">
+        <img src="images-optimized/jpeg/full/cassiecay-F28.jpg" alt="Joyful family of four embracing in golden prairie field during sunset family portrait session in Madison, Wisconsin" loading="lazy">
+      </picture></a></figure>
+      </div>
+    </div>
+    <!--/.portfolio-item -->
+      <div class="portfolio-item family">
+      <div class="portfolio-item-content">
+        <figure class="overlay overlay2"><a href="images-optimized/jpeg/full/cassiecay-F4.jpg">
+      <picture>
+        <source srcset="images-optimized/avif/full/cassiecay-F4.avif" type="image/avif">
+        <source srcset="images-optimized/webp/full/cassiecay-F4.webp" type="image/webp">
+        <img src="images-optimized/jpeg/full/cassiecay-F4.jpg" alt="Expecting mother in flowing dress poses serenely among trees during Madison, Wisconsin maternity photography session" loading="lazy">
+      </picture></a></figure>
+      </div>
+    </div>
+    <!--/.portfolio-item -->
+        <div class="portfolio-item milestone">
+      <div class="portfolio-item-content">
+        <figure class="overlay overlay2"><a href="images-optimized/jpeg/full/cassiecay-M14.jpg">
+      <picture>
+        <source srcset="images-optimized/avif/full/cassiecay-M14.avif" type="image/avif">
+        <source srcset="images-optimized/webp/full/cassiecay-M14.webp" type="image/webp">
+        <img src="images-optimized/jpeg/full/cassiecay-M14.jpg" alt="Bright-eyed baby milestone portrait capturing precious early months in Madison, Wisconsin studio photography session" loading="lazy">
+      </picture></a></figure>
+      </div>
+    </div>
+    <!--/.portfolio-item -->
+        <div class="portfolio-item family">
+      <div class="portfolio-item-content">
+        <figure class="overlay overlay2"><a href="images-optimized/jpeg/full/cassiecay-F13.jpg">
+      <picture>
+        <source srcset="images-optimized/avif/full/cassiecay-F13.avif" type="image/avif">
+        <source srcset="images-optimized/webp/full/cassiecay-F13.webp" type="image/webp">
+        <img src="images-optimized/jpeg/full/cassiecay-F13.jpg" alt="Joyful toddler between parents on front porch during family portrait session in Madison, Wisconsin" loading="lazy">
+      </picture></a></figure>
+      </div>
+    </div>
+    <!--/.portfolio-item -->
+        <div class="portfolio-item milestone">
+      <div class="portfolio-item-content">
+        <figure class="overlay overlay2"><a href="images-optimized/jpeg/full/cassiecay-M20.jpg">
+      <picture>
+        <source srcset="images-optimized/avif/full/cassiecay-M20.avif" type="image/avif">
+        <source srcset="images-optimized/webp/full/cassiecay-M20.webp" type="image/webp">
+        <img src="images-optimized/jpeg/full/cassiecay-M20.jpg" alt="Sweet baby girl with white bow headband during milestone portrait session in Madison, Wisconsin" loading="lazy">
+      </picture></a></figure>
+      </div>
+    </div>
+    <!--/.portfolio-item -->
+        <div class="portfolio-item family">
+      <div class="portfolio-item-content">
+        <figure class="overlay overlay2"><a href="images-optimized/jpeg/full/cassiecay-F25.jpg">
+      <picture>
+        <source srcset="images-optimized/avif/full/cassiecay-F25.avif" type="image/avif">
+        <source srcset="images-optimized/webp/full/cassiecay-F25.webp" type="image/webp">
+        <img src="images-optimized/jpeg/full/cassiecay-F25.jpg" alt="Mother and baby sharing tender moment during outdoor family portrait session in Madison, Wisconsin" loading="lazy">
+      </picture></a></figure>
+      </div>
+    </div>
+    <!--/.portfolio-item -->
+        <div class="portfolio-item couples">
+      <div class="portfolio-item-content">
+        <figure class="overlay overlay2"><a href="images-optimized/jpeg/full/cassiecay-E1.jpg">
+      <picture>
+        <source srcset="images-optimized/avif/full/cassiecay-E1.avif" type="image/avif">
+        <source srcset="images-optimized/webp/full/cassiecay-E1.webp" type="image/webp">
+        <img src="images-optimized/jpeg/full/cassiecay-E1.jpg" alt="Happy couple embracing outdoors during golden hour event portrait session in Madison, Wisconsin" loading="lazy">
+      </picture></a></figure>
+      </div>
+    </div>
+    <!--/.portfolio-item -->
+        <div class="portfolio-item family">
+      <div class="portfolio-item-content">
+        <figure class="overlay overlay2"><a href="images-optimized/jpeg/full/cassiecay-F24.jpg">
+      <picture>
+        <source srcset="images-optimized/avif/full/cassiecay-F24.avif" type="image/avif">
+        <source srcset="images-optimized/webp/full/cassiecay-F24.webp" type="image/webp">
+        <img src="images-optimized/jpeg/full/cassiecay-F24.jpg" alt="Father tenderly embraces young daughter while family gathers for intimate portrait session in Madison, Wisconsin" loading="lazy">
+      </picture></a></figure>
+      </div>
+    </div>
+    <!--/.portfolio-item -->
+        <div class="portfolio-item family">
+      <div class="portfolio-item-content">
+        <figure class="overlay overlay2"><a href="images-optimized/jpeg/full/cassiecay-F42.jpg">
+      <picture>
+        <source srcset="images-optimized/avif/full/cassiecay-F42.avif" type="image/avif">
+        <source srcset="images-optimized/webp/full/cassiecay-F42.webp" type="image/webp">
+        <img src="images-optimized/jpeg/full/cassiecay-F42.jpg" alt="Three-generation family embracing warmly in lush garden setting, Madison Wisconsin family portrait photography" loading="lazy">
+      </picture></a></figure>
+      </div>
+    </div>
+    <!--/.portfolio-item -->
+        <div class="portfolio-item couples">
+      <div class="portfolio-item-content">
+        <figure class="overlay overlay2"><a href="images-optimized/jpeg/full/cassiecay-E5.jpg">
+      <picture>
+        <source
+          srcset="images-optimized/avif/800w/cassiecay-E5.avif 800w"
+          sizes="(max-width: 600px) 100vw, (max-width: 1200px) 50vw, 400px"
+          type="image/avif">
+        <source
+          srcset="images-optimized/webp/800w/cassiecay-E5.webp 800w"
+          sizes="(max-width: 600px) 100vw, (max-width: 1200px) 50vw, 400px"
+          type="image/webp">
+        <img
+          src="images-optimized/jpeg/800w/cassiecay-E5.jpg"
+          srcset="images-optimized/jpeg/800w/cassiecay-E5.jpg 800w"
+          sizes="(max-width: 600px) 100vw, (max-width: 1200px) 50vw, 400px"
+          alt="Tender hands cradling diamond engagement ring during intimate wedding event photography session in Madison, Wisconsin"
+          loading="lazy">
+      </picture></a></figure>
+      </div>
+    </div>
+    <!--/.portfolio-item -->
+        <div class="portfolio-item family">
+      <div class="portfolio-item-content">
+        <figure class="overlay overlay2"><a href="images-optimized/jpeg/full/cassiecay-F5.jpg">
+      <picture>
+        <source srcset="images-optimized/avif/full/cassiecay-F5.avif" type="image/avif">
+        <source srcset="images-optimized/webp/full/cassiecay-F5.webp" type="image/webp">
+        <img src="images-optimized/jpeg/full/cassiecay-F5.jpg" alt="Expecting couple tenderly cradles baby bump during intimate maternity session in Madison, Wisconsin" loading="lazy">
+      </picture></a></figure>
+      </div>
+    </div>
+    <!--/.portfolio-item -->
+        <div class="portfolio-item milestone">
+      <div class="portfolio-item-content">
+        <figure class="overlay overlay2"><a href="images-optimized/jpeg/full/cassiecay-M25.jpg">
+      <picture>
+        <source srcset="images-optimized/avif/full/cassiecay-M25.avif" type="image/avif">
+        <source srcset="images-optimized/webp/full/cassiecay-M25.webp" type="image/webp">
+        <img src="images-optimized/jpeg/full/cassiecay-M25.jpg" alt="Curious toddler in sun hat exploring wooden bridge during milestone portrait session in Madison, Wisconsin" loading="lazy">
+      </picture></a></figure>
+      </div>
+    </div>
+    <!--/.portfolio-item -->
+        <div class="portfolio-item newborn">
+      <div class="portfolio-item-content">
+        <figure class="overlay overlay2"><a href="images-optimized/jpeg/full/cassiecay-F39.jpg">
+      <picture>
+        <source srcset="images-optimized/avif/full/cassiecay-F39.avif" type="image/avif">
+        <source srcset="images-optimized/webp/full/cassiecay-F39.webp" type="image/webp">
+        <img src="images-optimized/jpeg/full/cassiecay-F39.jpg" alt="Expecting couple shares tender moment under willow tree during lakeside family portrait session in Madison, Wisconsin" loading="lazy">
+      </picture></a></figure>
+      </div>
+    </div>
+    <!--/.portfolio-item -->
+        <div class="portfolio-item milestone">
+      <div class="portfolio-item-content">
+        <figure class="overlay overlay2"><a href="images-optimized/jpeg/full/cassiecay-M21.jpg">
+      <picture>
+        <source srcset="images-optimized/avif/full/cassiecay-M21.avif" type="image/avif">
+        <source srcset="images-optimized/webp/full/cassiecay-M21.webp" type="image/webp">
+        <img src="images-optimized/jpeg/full/cassiecay-M21.jpg" alt="Sweet toddler girl standing on wooden chair during golden hour milestone portrait session in Madison, Wisconsin" loading="lazy">
+      </picture></a></figure>
+      </div>
+    </div>
+    <!--/.portfolio-item -->
+        <div class="portfolio-item family">
+      <div class="portfolio-item-content">
+        <figure class="overlay overlay2"><a href="images-optimized/jpeg/full/cassiecay-F20.jpg">
+      <picture>
+        <source srcset="images-optimized/avif/full/cassiecay-F20.avif" type="image/avif">
+        <source srcset="images-optimized/webp/full/cassiecay-F20.webp" type="image/webp">
+        <img src="images-optimized/jpeg/full/cassiecay-F20.jpg" alt="Young woman with glasses smiling warmly against lush foliage backdrop in Madison, Wisconsin family portrait" loading="lazy">
+      </picture></a></figure>
+      </div>
+    </div>
+    <!--/.portfolio-item -->
+        <div class="portfolio-item family">
+      <div class="portfolio-item-content">
+        <figure class="overlay overlay2"><a href="images-optimized/jpeg/full/cassiecay-F38.jpg">
+      <picture>
+        <source srcset="images-optimized/avif/full/cassiecay-F38.avif" type="image/avif">
+        <source srcset="images-optimized/webp/full/cassiecay-F38.webp" type="image/webp">
+        <img src="images-optimized/jpeg/full/cassiecay-F38.jpg" alt="Joyful family embraces their smiling baby during intimate portrait session in Madison, Wisconsin" loading="lazy">
+      </picture></a></figure>
+      </div>
+    </div>
+    <!--/.portfolio-item -->
+        <div class="portfolio-item newborn">
+      <div class="portfolio-item-content">
+        <figure class="overlay overlay2"><a href="images-optimized/jpeg/full/cassiecay-NB13.jpg">
+      <picture>
+        <source srcset="images-optimized/avif/full/cassiecay-NB13.avif" type="image/avif">
+        <source srcset="images-optimized/webp/full/cassiecay-NB13.webp" type="image/webp">
+        <img src="images-optimized/jpeg/full/cassiecay-NB13.jpg" alt="Peaceful sleeping newborn wrapped in delicate lace during intimate portrait session in Madison, Wisconsin" loading="lazy">
+      </picture></a></figure>
+      </div>
+    </div>
+    <!--/.portfolio-item -->
+        <div class="portfolio-item family">
+      <div class="portfolio-item-content">
+        <figure class="overlay overlay2"><a href="images-optimized/jpeg/full/cassiecay-F37.jpg">
+      <picture>
+        <source srcset="images-optimized/avif/full/cassiecay-F37.avif" type="image/avif">
+        <source srcset="images-optimized/webp/full/cassiecay-F37.webp" type="image/webp">
+        <img src="images-optimized/jpeg/full/cassiecay-F37.jpg" alt="Father and toddler sharing tender moment at pumpkin patch family portrait session in Madison, Wisconsin" loading="lazy">
+      </picture></a></figure>
+      </div>
+    </div>
+    <!--/.portfolio-item -->
+        <div class="portfolio-item milestone">
+      <div class="portfolio-item-content">
+        <figure class="overlay overlay2"><a href="images-optimized/jpeg/full/cassiecay-M11.jpg">
+      <picture>
+        <source srcset="images-optimized/avif/full/cassiecay-M11.avif" type="image/avif">
+        <source srcset="images-optimized/webp/full/cassiecay-M11.webp" type="image/webp">
+        <img src="images-optimized/jpeg/full/cassiecay-M11.jpg" alt="Joyful baby in orange outfit laughing during milestone portrait session in Madison, Wisconsin" loading="lazy">
+      </picture></a></figure>
+      </div>
+    </div>
+    <!--/.portfolio-item -->
+        <div class="portfolio-item family">
+      <div class="portfolio-item-content">
+        <figure class="overlay overlay2"><a href="images-optimized/jpeg/full/cassiecay-F6.jpg">
+      <picture>
+        <source srcset="images-optimized/avif/full/cassiecay-F6.avif" type="image/avif">
+        <source srcset="images-optimized/webp/full/cassiecay-F6.webp" type="image/webp">
+        <img src="images-optimized/jpeg/full/cassiecay-F6.jpg" alt="Joyful family with toddler playing with yellow ball during outdoor portrait session in Madison, Wisconsin" loading="lazy">
+      </picture></a></figure>
+      </div>
+    </div>
+    <!--/.portfolio-item -->
+        <div class="portfolio-item family">
+      <div class="portfolio-item-content">
+        <figure class="overlay overlay2"><a href="images-optimized/jpeg/full/cassiecay-F36.jpg">
+      <picture>
+        <source srcset="images-optimized/avif/full/cassiecay-F36.avif" type="image/avif">
+        <source srcset="images-optimized/webp/full/cassiecay-F36.webp" type="image/webp">
+        <img src="images-optimized/jpeg/full/cassiecay-F36.jpg" alt="Happy family of four embracing among vibrant fall foliage during Madison, Wisconsin family portrait session" loading="lazy">
+      </picture></a></figure>
+      </div>
+    </div>
+    <!--/.portfolio-item -->
+        <div class="portfolio-item newborn">
+      <div class="portfolio-item-content">
+        <figure class="overlay overlay2"><a href="images-optimized/jpeg/full/cassiecay-NB9.jpg">
+      <picture>
+        <source srcset="images-optimized/avif/full/cassiecay-NB9.avif" type="image/avif">
+        <source srcset="images-optimized/webp/full/cassiecay-NB9.webp" type="image/webp">
+        <img src="images-optimized/jpeg/full/cassiecay-NB9.jpg" alt="Tender father cradles sleeping newborn in intimate black and white newborn portrait, Madison, Wisconsin" loading="lazy">
+      </picture></a></figure>
+      </div>
+    </div>
+    <!--/.portfolio-item -->
+        <div class="portfolio-item couples">
+      <div class="portfolio-item-content">
+        <figure class="overlay overlay2"><a href="images-optimized/jpeg/full/cassiecay-E3.jpg">
+      <picture>
+        <source srcset="images-optimized/avif/full/cassiecay-E3.avif" type="image/avif">
+        <source srcset="images-optimized/webp/full/cassiecay-E3.webp" type="image/webp">
+        <img src="images-optimized/jpeg/full/cassiecay-E3.jpg" alt="Couple sharing intimate autumn moment by lake with Madison, Wisconsin skyline during golden hour portrait session" loading="lazy">
+      </picture></a></figure>
+      </div>
+    </div>
+    <!--/.portfolio-item -->
+        <div class="portfolio-item milestone">
+      <div class="portfolio-item-content">
+        <figure class="overlay overlay2"><a href="images-optimized/jpeg/full/cassiecay-M23.jpg">
+      <picture>
+        <source srcset="images-optimized/avif/full/cassiecay-M23.avif" type="image/avif">
+        <source srcset="images-optimized/webp/full/cassiecay-M23.webp" type="image/webp">
+        <img src="images-optimized/jpeg/full/cassiecay-M23.jpg" alt="Baby's tiny feet and hands during cake smash milestone photography session in Madison, Wisconsin" loading="lazy">
+      </picture></a></figure>
+      </div>
+    </div>
+    <!--/.portfolio-item -->
+        <div class="portfolio-item milestone">
+      <div class="portfolio-item-content">
+        <figure class="overlay overlay2"><a href="images-optimized/jpeg/full/cassiecay-M12.jpg">
+      <picture>
+        <source srcset="images-optimized/avif/full/cassiecay-M12.avif" type="image/avif">
+        <source srcset="images-optimized/webp/full/cassiecay-M12.webp" type="image/webp">
+        <img src="images-optimized/jpeg/full/cassiecay-M12.jpg" alt="Toddler walking independently down pathway in heartwarming milestone portrait session in Madison, Wisconsin" loading="lazy">
+      </picture></a></figure>
+      </div>
+    </div>
+    <!--/.portfolio-item -->
+        <div class="portfolio-item family">
+      <div class="portfolio-item-content">
+        <figure class="overlay overlay2"><a href="images-optimized/jpeg/full/cassiecay-F18.jpg">
+      <picture>
+        <source srcset="images-optimized/avif/full/cassiecay-F18.avif" type="image/avif">
+        <source srcset="images-optimized/webp/full/cassiecay-F18.webp" type="image/webp">
+        <img src="images-optimized/jpeg/full/cassiecay-F18.jpg" alt="Father and daughter walking hand-in-hand through evergreen trees, joyful family portrait session in Madison, Wisconsin" loading="lazy">
+      </picture></a></figure>
+      </div>
+    </div>
+    <!--/.portfolio-item -->
+      <div class="portfolio-item newborn">
+      <div class="portfolio-item-content">
+        <figure class="overlay overlay2"><a href="images-optimized/jpeg/full/cassiecay-NB4.jpg">
+      <picture>
+        <source
+          srcset="images-optimized/avif/800w/cassiecay-NB4.avif 800w"
+          sizes="(max-width: 600px) 100vw, (max-width: 1200px) 50vw, 400px"
+          type="image/avif">
+        <source
+          srcset="images-optimized/webp/800w/cassiecay-NB4.webp 800w"
+          sizes="(max-width: 600px) 100vw, (max-width: 1200px) 50vw, 400px"
+          type="image/webp">
+        <img
+          src="images-optimized/jpeg/800w/cassiecay-NB4.jpg"
+          srcset="images-optimized/jpeg/800w/cassiecay-NB4.jpg 800w"
+          sizes="(max-width: 600px) 100vw, (max-width: 1200px) 50vw, 400px"
+          alt="Peaceful sleeping newborn with white flower headband wrapped in sage green blanket, Madison Wisconsin newborn portrait"
+          loading="lazy">
+      </picture></a></figure>
+      </div>
+    </div>
+    <!--/.portfolio-item -->
+        <div class="portfolio-item family">
+      <div class="portfolio-item-content">
+        <figure class="overlay overlay2"><a href="images-optimized/jpeg/full/cassiecay-F34.jpg">
+      <picture>
+        <source srcset="images-optimized/avif/full/cassiecay-F34.avif" type="image/avif">
+        <source srcset="images-optimized/webp/full/cassiecay-F34.webp" type="image/webp">
+        <img src="images-optimized/jpeg/full/cassiecay-F34.jpg" alt="Loving elderly couple shares tender moment during family portrait session in Madison, Wisconsin" loading="lazy">
+      </picture></a></figure>
+      </div>
+    </div>
+    <!--/.portfolio-item -->
+        <div class="portfolio-item family">
+      <div class="portfolio-item-content">
+        <figure class="overlay overlay2"><a href="images-optimized/jpeg/full/cassiecay-F33.jpg">
+      <picture>
+        <source srcset="images-optimized/avif/full/cassiecay-F33.avif" type="image/avif">
+        <source srcset="images-optimized/webp/full/cassiecay-F33.webp" type="image/webp">
+        <img src="images-optimized/jpeg/full/cassiecay-F33.jpg" alt="Father holding toddler in golden sunset field, intimate family portrait session in Madison, Wisconsin" loading="lazy">
+      </picture></a></figure>
+      </div>
+    </div>
+    <!--/.portfolio-item -->
+        <div class="portfolio-item milestone">
+      <div class="portfolio-item-content">
+        <figure class="overlay overlay2"><a href="images-optimized/jpeg/full/cassiecay-M24.jpg">
+      <picture>
+        <source srcset="images-optimized/avif/full/cassiecay-M24.avif" type="image/avif">
+        <source srcset="images-optimized/webp/full/cassiecay-M24.webp" type="image/webp">
+        <img src="images-optimized/jpeg/full/cassiecay-M24.jpg" alt="Joyful baby in tutu sits on wooden bridge with coral balloon, milestone portrait session Madison Wisconsin" loading="lazy">
+      </picture></a></figure>
+      </div>
+    </div>
+    <!--/.portfolio-item -->
+        <div class="portfolio-item milestone">
+      <div class="portfolio-item-content">
+        <figure class="overlay overlay2"><a href="images-optimized/jpeg/full/cassiecay-M3.jpg">
+      <picture>
+        <source srcset="images-optimized/avif/full/cassiecay-M3.avif" type="image/avif">
+        <source srcset="images-optimized/webp/full/cassiecay-M3.webp" type="image/webp">
+        <img src="images-optimized/jpeg/full/cassiecay-M3.jpg" alt="Sweet baby girl with pink flower headband smiling during milestone portrait session in Madison, Wisconsin" loading="lazy">
+      </picture></a></figure>
+      </div>
+    </div>
+    <!--/.portfolio-item -->
+        <div class="portfolio-item couples">
+      <div class="portfolio-item-content">
+        <figure class="overlay overlay2"><a href="images-optimized/jpeg/full/cassiecay-E10.jpg">
+      <picture>
+        <source srcset="images-optimized/avif/full/cassiecay-E10.avif" type="image/avif">
+        <source srcset="images-optimized/webp/full/cassiecay-E10.webp" type="image/webp">
+        <img src="images-optimized/jpeg/full/cassiecay-E10.jpg" alt="Intimate couple sharing tender moment during golden hour event photography session in Madison, Wisconsin" loading="lazy">
+      </picture></a></figure>
+      </div>
+    </div>
+    <!--/.portfolio-item -->
+        <div class="portfolio-item milestone">
+      <div class="portfolio-item-content">
+        <figure class="overlay overlay2"><a href="images-optimized/jpeg/full/cassiecay-M22.jpg">
+      <picture>
+        <source srcset="images-optimized/avif/full/cassiecay-M22.avif" type="image/avif">
+        <source srcset="images-optimized/webp/full/cassiecay-M22.webp" type="image/webp">
+        <img src="images-optimized/jpeg/full/cassiecay-M22.jpg" alt="Sweet toddler in tutu sitting on wooden bridge during milestone portrait session in Madison, Wisconsin" loading="lazy">
+      </picture></a></figure>
+      </div>
+    </div>
+    <!--/.portfolio-item -->
+      <div class="portfolio-item milestone">
+      <div class="portfolio-item-content">
+        <figure class="overlay overlay2"><a href="images-optimized/jpeg/full/cassiecay-M4.jpg">
+      <picture>
+        <source srcset="images-optimized/avif/full/cassiecay-M4.avif" type="image/avif">
+        <source srcset="images-optimized/webp/full/cassiecay-M4.webp" type="image/webp">
+        <img src="images-optimized/jpeg/full/cassiecay-M4.jpg" alt="Smiling baby in red tutu and white bow celebrates milestone portrait session in Madison, Wisconsin" loading="lazy">
+      </picture></a></figure>
+      </div>
+    </div>
+    <!--/.portfolio-item -->
+        <div class="portfolio-item newborn">
+      <div class="portfolio-item-content">
+        <figure class="overlay overlay2"><a href="images-optimized/jpeg/full/cassiecay-NB10.jpg">
+      <picture>
+        <source srcset="images-optimized/avif/full/cassiecay-NB10.avif" type="image/avif">
+        <source srcset="images-optimized/webp/full/cassiecay-NB10.webp" type="image/webp">
+        <img src="images-optimized/jpeg/full/cassiecay-NB10.jpg" alt="Joyful new parents with sleeping baby and golden retriever on bed, newborn photography in Madison, Wisconsin" loading="lazy">
+      </picture></a></figure>
+      </div>
+    </div>
+    <!--/.portfolio-item -->
+      <div class="portfolio-item senior">
+      <div class="portfolio-item-content">
+        <figure class="overlay overlay2"><a href="images-optimized/jpeg/full/cassiecay-senior1.jpg">
+      <picture>
+        <source srcset="images-optimized/avif/full/cassiecay-senior1.avif" type="image/avif">
+        <source srcset="images-optimized/webp/full/cassiecay-senior1.webp" type="image/webp">
+        <img src="images-optimized/jpeg/full/cassiecay-senior1.jpg" alt="Confident senior poses against stone wall with green foliage in Madison, Wisconsin portrait session" loading="lazy">
+      </picture></a></figure>
+      </div>
+    </div>
+    <!--/.portfolio-item -->
+      <div class="portfolio-item milestone">
+      <div class="portfolio-item-content">
+        <figure class="overlay overlay2"><a href="images-optimized/jpeg/full/cassiecay-M7.jpg">
+      <picture>
+        <source srcset="images-optimized/avif/full/cassiecay-M7.avif" type="image/avif">
+        <source srcset="images-optimized/webp/full/cassiecay-M7.webp" type="image/webp">
+        <img src="images-optimized/jpeg/full/cassiecay-M7.jpg" alt="Baby girl in pink and purple tutu celebrates milestone moment in Madison, WI portrait session" loading="lazy">
+      </picture></a></figure>
+      </div>
+    </div>
+    <!--/.portfolio-item -->
+        <div class="portfolio-item couples">
+      <div class="portfolio-item-content">
+        <figure class="overlay overlay2"><a href="images-optimized/jpeg/full/cassiecay-E13.jpg">
+      <picture>
+        <source
+          srcset="images-optimized/avif/800w/cassiecay-E13.avif 800w"
+          sizes="(max-width: 600px) 100vw, (max-width: 1200px) 50vw, 400px"
+          type="image/avif">
+        <source
+          srcset="images-optimized/webp/800w/cassiecay-E13.webp 800w"
+          sizes="(max-width: 600px) 100vw, (max-width: 1200px) 50vw, 400px"
+          type="image/webp">
+        <img
+          src="images-optimized/jpeg/800w/cassiecay-E13.jpg"
+          srcset="images-optimized/jpeg/800w/cassiecay-E13.jpg 800w"
+          sizes="(max-width: 600px) 100vw, (max-width: 1200px) 50vw, 400px"
+          alt="Couple holding hands walking through golden-lit Christmas tree farm during romantic engagement session in Madison, Wisconsin"
+          loading="lazy">
+      </picture></a></figure>
+      </div>
+    </div>
+    <!--/.portfolio-item -->
+        <div class="portfolio-item family">
+      <div class="portfolio-item-content">
+        <figure class="overlay overlay2"><a href="images-optimized/jpeg/full/cassiecay-F16.jpg">
+      <picture>
+        <source srcset="images-optimized/avif/full/cassiecay-F16.avif" type="image/avif">
+        <source srcset="images-optimized/webp/full/cassiecay-F16.webp" type="image/webp">
+        <img src="images-optimized/jpeg/full/cassiecay-F16.jpg" alt="Mother tenderly embracing two young daughters in intimate black and white family portrait, Madison Wisconsin" loading="lazy">
+      </picture></a></figure>
+      </div>
+    </div>
+    <!--/.portfolio-item -->
+        <div class="portfolio-item milestone">
+      <div class="portfolio-item-content">
+        <figure class="overlay overlay2"><a href="images-optimized/jpeg/full/cassiecay-M5.jpg">
+      <picture>
+        <source srcset="images-optimized/avif/full/cassiecay-M5.avif" type="image/avif">
+        <source srcset="images-optimized/webp/full/cassiecay-M5.webp" type="image/webp">
+        <img src="images-optimized/jpeg/full/cassiecay-M5.jpg" alt="Sweet baby milestone portrait in vintage metal tub with cream lace, Madison Wisconsin photography session" loading="lazy">
+      </picture></a></figure>
+      </div>
+    </div>
+    <!--/.portfolio-item -->
+      <div class="portfolio-item newborn ">
+        <div class="portfolio-item-content">
+          <figure class="overlay overlay2"><a href="images-optimized/jpeg/full/cassiecay-NB3.jpg">
+    <picture>
+      <source srcset="images-optimized/avif/full/cassiecay-NB3.avif" type="image/avif">
+      <source srcset="images-optimized/webp/full/cassiecay-NB3.webp" type="image/webp">
+      <img src="images-optimized/jpeg/full/cassiecay-NB3.jpg" alt="Tender sibling moment with toddler kissing newborn baby in Madison Wisconsin newborn portrait session" loading="lazy">
+    </picture></a></figure>
+        </div>
+      </div>
+        <!--/.portfolio-item -->
+        <div class="portfolio-item couples">
+      <div class="portfolio-item-content">
+        <figure class="overlay overlay2"><a href="images-optimized/jpeg/full/cassiecay-E12.jpg">
+      <picture>
+        <source srcset="images-optimized/avif/full/cassiecay-E12.avif" type="image/avif">
+        <source srcset="images-optimized/webp/full/cassiecay-E12.webp" type="image/webp">
+        <img src="images-optimized/jpeg/full/cassiecay-E12.jpg" alt="Happy couple with white dog in autumn foliage during Madison Wisconsin portrait session" loading="lazy">
+      </picture></a></figure>
+      </div>
+    </div>
+    <!--/.portfolio-item -->
+      <div class="portfolio-item couples">
+      <div class="portfolio-item-content">
+        <figure class="overlay overlay2"><a href="images-optimized/jpeg/full/cassiecay-E4.jpg">
+      <picture>
+        <source
+          srcset="images-optimized/avif/800w/cassiecay-E4.avif 800w"
+          sizes="(max-width: 600px) 100vw, (max-width: 1200px) 50vw, 400px"
+          type="image/avif">
+        <source
+          srcset="images-optimized/webp/800w/cassiecay-E4.webp 800w"
+          sizes="(max-width: 600px) 100vw, (max-width: 1200px) 50vw, 400px"
+          type="image/webp">
+        <img
+          src="images-optimized/jpeg/800w/cassiecay-E4.jpg"
+          srcset="images-optimized/jpeg/800w/cassiecay-E4.jpg 800w"
+          sizes="(max-width: 600px) 100vw, (max-width: 1200px) 50vw, 400px"
+          alt="Intimate black and white event portrait of contemplative man with clasped hands in Madison, Wisconsin"
+          loading="lazy">
+      </picture></a></figure>
+      </div>
+    </div>
+    <!--/.portfolio-item -->
+        <div class="portfolio-item newborn">
+      <div class="portfolio-item-content">
+        <figure class="overlay overlay2"><a href="images-optimized/jpeg/full/cassiecay-NB12.jpg">
+      <picture>
+        <source srcset="images-optimized/avif/full/cassiecay-NB12.avif" type="image/avif">
+        <source srcset="images-optimized/webp/full/cassiecay-NB12.webp" type="image/webp">
+        <img src="images-optimized/jpeg/full/cassiecay-NB12.jpg" alt="Loving father cradles swaddled newborn in tender Madison, Wisconsin newborn portrait session" loading="lazy">
+      </picture></a></figure>
+      </div>
+    </div>
+    <!--/.portfolio-item -->
+      <div class="portfolio-item family">
+      <div class="portfolio-item-content">
+        <figure class="overlay overlay2"><a href="images-optimized/jpeg/full/cassiecay-F10.jpg">
+      <picture>
+        <source
+          srcset="images-optimized/avif/800w/cassiecay-F10.avif 800w"
+          sizes="(max-width: 600px) 100vw, (max-width: 1200px) 50vw, 400px"
+          type="image/avif">
+        <source
+          srcset="images-optimized/webp/800w/cassiecay-F10.webp 800w"
+          sizes="(max-width: 600px) 100vw, (max-width: 1200px) 50vw, 400px"
+          type="image/webp">
+        <img
+          src="images-optimized/jpeg/800w/cassiecay-F10.jpg"
+          srcset="images-optimized/jpeg/800w/cassiecay-F10.jpg 800w"
+          sizes="(max-width: 600px) 100vw, (max-width: 1200px) 50vw, 400px"
+          alt="Father and toddler sharing apple during autumn family portrait session in Madison, Wisconsin"
+          loading="lazy">
+      </picture></a></figure>
+      </div>
+    </div>
+    <!--/.portfolio-item -->
+        <div class="portfolio-item milestone">
+      <div class="portfolio-item-content">
+        <figure class="overlay overlay2"><a href="images-optimized/jpeg/full/cassiecay-M15.jpg">
+      <picture>
+        <source srcset="images-optimized/avif/full/cassiecay-M15.avif" type="image/avif">
+        <source srcset="images-optimized/webp/full/cassiecay-M15.webp" type="image/webp">
+        <img src="images-optimized/jpeg/full/cassiecay-M15.jpg" alt="Curious toddler gazing up at apple tree during milestone portrait session in Madison, Wisconsin" loading="lazy">
+      </picture></a></figure>
+      </div>
+    </div>
+    <!--/.portfolio-item -->
+        <div class="portfolio-item milestone">
+      <div class="portfolio-item-content">
+        <figure class="overlay overlay2"><a href="images-optimized/jpeg/full/cassiecay-M6.jpg">
+      <picture>
+        <source srcset="images-optimized/avif/full/cassiecay-M6.avif" type="image/avif">
+        <source srcset="images-optimized/webp/full/cassiecay-M6.webp" type="image/webp">
+        <img src="images-optimized/jpeg/full/cassiecay-M6.jpg" alt="Joyful cake smash milestone portrait session capturing messy celebration in Madison, Wisconsin" loading="lazy">
+      </picture></a></figure>
+      </div>
+    </div>
+    <!--/.portfolio-item -->
+        <div class="portfolio-item couples">
+      <div class="portfolio-item-content">
+        <figure class="overlay overlay2"><a href="images-optimized/jpeg/full/cassiecay-E11.jpg">
+      <picture>
+        <source srcset="images-optimized/avif/full/cassiecay-E11.avif" type="image/avif">
+        <source srcset="images-optimized/webp/full/cassiecay-E11.webp" type="image/webp">
+        <img src="images-optimized/jpeg/full/cassiecay-E11.jpg" alt="Intimate couple sharing tender moment during winter portrait session in Madison, Wisconsin" loading="lazy">
+      </picture></a></figure>
+      </div>
+    </div>
+    <!--/.portfolio-item -->
+        <div class="portfolio-item milestone">
+      <div class="portfolio-item-content">
+        <figure class="overlay overlay2"><a href="images-optimized/jpeg/full/cassiecay-M17.jpg">
+      <picture>
+        <source srcset="images-optimized/avif/full/cassiecay-M17.avif" type="image/avif">
+        <source srcset="images-optimized/webp/full/cassiecay-M17.webp" type="image/webp">
+        <img src="images-optimized/jpeg/full/cassiecay-M17.jpg" alt="Joyful toddler gazing up at number balloons during milestone portrait session in Madison, Wisconsin" loading="lazy">
+      </picture></a></figure>
+      </div>
+    </div>
+    <!--/.portfolio-item -->
+      <div class="portfolio-item newborn">
+      <div class="portfolio-item-content">
+        <figure class="overlay overlay2"><a href="images-optimized/jpeg/full/cassiecay-NB7.jpg">
+      <picture>
+        <source
+          srcset="images-optimized/avif/800w/cassiecay-NB7.avif 800w"
+          sizes="(max-width: 600px) 100vw, (max-width: 1200px) 50vw, 400px"
+          type="image/avif">
+        <source
+          srcset="images-optimized/webp/800w/cassiecay-NB7.webp 800w"
+          sizes="(max-width: 600px) 100vw, (max-width: 1200px) 50vw, 400px"
+          type="image/webp">
+        <img
+          src="images-optimized/jpeg/800w/cassiecay-NB7.jpg"
+          srcset="images-optimized/jpeg/800w/cassiecay-NB7.jpg 800w"
+          sizes="(max-width: 600px) 100vw, (max-width: 1200px) 50vw, 400px"
+          alt="Peaceful sleeping newborn in knit hat and sweater, intimate black and white portrait by Madison, WI photographer"
+          loading="lazy">
+      </picture></a></figure>
+      </div>
+    </div>
+    <!--/.portfolio-item -->
+      <div class="portfolio-item newborn">
+      <div class="portfolio-item-content">
+        <figure class="overlay overlay2"><a href="images-optimized/jpeg/full/cassiecay-NB8.jpg">
+      <picture>
+        <source srcset="images-optimized/avif/full/cassiecay-NB8.avif" type="image/avif">
+        <source srcset="images-optimized/webp/full/cassiecay-NB8.webp" type="image/webp">
+        <img src="images-optimized/jpeg/full/cassiecay-NB8.jpg" alt="Peaceful sleeping newborn with white bow headband, serene newborn portrait photography in Madison, Wisconsin" loading="lazy">
+      </picture></a></figure>
+      </div>
+    </div>
+    <!--/.portfolio-item -->
+        <div class="portfolio-item family">
+      <div class="portfolio-item-content">
+        <figure class="overlay overlay2"><a href="images-optimized/jpeg/full/cassiecay-F11.jpg">
+      <picture>
+        <source srcset="images-optimized/avif/full/cassiecay-F11.avif" type="image/avif">
+        <source srcset="images-optimized/webp/full/cassiecay-F11.webp" type="image/webp">
+        <img src="images-optimized/jpeg/full/cassiecay-F11.jpg" alt="Joyful family of three laughing together on blanket in golden field during Madison, Wisconsin family portrait session" loading="lazy">
+      </picture></a></figure>
+      </div>
+    </div>
+    <!--/.portfolio-item -->
+        <div class="portfolio-item milestone">
+      <div class="portfolio-item-content">
+        <figure class="overlay overlay2"><a href="images-optimized/jpeg/full/cassiecay-M19.jpg">
+      <picture>
+        <source srcset="images-optimized/avif/full/cassiecay-M19.avif" type="image/avif">
+        <source srcset="images-optimized/webp/full/cassiecay-M19.webp" type="image/webp">
+        <img src="images-optimized/jpeg/full/cassiecay-M19.jpg" alt="Joyful baby in pink tutu and white bow during milestone portrait session in Madison, Wisconsin" loading="lazy">
+      </picture></a></figure>
+      </div>
+    </div>
+    <!--/.portfolio-item -->
+        <div class="portfolio-item milestone">
+      <div class="portfolio-item-content">
+        <figure class="overlay overlay2"><a href="images-optimized/jpeg/full/cassiecay-M18.jpg">
+      <picture>
+        <source srcset="images-optimized/avif/full/cassiecay-M18.avif" type="image/avif">
+        <source srcset="images-optimized/webp/full/cassiecay-M18.webp" type="image/webp">
+        <img src="images-optimized/jpeg/full/cassiecay-M18.jpg" alt="Blonde toddler in denim jacket smiling joyfully on wooden steps, milestone portrait session in Madison, Wisconsin" loading="lazy">
+      </picture></a></figure>
+      </div>
+    </div>
+    <!--/.portfolio-item -->
+        <div class="portfolio-item couples">
+      <div class="portfolio-item-content">
+        <figure class="overlay overlay2"><a href="images-optimized/jpeg/full/cassiecay-E8.jpg">
+      <picture>
+        <source srcset="images-optimized/avif/full/cassiecay-E8.avif" type="image/avif">
+        <source srcset="images-optimized/webp/full/cassiecay-E8.webp" type="image/webp">
+        <img src="images-optimized/jpeg/full/cassiecay-E8.jpg" alt="Intimate engagement ring detail captured in warm light during Madison, Wisconsin event photography session" loading="lazy">
+      </picture></a></figure>
+      </div>
+    </div>
+    <!--/.portfolio-item -->
+        <div class="portfolio-item couples">
+      <div class="portfolio-item-content">
+        <figure class="overlay overlay2"><a href="images-optimized/jpeg/full/cassiecay-E2.jpg">
+      <picture>
+        <source srcset="images-optimized/avif/full/cassiecay-E2.avif" type="image/avif">
+        <source srcset="images-optimized/webp/full/cassiecay-E2.webp" type="image/webp">
+        <img src="images-optimized/jpeg/full/cassiecay-E2.jpg" alt="Romantic couple embracing on lakeside dock during intimate engagement session in Madison, Wisconsin" loading="lazy">
+      </picture></a></figure>
+      </div>
+    </div>
+    <!--/.portfolio-item -->
+        <div class="portfolio-item family">
+      <div class="portfolio-item-content">
+        <figure class="overlay overlay2"><a href="images-optimized/jpeg/full/cassiecay-F14.jpg">
+      <picture>
+        <source srcset="images-optimized/avif/full/cassiecay-F14.avif" type="image/avif">
+        <source srcset="images-optimized/webp/full/cassiecay-F14.webp" type="image/webp">
+        <img src="images-optimized/jpeg/full/cassiecay-F14.jpg" alt="Expecting parents with young son tenderly embracing during maternity family portrait session in Madison, Wisconsin" loading="lazy">
+      </picture></a></figure>
+      </div>
+    </div>
+    <!--/.portfolio-item -->
+    </div>
+    <!--/.portfolio-grid --> 
+  </div>
+  <!-- /.wrapper -->
+    <div class="wrapper image-wrapper bg-image inverse-text" data-image-src="images-optimized/jpeg/1800w/cassiecay-background2.jpg">
+      <div class="container inner pt-120 pb-120">
+        <div class="row">
+          <div class="col-lg-8 offset-lg-2">
+            <div class="swiper-container-wrapper basic-slider">
+              <div class="swiper-container text-center">
+                <div class="swiper-wrapper">
+                  <div class="swiper-slide">
+                    <blockquote class="icon icon-top larger">
+                      <p>Taking pictures is savoring life intensely, every hundredth of a second.</p>
+                      <footer class="blockquote-footer">Marc Riboud</footer>
+                    </blockquote>
+                  </div>
+                  <!-- /.swiper-slide -->
+                  <div class="swiper-slide">
+                    <blockquote class="icon icon-top larger">
+                      <p>What I like about photographs is that they capture a moment that's gone forever, impossible to reproduce.</p>
+                      <footer class="blockquote-footer">Karl Lagerfeld</footer>
+                    </blockquote>
+                  </div>
+                  <!-- /.swiper-slide -->
+                  <div class="swiper-slide">
+                    <blockquote class="icon icon-top larger">
+                      <p>I wish that all of nature's magnificence, the emotion of the land, the living energy of place could be photographed.</p>
+                      <footer class="blockquote-footer">Annie Leibovitz</footer>
+                    </blockquote>
+                  </div>
+                  <!-- /.swiper-slide --> 
+                </div>
+                <!-- /.swiper-wrapper --> 
+              </div>
+              <!-- /.swiper-container -->
+              <div class="swiper-pagination gap-small"></div>
+            </div>
+            <!-- .swiper-container-wrapper --> 
+          </div>
+          <!-- /column --> 
+        </div>
+        <!-- /.row --> 
+      </div>
+      <!-- /.container --> 
+    </div>
+    <!-- /.wrapper --> 
+  </section>
+  <!-- /section -->
+  <section id="services">
+    <div class="wrapper dark-wrapper inverse-text">
+      <div class="container inner">
+        <div class="row">
+          <div class="col-lg-10 offset-lg-1">
+            <h2 class="section-title section-title-upper text-center">My Services</h2>
+            <p class="text-center">Please contact me for bundle deals. You can also take advantage of a 10% discount when you book a second session within 6 months of a full price session. This discount is not applicable to seasonal mini sessions. <br><br> </p>
+            <div class="space40"></div>
+            <div class="row d-flex align-items-center">
+              <div class="col-md-6 order-md-2 text-center">
+                <figure><picture>
+                  <source srcset="images-optimized/avif/full/cassiecay-service1.avif" type="image/avif">
+                  <source srcset="images-optimized/webp/full/cassiecay-service1.webp" type="image/webp">
+                  <img class="octagon" src="images-optimized/jpeg/full/cassiecay-service1.jpg" alt="">
+                </picture></figure>
+              </div>
+              <!--/column -->
+              <div class="space20 d-block d-sm-none"></div>
+              <div class="col-md-6">
+                <h3>Full Session</h3>
+                <p class="lead mb-0">Investment: $350.00</p>
+            <p>What to Expect: A 45-60 minute session with 70+ high-resolution digital images with print release. This is perfect for engagement, family, maternity, milestone, or cake smashes. Extended family sessions incur extra fees. Location will be at a mutually agreed upon location, which may be outdoor, in my studio, or in your house.</p>
+              </div>
+              <!--/column --> 
+            </div>
+            <!--/.row -->
+            <div class="space20 d-none d-md-block"></div>
+			<div class="space50 d-md-none"></div>
+            <div class="row d-flex align-items-center">
+              <div class="col-md-6 text-center">
+                <figure><picture>
+                  <source srcset="images-optimized/avif/full/cassiecay-service8.avif" type="image/avif">
+                  <source srcset="images-optimized/webp/full/cassiecay-service8.webp" type="image/webp">
+                  <img class="octagon" src="images-optimized/jpeg/full/cassiecay-service8.jpg" alt="">
+                </picture></figure>
+              </div>
+              <!--/column -->
+              <div class="space20 d-block d-sm-none"></div>
+              <div class="col-md-6">
+                <h3>Wedding, Event</h3>
+                <p class="lead mb-0">Investment: $350.00 per hour</p>
+            <p>What to Expect: This can be used for a variety of events including weddings, birthday parties, bat or bar mitzvahs, or professional events.</p>
+              </div>
+              <!--/column --> 
+            </div>
+            <!--/.row -->
+            <div class="space20 d-none d-md-block"></div>
+			<div class="space50 d-md-none"></div>
+            <div class="row d-flex align-items-center">
+              <div class="col-md-6 order-md-2 text-center">
+                <figure><picture>
+                  <source srcset="images-optimized/avif/full/cassiecay-service3.avif" type="image/avif">
+                  <source srcset="images-optimized/webp/full/cassiecay-service3.webp" type="image/webp">
+                  <img class="octagon" src="images-optimized/jpeg/full/cassiecay-service3.jpg" alt="">
+                </picture></figure>
+              </div>
+              <!--/column -->
+              <div class="space20 d-block d-sm-none"></div>
+              <div class="col-md-6">
+                <h3>Compact Session</h3>
+                <p class="lead mb-0">Investment: $250.00</p>
+            <p>What to Expect: A 25 minute session with 35+ high-resolution digital images with print release. Location will be determined by photographer.</p>
+              </div>
+              <!--/column --> 
+            </div>
+            <!--/.row --> 
+              <div class="space20 d-none d-md-block"></div>
+			<div class="space50 d-md-none"></div>
+            <div class="row d-flex align-items-center">
+              <div class="col-md-6 text-center">
+                <figure><picture>
+                  <source srcset="images-optimized/avif/full/cassiecay-service4.avif" type="image/avif">
+                  <source srcset="images-optimized/webp/full/cassiecay-service4.webp" type="image/webp">
+                  <img class="octagon" src="images-optimized/jpeg/full/cassiecay-service4.jpg" alt="">
+                </picture></figure>
+              </div>
+              <!--/column -->
+              <div class="space20 d-block d-sm-none"></div>
+              <div class="col-md-6">
+                <h3>Senior</h3>
+                <p class="lead mb-0"> Investment: $400.00</p>
+            <p>What to Expect: A 60-90 minute session with 70+ digital high resolution images with print release. This includes unlimited outfit changes within the alloted session time, as well as up to 2 locations.</p>
+              </div>
+              <!--/column --> 
+            </div>
+            <!--/.row -->
+              <div class="space20 d-none d-md-block"></div>
+			<div class="space50 d-md-none"></div>
+            <div class="row d-flex align-items-center">
+              <div class="col-md-6 order-md-2 text-center">
+                <figure><picture>
+                  <source srcset="images-optimized/avif/full/cassiecay-service6.avif" type="image/avif">
+                  <source srcset="images-optimized/webp/full/cassiecay-service6.webp" type="image/webp">
+                  <img class="octagon" src="images-optimized/jpeg/full/cassiecay-service6.jpg" alt="">
+                </picture></figure>
+              </div>
+              <!--/column -->
+              <div class="space20 d-block d-sm-none"></div>
+              <div class="col-md-6">
+                <h3>Fresh 48</h3>
+                <p class="lead mb-0">Investment: $300.00</p>
+            <p>What to Expect: A 30 minute session with 35+ digital images that takes place in the hospital within 48 hours of birth.</p>
+              </div>
+              <!--/column --> 
+            </div>
+            <!--/.row --> 
+              <div class="space20 d-none d-md-block"></div>
+			<div class="space50 d-md-none"></div>
+            <div class="row d-flex align-items-center">
+              <div class="col-md-6 text-center">
+                <figure><picture>
+                  <source srcset="images-optimized/avif/full/cassiecay-service7.avif" type="image/avif">
+                  <source srcset="images-optimized/webp/full/cassiecay-service7.webp" type="image/webp">
+                  <img class="octagon" src="images-optimized/jpeg/full/cassiecay-service7.jpg" alt="">
+                </picture></figure>
+              </div>
+              <!--/column -->
+              <div class="space20 d-block d-sm-none"></div>
+              <div class="col-md-6">
+                <h3>Newborn</h3>
+                <p class="lead mb-0">Investment Newborn: $450.00</p>
+            <p>What to Expect: A 1-3 hour lifestyle session with 70+ digital high-resolution images with print release. Location will be mutually agreed on, but generally takes place in your home or outdoors. These photos can include the immediate family, with generally one posed set up. If you would like to focus on only posed photos, please inquire about final pricing.</p>
+              </div>
+              <!--/column --> 
+            </div>
+            <!--/.row -->
+          </div>
+          <!-- /column --> 
+        </div>
+        <!-- /.row --> 
+      </div>
+      <!-- /.container --> 
+    </div>
+    <!-- /.wrapper --> 
+  </section>
+  <!-- /section -->
+  <section id="contact">
+    <div class="wrapper image-wrapper bg-image inverse-text" data-image-src="images-optimized/jpeg/1800w/cassiecay-background3.jpg">
+      <div class="container inner pt-150 pb-150">
+        <h2 class="heading text-center">Thank you for taking some time to share in my art.<br class="d-none d-xl-block" />
+          Feel free to get in touch if there are other services you are interested in.</h2>
+      </div>
+      <!-- /.container --> 
+    </div>
+    <!-- /.wrapper -->
+    <div class="wrapper dark-wrapper inverse-text">
+      <div class="container inner">
+        <div class="row">
+          <div class="col-lg-8 offset-lg-2">
+            <h2 class="section-title section-title-upper text-center">Get in Touch</h2>
+            <p class="text-center">I would be honored to capture a moment in time for you! If you would like to book a seasonal Mini Session, please click the booking button below.  For all other sessions, please use the contact form below to discuss availability. </p><center><a href="https://booking.appointy.com/cassiecayphotography" target="_blank"><picture>
+              <source srcset="images-optimized/avif/full/BookaPhotoshoot.avif" type="image/avif">
+              <source srcset="images-optimized/webp/full/BookaPhotoshoot.webp" type="image/webp">
+              <img src="images-optimized/jpeg/full/BookaPhotoshoot.jpg" alt="" width="200" border="0">
+            </picture></a></center>
+            <div class="space20"></div>
+            <div class="row text-center">
+              <div class="col-md-6"> <span class="icon icon-color color-white fs-48 mb-10"><i class="si-camping_map"></i></span>
+                <p>Waunakee, Wisconsin</p>
+              </div>
+              <!--/column -->
+              <div class="col-md-6"> <span class="icon icon-color color-white fs-48 mb-10"><i class="si-mail_mail-2"></i></span>
+                <p><a class="nocolor" href="mailto:cassiecayphoto@gmail.com">cassiecayphoto@gmail.com</a></p>
+              </div>
+              <!--/column --> 
+            </div>
+            <!--/.row -->
+            <div class="space30"></div>
+            <div class="form-container">
+              <form id="contact-form" action="post">
+                <div class="row text-center">
+                  <div class="col-md-6 pr-10">
+                    <div class="form-group">
+                      <input type="text" class="form-control" name="name" id="name" placeholder="Your name" required="required" minlength="2">
+                    </div>
+                    <!--/.form-group --> 
+                  </div>
+                  <!--/column -->
+                  <div class="col-md-6 pl-10">
+                    <div class="form-group">
+                      <input type="email" class="form-control" name="mail" id="mail" placeholder="Your e-mail" required="required">
+                    </div>
+                    <!--/.form-group --> 
+                  </div>
+                  <!--/column -->
+                  <div class="col-12">
+                    <div class="form-group">
+                      <input type="text" class="form-control" name="subject" id="subject" placeholder="Subject">
+                    </div>
+                    <!--/.form-group --> 
+                  </div>
+                  <!--/column -->
+                  <div class="col-12">
+                    <textarea name="comment" id="comment" class="form-control" rows="3" placeholder="Type your message here..." required></textarea>
+                    <div class="space20"></div>
+                    <button style="background:#9A7A7D;" type="button" ID="submitmessage" class="btn btn-full-rounded" onClick="submitToAPI(event)">Send Message</button>
+                    <footer class="notification-box"></footer>
+                    <p id="message" style="margin-top:10px;"></p>
+                  </div>
+                  <!--/column --> 
+                </div>
+                <!--/.row -->
+              </form>
+              <!--/.vanilla-form --> 
+            </div>
+            <!--/.form-container --> 
+          </div>
+          <!-- /column --> 
+        </div>
+        <!-- /.row --> 
+      </div>
+      <!-- /.container --> 
+    </div>
+    <!-- /.wrapper --> 
+  </section>
+  <!-- /section -->
+  <footer class="dark-wrapper inverse-text">
+    <div class="sub-footer">
+      <div class="container inner text-center"> <picture>
+          <source srcset="images-optimized/avif/full/cassiecaylogobw2.avif" type="image/avif">
+          <source srcset="images-optimized/webp/full/cassiecaylogobw2.webp" type="image/webp">
+          <img width="200px" src="images-optimized/webp/full/cassiecaylogobw2.webp" alt="Cassie Cay Photography logo">
+        </picture>
+        <div class="space25"></div>
+        <p>© <script>document.write(new Date().getFullYear())</script> Cassie Cay Photography. All rights reserved.</p>
+        <p style="font-size:10px; color:#666; margin-top:8px;">Protected by reCAPTCHA · <a href="https://policies.google.com/privacy" target="_blank" style="color:#666;">Privacy</a> · <a href="https://policies.google.com/terms" target="_blank" style="color:#666;">Terms</a></p>
+        <div class="space30"></div>
+        <ul class="social social-bg social-s">
+          <li><a href="https://www.facebook.com/cassie.cay.photography"><i class="fa fa-facebook-f"></i></a></li>
+          <li><a href="https://www.instagram.com/cassie.cay.photography/?hl=en"><i class="fa fa-instagram"></i></a></li>
+        </ul>
+      </div>
+      <!-- /.container --> 
+    </div>
+    <!-- /.sub-footer --> 
+  </footer>
+</div>
+<!-- /.content-wrapper --> 
+<script src="style/js/bootstrap.bundle.min.js"></script>
+<script src="style/js/embla-carousel.umd.js"></script>
+<script src="style/js/embla-carousel-autoplay.umd.js"></script>
+<script src="style/js/glightbox.min.js"></script>
+<script src="style/js/muuri.min.js"></script>
+<script src="style/js/custom-plugins.js"></script>
+<script src="style/js/custom-scripts.js"></script>
+</body>
+</html>
