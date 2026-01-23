@@ -1,0 +1,136 @@
+name: Process New Photos
+
+on:
+  push:
+    paths:
+      - 'new-photos/**'
+    branches:
+      - main
+
+jobs:
+  process-images:
+    runs-on: ubuntu-latest
+    # Don't run on commits from this workflow
+    if: "!contains(github.event.head_commit.message, '[skip ci]')"
+    
+    permissions:
+      contents: write
+    
+    concurrency:
+      group: process-images
+      cancel-in-progress: false
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          cache: 'npm'
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Check for new images
+        id: check
+        run: |
+          # Find image files in new-photos (excluding .gitkeep)
+          IMAGES=$(find new-photos -type f \( -iname "*.jpg" -o -iname "*.jpeg" -o -iname "*.png" \) | head -20)
+          if [ -z "$IMAGES" ]; then
+            echo "No new images found"
+            echo "has_images=false" >> $GITHUB_OUTPUT
+          else
+            echo "Found images:"
+            echo "$IMAGES"
+            echo "has_images=true" >> $GITHUB_OUTPUT
+          fi
+
+      - name: Process new images
+        if: steps.check.outputs.has_images == 'true'
+        run: |
+          # Move images to images/ folder
+          for img in new-photos/*.{jpg,jpeg,png,JPG,JPEG,PNG}; do
+            [ -f "$img" ] || continue
+            filename=$(basename "$img")
+            # Skip if not an image file
+            [[ "$filename" == ".gitkeep" ]] && continue
+            echo "Moving $filename to images/"
+            mv "$img" "images/$filename"
+          done
+
+      - name: Optimize images
+        if: steps.check.outputs.has_images == 'true'
+        run: npm run preprocess
+
+      - name: Generate HTML snippets
+        if: steps.check.outputs.has_images == 'true'
+        run: |
+          # Find newly added images and generate HTML
+          for img in images-optimized/jpeg/full/cassiecay-*.jpg; do
+            filename=$(basename "$img" .jpg)
+            
+            # Check if this image is already in index.html
+            if grep -q "$filename" index.html; then
+              continue
+            fi
+            
+            echo "Generating HTML for $filename"
+            
+            # Check if 800w variant exists
+            if [ -f "images-optimized/jpeg/800w/$filename.jpg" ]; then
+              # Responsive version
+              cat >> new-images.html << EOF
+          <!-- ========== MOVE THIS BLOCK START ========== -->
+          <!-- Image: $filename | Category: family (options: family, milestone, senior, newborn, couples) -->
+          <div class="portfolio-item family">
+            <div class="portfolio-item-content">
+              <figure class="overlay overlay2"><a href="images-optimized/jpeg/full/$filename.jpg">
+                <picture>
+                  <source
+                    srcset="images-optimized/avif/800w/$filename.avif 800w"
+                    sizes="(max-width: 600px) 100vw, (max-width: 1200px) 50vw, 400px"
+                    type="image/avif">
+                  <source
+                    srcset="images-optimized/webp/800w/$filename.webp 800w"
+                    sizes="(max-width: 600px) 100vw, (max-width: 1200px) 50vw, 400px"
+                    type="image/webp">
+                  <img
+                    src="images-optimized/jpeg/800w/$filename.jpg"
+                    srcset="images-optimized/jpeg/800w/$filename.jpg 800w"
+                    sizes="(max-width: 600px) 100vw, (max-width: 1200px) 50vw, 400px"
+                    alt="[ADD DESCRIPTION]"
+                    loading="lazy">
+                </picture>
+              </a></figure>
+            </div>
+          </div>
+          <!-- ========== MOVE THIS BLOCK END ========== -->
+          EOF
+            fi
+          done
+
+      - name: Insert HTML into index.html
+        if: steps.check.outputs.has_images == 'true'
+        run: |
+          if [ -f "new-images.html" ]; then
+            # Find the insert point marker or end of portfolio grid
+            if grep -q "<!-- NEW-IMAGES-INSERT-POINT -->" index.html; then
+              # Insert before the marker
+              sed -i '/<!-- NEW-IMAGES-INSERT-POINT -->/r new-images.html' index.html
+            else
+              # Insert before closing of portfolio-grid
+              sed -i '/<!--\/.portfolio-grid -->/r new-images.html' index.html
+            fi
+            rm new-images.html
+          fi
+
+      - name: Commit and push
+        if: steps.check.outputs.has_images == 'true'
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git add -A
+          git commit -m "feat: process new portfolio images [skip ci]" || echo "No changes to commit"
+          git push
