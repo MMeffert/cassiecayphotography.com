@@ -23,6 +23,8 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v4
+        with:
+          fetch-depth: 2
 
       - name: Setup Node.js
         uses: actions/setup-node@v4
@@ -36,7 +38,6 @@ jobs:
       - name: Check for new images
         id: check
         run: |
-          # Find image files in new-photos (excluding .gitkeep)
           IMAGES=$(find new-photos -type f \( -iname "*.jpg" -o -iname "*.jpeg" -o -iname "*.png" \) | head -20)
           if [ -z "$IMAGES" ]; then
             echo "No new images found"
@@ -50,11 +51,9 @@ jobs:
       - name: Process new images
         if: steps.check.outputs.has_images == 'true'
         run: |
-          # Move images to images/ folder
           for img in new-photos/*.{jpg,jpeg,png,JPG,JPEG,PNG}; do
             [ -f "$img" ] || continue
             filename=$(basename "$img")
-            # Skip if not an image file
             [[ "$filename" == ".gitkeep" ]] && continue
             echo "Moving $filename to images/"
             mv "$img" "images/$filename"
@@ -66,12 +65,12 @@ jobs:
 
       - name: Generate HTML snippets
         if: steps.check.outputs.has_images == 'true'
+        shell: bash
         run: |
-          # Get list of images that were just moved
-          MOVED_IMAGES=$(git diff --name-only HEAD~1 HEAD -- images/ | grep -E '\.(jpg|jpeg|png)$' | xargs -I {} basename {} | sed 's/\.[^.]*$//')
+          # Get list of newly added images in this commit
+          MOVED_IMAGES=$(git diff --name-only HEAD~1 -- images/ 2>/dev/null | grep -iE '\.(jpg|jpeg|png)$' | xargs -I {} basename {} 2>/dev/null | sed 's/\.[^.]*$//' || true)
           
           for filename in $MOVED_IMAGES; do
-            # Skip if already in index.html
             if grep -q "href=\"images-optimized/jpeg/full/$filename.jpg\"" index.html; then
               echo "Skipping $filename - already in index.html"
               continue
@@ -79,35 +78,21 @@ jobs:
             
             echo "Generating HTML for $filename"
             
-            # Check if 800w variant exists
             if [ -f "images-optimized/jpeg/800w/$filename.jpg" ]; then
-              cat >> new-images.html << EOF
-<!-- ========== MOVE THIS BLOCK START ========== -->
-<!-- Image: $filename | Category: family (options: family, milestone, senior, newborn, couples) -->
-<div class="portfolio-item family">
-  <div class="portfolio-item-content">
-    <figure class="overlay overlay2"><a href="images-optimized/jpeg/full/$filename.jpg">
-      <picture>
-        <source
-          srcset="images-optimized/avif/800w/$filename.avif 800w"
-          sizes="(max-width: 600px) 100vw, (max-width: 1200px) 50vw, 400px"
-          type="image/avif">
-        <source
-          srcset="images-optimized/webp/800w/$filename.webp 800w"
-          sizes="(max-width: 600px) 100vw, (max-width: 1200px) 50vw, 400px"
-          type="image/webp">
-        <img
-          src="images-optimized/jpeg/800w/$filename.jpg"
-          srcset="images-optimized/jpeg/800w/$filename.jpg 800w"
-          sizes="(max-width: 600px) 100vw, (max-width: 1200px) 50vw, 400px"
-          alt="[ADD DESCRIPTION]"
-          loading="lazy">
-      </picture>
-    </a></figure>
-  </div>
-</div>
-<!-- ========== MOVE THIS BLOCK END ========== -->
-EOF
+              echo '<!-- ========== MOVE THIS BLOCK START ========== -->' >> new-images.html
+              echo "<!-- Image: $filename | Category: family (options: family, milestone, senior, newborn, couples) -->" >> new-images.html
+              echo '<div class="portfolio-item family">' >> new-images.html
+              echo '  <div class="portfolio-item-content">' >> new-images.html
+              echo "    <figure class=\"overlay overlay2\"><a href=\"images-optimized/jpeg/full/$filename.jpg\">" >> new-images.html
+              echo '      <picture>' >> new-images.html
+              echo "        <source srcset=\"images-optimized/avif/800w/$filename.avif 800w\" sizes=\"(max-width: 600px) 100vw, (max-width: 1200px) 50vw, 400px\" type=\"image/avif\">" >> new-images.html
+              echo "        <source srcset=\"images-optimized/webp/800w/$filename.webp 800w\" sizes=\"(max-width: 600px) 100vw, (max-width: 1200px) 50vw, 400px\" type=\"image/webp\">" >> new-images.html
+              echo "        <img src=\"images-optimized/jpeg/800w/$filename.jpg\" srcset=\"images-optimized/jpeg/800w/$filename.jpg 800w\" sizes=\"(max-width: 600px) 100vw, (max-width: 1200px) 50vw, 400px\" alt=\"[ADD DESCRIPTION]\" loading=\"lazy\">" >> new-images.html
+              echo '      </picture>' >> new-images.html
+              echo '    </a></figure>' >> new-images.html
+              echo '  </div>' >> new-images.html
+              echo '</div>' >> new-images.html
+              echo '<!-- ========== MOVE THIS BLOCK END ========== -->' >> new-images.html
             fi
           done
 
@@ -115,12 +100,9 @@ EOF
         if: steps.check.outputs.has_images == 'true'
         run: |
           if [ -f "new-images.html" ]; then
-            # Find the insert point marker or end of portfolio grid
             if grep -q "<!-- NEW-IMAGES-INSERT-POINT -->" index.html; then
-              # Insert before the marker
               sed -i '/<!-- NEW-IMAGES-INSERT-POINT -->/r new-images.html' index.html
             else
-              # Insert before closing of portfolio-grid
               sed -i '/<!--\/.portfolio-grid -->/r new-images.html' index.html
             fi
             rm new-images.html
