@@ -86,9 +86,9 @@ function getPortfolioImages() {
 
   const files = readdirSync(imageDir);
 
-  // Filter to only portfolio images (cassiecay-{CATEGORY}{NUMBER}-full.jpg)
-  // Categories: B, C, E, F, S, W, NB, M, senior
-  const portfolioPattern = /^cassiecay-(B|C|E|F|S|W|NB|M|senior)\d.*-full\.jpg$/i;
+  // Filter to only portfolio images (cassiecay-{CATEGORY}{NUMBER}.jpg)
+  // Categories: E (couples), F (family), M (milestone), NB (newborn), senior
+  const portfolioPattern = /^cassiecay-(E|F|M|NB|senior)\d+.*\.jpg$/i;
 
   return files.filter(f => portfolioPattern.test(f));
 }
