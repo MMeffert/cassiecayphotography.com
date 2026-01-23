@@ -10,7 +10,6 @@ on:
 jobs:
   process-images:
     runs-on: ubuntu-latest
-    # Don't run on commits from this workflow
     if: "!contains(github.event.head_commit.message, '[skip ci]')"
     
     permissions:
@@ -23,8 +22,6 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v4
-        with:
-          fetch-depth: 2
 
       - name: Setup Node.js
         uses: actions/setup-node@v4
@@ -49,15 +46,21 @@ jobs:
           fi
 
       - name: Process new images
+        id: process
         if: steps.check.outputs.has_images == 'true'
         run: |
+          MOVED_FILES=""
           for img in new-photos/*.{jpg,jpeg,png,JPG,JPEG,PNG}; do
             [ -f "$img" ] || continue
             filename=$(basename "$img")
             [[ "$filename" == ".gitkeep" ]] && continue
             echo "Moving $filename to images/"
             mv "$img" "images/$filename"
+            # Track moved files (without extension)
+            basename_no_ext="${filename%.*}"
+            MOVED_FILES="$MOVED_FILES $basename_no_ext"
           done
+          echo "moved_files=$MOVED_FILES" >> $GITHUB_OUTPUT
 
       - name: Optimize images
         if: steps.check.outputs.has_images == 'true'
@@ -65,12 +68,8 @@ jobs:
 
       - name: Generate HTML snippets
         if: steps.check.outputs.has_images == 'true'
-        shell: bash
         run: |
-          # Get list of newly added images in this commit
-          MOVED_IMAGES=$(git diff --name-only HEAD~1 -- images/ 2>/dev/null | grep -iE '\.(jpg|jpeg|png)$' | xargs -I {} basename {} 2>/dev/null | sed 's/\.[^.]*$//' || true)
-          
-          for filename in $MOVED_IMAGES; do
+          for filename in ${{ steps.process.outputs.moved_files }}; do
             if grep -q "href=\"images-optimized/jpeg/full/$filename.jpg\"" index.html; then
               echo "Skipping $filename - already in index.html"
               continue
