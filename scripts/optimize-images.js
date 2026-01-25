@@ -29,8 +29,9 @@ const OUTPUT_DIR = 'images-optimized';
 const CONCURRENCY = 4; // Limit concurrent processing for memory management
 
 // CONSERVATIVE quality settings for photography portfolio
+// Note: AVIF effort lowered from 6 to 4 for faster CI encoding
 const QUALITY = {
-  avif: { quality: 85, effort: 6, chromaSubsampling: '4:4:4' },
+  avif: { quality: 85, effort: 4, chromaSubsampling: '4:4:4' },
   webp: { quality: 85, effort: 6, smartSubsample: true },
   jpeg: { quality: 90, mozjpeg: true, progressive: true }
 };
