@@ -20,12 +20,14 @@ export class ContactFormStack extends cdk.Stack {
     cdk.Tags.of(this).add('ManagedBy', 'cdk');
     cdk.Tags.of(this).add('Repository', 'Meffert-House/cassiecayphotography.com');
 
-    // Create or import the Secrets Manager secret for the reCAPTCHA API key
-    // The actual secret value must be set manually in AWS Console or CLI
-    const recaptchaApiKeySecret = new secretsmanager.Secret(this, 'RecaptchaApiKey', {
-      secretName: 'cassiecayphotography-website/recaptcha-api-key',
-      description: 'reCAPTCHA Enterprise API key for cassiecayphotography.com contact form',
-    });
+    // Import existing Secrets Manager secret for the reCAPTCHA API key
+    // The secret was created manually and its value is managed outside of CDK
+    const recaptchaSecretName = 'cassiecayphotography-website/recaptcha-api-key';
+    const recaptchaApiKeySecret = secretsmanager.Secret.fromSecretNameV2(
+      this,
+      'RecaptchaApiKey',
+      recaptchaSecretName,
+    );
 
     // Create Lambda function for contact form
     const contactFormFunction = new lambda.Function(this, 'ContactFormFunction', {
@@ -35,11 +37,14 @@ export class ContactFormStack extends cdk.Stack {
       code: lambda.Code.fromAsset('lambda/contact-form'),
       timeout: cdk.Duration.seconds(10),
       memorySize: 128,
+      // Rate limiting: limit concurrent executions to prevent cost abuse
+      // 5 concurrent = ~5 requests/second max, sufficient for legitimate contact form usage
+      reservedConcurrentExecutions: 5,
       environment: {
         SENDER_EMAIL: 'no-reply@cassiecayphotography.com',
         RECEIVER_EMAIL: 'cassiecayphoto@gmail.com',
         EMAIL_SUBJECT: 'Contact Form Submission',
-        RECAPTCHA_API_KEY_SECRET_NAME: recaptchaApiKeySecret.secretName,
+        RECAPTCHA_API_KEY_SECRET_NAME: recaptchaSecretName,
         RECAPTCHA_PROJECT_ID: 'cassiecayphotographycom',
         RECAPTCHA_SITE_KEY: '6LchXjYsAAAAANiJ_B8AKMUp7vwsJx_8HnKLBzr2',
         RECAPTCHA_SCORE_THRESHOLD: '0.5',

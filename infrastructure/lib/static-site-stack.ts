@@ -60,6 +60,60 @@ export class StaticSiteStack extends cdk.Stack {
       signing: cloudfront.Signing.SIGV4_ALWAYS,
     });
 
+    // Security headers policy for all responses
+    const securityHeadersPolicy = new cloudfront.ResponseHeadersPolicy(this, 'SecurityHeadersPolicy', {
+      responseHeadersPolicyName: 'cassiecayphoto-security-headers',
+      comment: 'Security headers for cassiecayphotography.com',
+      securityHeadersBehavior: {
+        contentSecurityPolicy: {
+          contentSecurityPolicy: [
+            "default-src 'self'",
+            "script-src 'self' 'unsafe-inline' https://www.google.com https://www.gstatic.com https://www.recaptcha.net",
+            "style-src 'self' 'unsafe-inline' https://fonts.googleapis.com",
+            "font-src 'self' https://fonts.gstatic.com",
+            "img-src 'self' data: https:",
+            "connect-src 'self' https://*.lambda-url.us-east-1.on.aws https://www.google.com",
+            "frame-src https://www.google.com https://www.recaptcha.net",
+            "object-src 'none'",
+            "base-uri 'self'",
+            "form-action 'self'",
+          ].join('; '),
+          override: true,
+        },
+        frameOptions: {
+          frameOption: cloudfront.HeadersFrameOption.DENY,
+          override: true,
+        },
+        contentTypeOptions: {
+          override: true,
+        },
+        referrerPolicy: {
+          referrerPolicy: cloudfront.HeadersReferrerPolicy.STRICT_ORIGIN_WHEN_CROSS_ORIGIN,
+          override: true,
+        },
+        strictTransportSecurity: {
+          accessControlMaxAge: cdk.Duration.days(365),
+          includeSubdomains: true,
+          preload: true,
+          override: true,
+        },
+        xssProtection: {
+          protection: true,
+          modeBlock: true,
+          override: true,
+        },
+      },
+      customHeadersBehavior: {
+        customHeaders: [
+          {
+            header: 'Permissions-Policy',
+            value: 'camera=(), microphone=(), geolocation=()',
+            override: true,
+          },
+        ],
+      },
+    });
+
     // CloudFront Function to redirect www to non-www (for SEO canonical consistency)
     const wwwRedirectFunction = skipDomain ? undefined : new cloudfront.Function(this, 'WwwRedirectFunction', {
       code: cloudfront.FunctionCode.fromInline(`
@@ -97,6 +151,7 @@ function handler(event) {
         cachedMethods: cloudfront.CachedMethods.CACHE_GET_HEAD,
         compress: true,
         cachePolicy: cloudfront.CachePolicy.CACHING_OPTIMIZED,
+        responseHeadersPolicy: securityHeadersPolicy,
         // Attach www redirect function only when domain is configured
         ...(wwwRedirectFunction ? {
           functionAssociations: [{
