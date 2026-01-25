@@ -5,7 +5,7 @@ This guide is for Cassie to make updates via GitHub.
 ## Getting Started
 
 1. Go to **github.com** and sign in with your Google account (cassiecayphoto@gmail.com)
-2. Navigate to **MMeffert/cassiecayphotography.com**
+2. Navigate to **Meffert-House/cassiecayphotography.com**
 
 ---
 

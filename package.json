@@ -20,15 +20,15 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/MMeffert/cassiecayphotography.com.git"
+    "url": "git+https://github.com/Meffert-House/cassiecayphotography.com.git"
   },
   "keywords": [],
   "author": "Cassie Meffert",
   "license": "ISC",
   "bugs": {
-    "url": "https://github.com/MMeffert/cassiecayphotography.com/issues"
+    "url": "https://github.com/Meffert-House/cassiecayphotography.com/issues"
   },
-  "homepage": "https://github.com/MMeffert/cassiecayphotography.com#readme",
+  "homepage": "https://github.com/Meffert-House/cassiecayphotography.com#readme",
   "devDependencies": {
     "autoprefixer": "^10.4.23",
     "cli-progress": "^3.12.0",

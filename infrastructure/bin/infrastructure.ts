@@ -16,7 +16,7 @@ const env = {
 new GitHubOidcStack(app, 'CassiePhotoGitHubOidcStack', {
   env,
   description: 'GitHub OIDC provider and deployment role for Cassie Cay Photography',
-  repositoryOwner: 'MMeffert',
+  repositoryOwner: 'Meffert-House',
   repositoryName: 'cassiecayphotography.com',
 });
 

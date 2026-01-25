@@ -18,7 +18,7 @@ export class ContactFormStack extends cdk.Stack {
     cdk.Tags.of(this).add('Application', 'cassiecayphotography');
     cdk.Tags.of(this).add('Environment', 'production');
     cdk.Tags.of(this).add('ManagedBy', 'cdk');
-    cdk.Tags.of(this).add('Repository', 'MMeffert/cassiecayphotography.com');
+    cdk.Tags.of(this).add('Repository', 'Meffert-House/cassiecayphotography.com');
 
     // Create or import the Secrets Manager secret for the reCAPTCHA API key
     // The actual secret value must be set manually in AWS Console or CLI

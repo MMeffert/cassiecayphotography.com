@@ -29,7 +29,7 @@ export class StaticSiteStack extends cdk.Stack {
     cdk.Tags.of(this).add('Application', 'cassiecayphotography');
     cdk.Tags.of(this).add('Environment', 'production');
     cdk.Tags.of(this).add('ManagedBy', 'cdk');
-    cdk.Tags.of(this).add('Repository', 'MMeffert/cassiecayphotography.com');
+    cdk.Tags.of(this).add('Repository', 'Meffert-House/cassiecayphotography.com');
 
     const skipDomain = props.skipDomainSetup ?? false;
 
