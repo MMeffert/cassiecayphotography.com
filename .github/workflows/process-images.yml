@@ -3,6 +3,12 @@ name: Process New Photos
 on:
   push:
     paths:
+      - 'new-photos/*.jpg'
+      - 'new-photos/*.jpeg'
+      - 'new-photos/*.png'
+      - 'new-photos/*.JPG'
+      - 'new-photos/*.JPEG'
+      - 'new-photos/*.PNG'
       - 'new-photos/portfolio/**'
       - 'new-photos/services/**'
       - 'new-photos/hero/**'
@@ -37,7 +43,12 @@ jobs:
       - name: Check for new images
         id: check
         run: |
-          PORTFOLIO=$(find new-photos/portfolio -type f \( -iname "*.jpg" -o -iname "*.jpeg" -o -iname "*.png" \) 2>/dev/null | head -20)
+          # Check root new-photos/ (treated as portfolio) and subfolders
+          ROOT_IMAGES=$(find new-photos -maxdepth 1 -type f \( -iname "*.jpg" -o -iname "*.jpeg" -o -iname "*.png" \) 2>/dev/null | head -20)
+          PORTFOLIO_SUBFOLDER=$(find new-photos/portfolio -type f \( -iname "*.jpg" -o -iname "*.jpeg" -o -iname "*.png" \) 2>/dev/null | head -20)
+          PORTFOLIO="$ROOT_IMAGES $PORTFOLIO_SUBFOLDER"
+          PORTFOLIO=$(echo "$PORTFOLIO" | xargs)  # trim whitespace
+
           SERVICES=$(find new-photos/services -type f \( -iname "*.jpg" -o -iname "*.jpeg" -o -iname "*.png" \) 2>/dev/null | head -20)
           HERO=$(find new-photos/hero -type f \( -iname "*.jpg" -o -iname "*.jpeg" -o -iname "*.png" \) 2>/dev/null | head -20)
 
@@ -61,7 +72,8 @@ jobs:
         if: steps.check.outputs.has_portfolio == 'true'
         run: |
           MOVED_FILES=""
-          for img in new-photos/portfolio/*.{jpg,jpeg,png,JPG,JPEG,PNG}; do
+          # Process from both root new-photos/ and new-photos/portfolio/
+          for img in new-photos/*.{jpg,jpeg,png,JPG,JPEG,PNG} new-photos/portfolio/*.{jpg,jpeg,png,JPG,JPEG,PNG}; do
             [ -f "$img" ] || continue
             filename=$(basename "$img")
             [[ "$filename" == ".gitkeep" ]] && continue
