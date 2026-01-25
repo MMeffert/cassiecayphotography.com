@@ -60,6 +60,32 @@ export class StaticSiteStack extends cdk.Stack {
       signing: cloudfront.Signing.SIGV4_ALWAYS,
     });
 
+    // CloudFront Function to redirect www to non-www (for SEO canonical consistency)
+    const wwwRedirectFunction = skipDomain ? undefined : new cloudfront.Function(this, 'WwwRedirectFunction', {
+      code: cloudfront.FunctionCode.fromInline(`
+function handler(event) {
+  var request = event.request;
+  var host = request.headers.host.value;
+
+  // Redirect www to non-www
+  if (host.startsWith('www.')) {
+    var newHost = host.substring(4);
+    return {
+      statusCode: 301,
+      statusDescription: 'Moved Permanently',
+      headers: {
+        'location': { value: 'https://' + newHost + request.uri }
+      }
+    };
+  }
+
+  return request;
+}
+      `),
+      functionName: 'cassiecayphoto-www-redirect',
+      comment: 'Redirects www.cassiecayphotography.com to cassiecayphotography.com',
+    });
+
     // Create CloudFront distribution
     this.distribution = new cloudfront.Distribution(this, 'SiteDistribution', {
       defaultBehavior: {
@@ -71,6 +97,13 @@ export class StaticSiteStack extends cdk.Stack {
         cachedMethods: cloudfront.CachedMethods.CACHE_GET_HEAD,
         compress: true,
         cachePolicy: cloudfront.CachePolicy.CACHING_OPTIMIZED,
+        // Attach www redirect function only when domain is configured
+        ...(wwwRedirectFunction ? {
+          functionAssociations: [{
+            function: wwwRedirectFunction,
+            eventType: cloudfront.FunctionEventType.VIEWER_REQUEST,
+          }],
+        } : {}),
       },
       // Only set domain names and certificate when not skipping domain setup
       ...(skipDomain ? {} : {
