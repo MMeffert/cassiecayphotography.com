@@ -3,7 +3,9 @@ name: Process New Photos
 on:
   push:
     paths:
-      - 'new-photos/**'
+      - 'new-photos/portfolio/**'
+      - 'new-photos/services/**'
+      - 'new-photos/hero/**'
     branches:
       - main
 
@@ -11,10 +13,10 @@ jobs:
   process-images:
     runs-on: ubuntu-latest
     if: "!contains(github.event.head_commit.message, '[skip ci]')"
-    
+
     permissions:
       contents: write
-    
+
     concurrency:
       group: process-images
       cancel-in-progress: false
@@ -35,29 +37,101 @@ jobs:
       - name: Check for new images
         id: check
         run: |
-          IMAGES=$(find new-photos -type f \( -iname "*.jpg" -o -iname "*.jpeg" -o -iname "*.png" \) | head -20)
-          if [ -z "$IMAGES" ]; then
-            echo "No new images found"
-            echo "has_images=false" >> $GITHUB_OUTPUT
-          else
-            echo "Found images:"
-            echo "$IMAGES"
+          PORTFOLIO=$(find new-photos/portfolio -type f \( -iname "*.jpg" -o -iname "*.jpeg" -o -iname "*.png" \) 2>/dev/null | head -20)
+          SERVICES=$(find new-photos/services -type f \( -iname "*.jpg" -o -iname "*.jpeg" -o -iname "*.png" \) 2>/dev/null | head -20)
+          HERO=$(find new-photos/hero -type f \( -iname "*.jpg" -o -iname "*.jpeg" -o -iname "*.png" \) 2>/dev/null | head -20)
+
+          echo "has_portfolio=$( [ -n "$PORTFOLIO" ] && echo true || echo false )" >> $GITHUB_OUTPUT
+          echo "has_services=$( [ -n "$SERVICES" ] && echo true || echo false )" >> $GITHUB_OUTPUT
+          echo "has_hero=$( [ -n "$HERO" ] && echo true || echo false )" >> $GITHUB_OUTPUT
+
+          if [ -n "$PORTFOLIO" ] || [ -n "$SERVICES" ] || [ -n "$HERO" ]; then
             echo "has_images=true" >> $GITHUB_OUTPUT
+            echo "Found images:"
+            [ -n "$PORTFOLIO" ] && echo "  Portfolio: $PORTFOLIO"
+            [ -n "$SERVICES" ] && echo "  Services: $SERVICES"
+            [ -n "$HERO" ] && echo "  Hero: $HERO"
+          else
+            echo "has_images=false" >> $GITHUB_OUTPUT
+            echo "No new images found"
           fi
 
-      - name: Process new images
-        id: process
-        if: steps.check.outputs.has_images == 'true'
+      - name: Process portfolio images
+        id: portfolio
+        if: steps.check.outputs.has_portfolio == 'true'
         run: |
           MOVED_FILES=""
-          for img in new-photos/*.{jpg,jpeg,png,JPG,JPEG,PNG}; do
+          for img in new-photos/portfolio/*.{jpg,jpeg,png,JPG,JPEG,PNG}; do
             [ -f "$img" ] || continue
             filename=$(basename "$img")
             [[ "$filename" == ".gitkeep" ]] && continue
-            echo "Moving $filename to images/"
+            echo "Moving portfolio image: $filename"
             mv "$img" "images/$filename"
-            # Track moved files (without extension)
             basename_no_ext="${filename%.*}"
+            MOVED_FILES="$MOVED_FILES $basename_no_ext"
+          done
+          echo "moved_files=$MOVED_FILES" >> $GITHUB_OUTPUT
+
+      - name: Process service images (500x500 crop)
+        id: services
+        if: steps.check.outputs.has_services == 'true'
+        run: |
+          MOVED_FILES=""
+          for img in new-photos/services/*.{jpg,jpeg,png,JPG,JPEG,PNG}; do
+            [ -f "$img" ] || continue
+            filename=$(basename "$img")
+            [[ "$filename" == ".gitkeep" ]] && continue
+
+            # Add service prefix if not already present
+            if [[ "$filename" != cassiecay-service-* ]]; then
+              basename_no_ext="${filename%.*}"
+              ext="${filename##*.}"
+              new_filename="cassiecay-service-${basename_no_ext}.${ext}"
+            else
+              new_filename="$filename"
+            fi
+
+            echo "Processing service image: $filename -> $new_filename (500x500 crop)"
+
+            # Crop to 500x500 square using sharp
+            node -e "
+              const sharp = require('sharp');
+              sharp('$img')
+                .resize(500, 500, { fit: 'cover', position: 'attention' })
+                .jpeg({ quality: 90 })
+                .toFile('images/$new_filename')
+                .then(() => console.log('Cropped successfully'))
+                .catch(err => { console.error(err); process.exit(1); });
+            "
+
+            rm "$img"
+            basename_no_ext="${new_filename%.*}"
+            MOVED_FILES="$MOVED_FILES $basename_no_ext"
+          done
+          echo "moved_files=$MOVED_FILES" >> $GITHUB_OUTPUT
+
+      - name: Process hero images
+        id: hero
+        if: steps.check.outputs.has_hero == 'true'
+        run: |
+          MOVED_FILES=""
+          for img in new-photos/hero/*.{jpg,jpeg,png,JPG,JPEG,PNG}; do
+            [ -f "$img" ] || continue
+            filename=$(basename "$img")
+            [[ "$filename" == ".gitkeep" ]] && continue
+
+            # Add slider prefix if not already present
+            if [[ "$filename" != cassiecay-slider* ]]; then
+              basename_no_ext="${filename%.*}"
+              ext="${filename##*.}"
+              new_filename="cassiecay-slider-${basename_no_ext}.${ext}"
+            else
+              new_filename="$filename"
+            fi
+
+            echo "Moving hero image: $filename -> $new_filename"
+            mv "$img" "images/$new_filename"
+            basename_no_ext="${new_filename%.*}"
             MOVED_FILES="$MOVED_FILES $basename_no_ext"
           done
           echo "moved_files=$MOVED_FILES" >> $GITHUB_OUTPUT
@@ -66,37 +140,89 @@ jobs:
         if: steps.check.outputs.has_images == 'true'
         run: npm run preprocess
 
-      - name: Generate HTML snippets
-        if: steps.check.outputs.has_images == 'true'
+      - name: Generate portfolio HTML
+        if: steps.check.outputs.has_portfolio == 'true'
         run: |
-          for filename in ${{ steps.process.outputs.moved_files }}; do
+          for filename in ${{ steps.portfolio.outputs.moved_files }}; do
             if grep -q "href=\"images-optimized/jpeg/full/$filename.jpg\"" index.html; then
               echo "Skipping $filename - already in index.html"
               continue
             fi
-            
-            echo "Generating HTML for $filename"
-            
+
+            echo "Generating portfolio HTML for $filename"
+
             if [ -f "images-optimized/jpeg/800w/$filename.jpg" ]; then
-              echo '<!-- ========== MOVE THIS BLOCK START ========== -->' >> new-images.html
-              echo "<!-- Image: $filename | Category: family (options: family, milestone, senior, newborn, couples) -->" >> new-images.html
-              echo '<div class="portfolio-item family">' >> new-images.html
-              echo '  <div class="portfolio-item-content">' >> new-images.html
-              echo "    <figure class=\"overlay overlay2\"><a href=\"images-optimized/jpeg/full/$filename.jpg\">" >> new-images.html
-              echo '      <picture>' >> new-images.html
-              echo "        <source srcset=\"images-optimized/avif/800w/$filename.avif 800w\" sizes=\"(max-width: 600px) 100vw, (max-width: 1200px) 50vw, 400px\" type=\"image/avif\">" >> new-images.html
-              echo "        <source srcset=\"images-optimized/webp/800w/$filename.webp 800w\" sizes=\"(max-width: 600px) 100vw, (max-width: 1200px) 50vw, 400px\" type=\"image/webp\">" >> new-images.html
-              echo "        <img src=\"images-optimized/jpeg/800w/$filename.jpg\" srcset=\"images-optimized/jpeg/800w/$filename.jpg 800w\" sizes=\"(max-width: 600px) 100vw, (max-width: 1200px) 50vw, 400px\" alt=\"[ADD DESCRIPTION]\" loading=\"lazy\">" >> new-images.html
-              echo '      </picture>' >> new-images.html
-              echo '    </a></figure>' >> new-images.html
-              echo '  </div>' >> new-images.html
-              echo '</div>' >> new-images.html
-              echo '<!-- ========== MOVE THIS BLOCK END ========== -->' >> new-images.html
+              cat >> new-images.html << 'HTMLEOF'
+<!-- ========== MOVE THIS BLOCK START ========== -->
+HTMLEOF
+              echo "<!-- Image: $filename | Category: family (options: family, milestone, senior, newborn, couples, wedding) -->" >> new-images.html
+              cat >> new-images.html << HTMLEOF
+<div class="portfolio-item family">
+  <div class="portfolio-item-content">
+    <figure class="overlay overlay2"><a href="images-optimized/jpeg/full/$filename.jpg">
+      <picture>
+        <source srcset="images-optimized/avif/800w/$filename.avif 800w" sizes="(max-width: 600px) 100vw, (max-width: 1200px) 50vw, 400px" type="image/avif">
+        <source srcset="images-optimized/webp/800w/$filename.webp 800w" sizes="(max-width: 600px) 100vw, (max-width: 1200px) 50vw, 400px" type="image/webp">
+        <img src="images-optimized/jpeg/800w/$filename.jpg" srcset="images-optimized/jpeg/800w/$filename.jpg 800w" sizes="(max-width: 600px) 100vw, (max-width: 1200px) 50vw, 400px" alt="[ADD DESCRIPTION]" loading="lazy">
+      </picture>
+    </a></figure>
+  </div>
+</div>
+<!-- ========== MOVE THIS BLOCK END ========== -->
+HTMLEOF
             fi
           done
 
-      - name: Insert HTML into index.html
-        if: steps.check.outputs.has_images == 'true'
+      - name: Generate service HTML
+        if: steps.check.outputs.has_services == 'true'
+        run: |
+          for filename in ${{ steps.services.outputs.moved_files }}; do
+            if grep -q "images-optimized/jpeg/full/$filename.jpg" index.html; then
+              echo "Skipping $filename - already in index.html"
+              continue
+            fi
+
+            echo "Generating service HTML for $filename"
+
+            if [ -f "images-optimized/jpeg/full/$filename.jpg" ]; then
+              cat >> new-services.html << HTMLEOF
+<!-- ========== NEW SERVICE IMAGE: $filename ========== -->
+<!-- Copy this block to replace an existing service image -->
+<figure><picture>
+  <source srcset="images-optimized/avif/full/$filename.avif" type="image/avif">
+  <source srcset="images-optimized/webp/full/$filename.webp" type="image/webp">
+  <img class="octagon" src="images-optimized/jpeg/full/$filename.jpg" alt="[ADD DESCRIPTION]">
+</picture></figure>
+<!-- ========== END SERVICE IMAGE ========== -->
+HTMLEOF
+            fi
+          done
+
+      - name: Generate hero HTML
+        if: steps.check.outputs.has_hero == 'true'
+        run: |
+          for filename in ${{ steps.hero.outputs.moved_files }}; do
+            if grep -q "images-optimized/jpeg/full/$filename.jpg" index.html; then
+              echo "Skipping $filename - already in index.html"
+              continue
+            fi
+
+            echo "Generating hero HTML for $filename"
+
+            if [ -f "images-optimized/jpeg/full/$filename.jpg" ]; then
+              cat >> new-hero.html << HTMLEOF
+<!-- ========== NEW HERO SLIDE: $filename ========== -->
+<!-- Add this inside the .embla__container div -->
+<div class="embla__slide">
+  <img src="images-optimized/jpeg/full/$filename.jpg" alt="[ADD DESCRIPTION]">
+</div>
+<!-- ========== END HERO SLIDE ========== -->
+HTMLEOF
+            fi
+          done
+
+      - name: Insert portfolio HTML into index.html
+        if: steps.check.outputs.has_portfolio == 'true'
         run: |
           if [ -f "new-images.html" ]; then
             if grep -q "<!-- NEW-IMAGES-INSERT-POINT -->" index.html; then
@@ -107,11 +233,37 @@ jobs:
             rm new-images.html
           fi
 
+      - name: Append service/hero HTML as comments
+        run: |
+          # Service images need manual placement, append to end of file as reference
+          if [ -f "new-services.html" ]; then
+            echo "" >> index.html
+            echo "<!-- ========== NEW SERVICE IMAGES TO PLACE ========== -->" >> index.html
+            cat new-services.html >> index.html
+            rm new-services.html
+          fi
+
+          # Hero images need manual placement in slider
+          if [ -f "new-hero.html" ]; then
+            echo "" >> index.html
+            echo "<!-- ========== NEW HERO SLIDES TO PLACE ========== -->" >> index.html
+            cat new-hero.html >> index.html
+            rm new-hero.html
+          fi
+
       - name: Commit and push
         if: steps.check.outputs.has_images == 'true'
         run: |
           git config user.name "github-actions[bot]"
           git config user.email "github-actions[bot]@users.noreply.github.com"
           git add -A
-          git commit -m "feat: process new portfolio images [skip ci]" || echo "No changes to commit"
+
+          # Build commit message based on what was processed
+          MSG="feat: process new images"
+          [ "${{ steps.check.outputs.has_portfolio }}" == "true" ] && MSG="$MSG (portfolio)"
+          [ "${{ steps.check.outputs.has_services }}" == "true" ] && MSG="$MSG (services)"
+          [ "${{ steps.check.outputs.has_hero }}" == "true" ] && MSG="$MSG (hero)"
+          MSG="$MSG [skip ci]"
+
+          git commit -m "$MSG" || echo "No changes to commit"
           git push

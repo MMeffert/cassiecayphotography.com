@@ -18,8 +18,15 @@ jobs:
         with:
           github-token: "${{ secrets.GITHUB_TOKEN }}"
 
-      - name: Auto-merge minor/patch updates
-        if: steps.metadata.outputs.update-type != 'version-update:semver-major'
+      - name: Auto-merge GitHub Actions (all versions)
+        if: steps.metadata.outputs.package-ecosystem == 'github_actions'
+        run: gh pr merge --auto --squash "$PR_URL"
+        env:
+          PR_URL: ${{ github.event.pull_request.html_url }}
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Auto-merge npm minor/patch updates
+        if: steps.metadata.outputs.package-ecosystem == 'npm_and_yarn' && steps.metadata.outputs.update-type != 'version-update:semver-major'
         run: gh pr merge --auto --squash "$PR_URL"
         env:
           PR_URL: ${{ github.event.pull_request.html_url }}
