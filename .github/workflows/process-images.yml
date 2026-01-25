@@ -59,9 +59,9 @@ jobs:
           if [ -n "$PORTFOLIO" ] || [ -n "$SERVICES" ] || [ -n "$HERO" ]; then
             echo "has_images=true" >> $GITHUB_OUTPUT
             echo "Found images:"
-            [ -n "$PORTFOLIO" ] && echo "  Portfolio: $PORTFOLIO"
-            [ -n "$SERVICES" ] && echo "  Services: $SERVICES"
-            [ -n "$HERO" ] && echo "  Hero: $HERO"
+            [ -n "$PORTFOLIO" ] && echo "  Portfolio: $PORTFOLIO" || true
+            [ -n "$SERVICES" ] && echo "  Services: $SERVICES" || true
+            [ -n "$HERO" ] && echo "  Hero: $HERO" || true
           else
             echo "has_images=false" >> $GITHUB_OUTPUT
             echo "No new images found"
