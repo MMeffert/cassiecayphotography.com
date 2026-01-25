@@ -164,24 +164,20 @@ jobs:
             echo "Generating portfolio HTML for $filename"
 
             if [ -f "images-optimized/jpeg/800w/$filename.jpg" ]; then
-              cat >> new-images.html << 'HTMLEOF'
-<!-- ========== MOVE THIS BLOCK START ========== -->
-HTMLEOF
+              echo '<!-- ========== MOVE THIS BLOCK START ========== -->' >> new-images.html
               echo "<!-- Image: $filename | Category: family (options: family, milestone, senior, newborn, couples, wedding) -->" >> new-images.html
-              cat >> new-images.html << HTMLEOF
-<div class="portfolio-item family">
-  <div class="portfolio-item-content">
-    <figure class="overlay overlay2"><a href="images-optimized/jpeg/full/$filename.jpg">
-      <picture>
-        <source srcset="images-optimized/avif/800w/$filename.avif 800w" sizes="(max-width: 600px) 100vw, (max-width: 1200px) 50vw, 400px" type="image/avif">
-        <source srcset="images-optimized/webp/800w/$filename.webp 800w" sizes="(max-width: 600px) 100vw, (max-width: 1200px) 50vw, 400px" type="image/webp">
-        <img src="images-optimized/jpeg/800w/$filename.jpg" srcset="images-optimized/jpeg/800w/$filename.jpg 800w" sizes="(max-width: 600px) 100vw, (max-width: 1200px) 50vw, 400px" alt="[ADD DESCRIPTION]" loading="lazy">
-      </picture>
-    </a></figure>
-  </div>
-</div>
-<!-- ========== MOVE THIS BLOCK END ========== -->
-HTMLEOF
+              echo '<div class="portfolio-item family">' >> new-images.html
+              echo '  <div class="portfolio-item-content">' >> new-images.html
+              echo "    <figure class=\"overlay overlay2\"><a href=\"images-optimized/jpeg/full/$filename.jpg\">" >> new-images.html
+              echo '      <picture>' >> new-images.html
+              echo "        <source srcset=\"images-optimized/avif/800w/$filename.avif 800w\" sizes=\"(max-width: 600px) 100vw, (max-width: 1200px) 50vw, 400px\" type=\"image/avif\">" >> new-images.html
+              echo "        <source srcset=\"images-optimized/webp/800w/$filename.webp 800w\" sizes=\"(max-width: 600px) 100vw, (max-width: 1200px) 50vw, 400px\" type=\"image/webp\">" >> new-images.html
+              echo "        <img src=\"images-optimized/jpeg/800w/$filename.jpg\" srcset=\"images-optimized/jpeg/800w/$filename.jpg 800w\" sizes=\"(max-width: 600px) 100vw, (max-width: 1200px) 50vw, 400px\" alt=\"[ADD DESCRIPTION]\" loading=\"lazy\">" >> new-images.html
+              echo '      </picture>' >> new-images.html
+              echo '    </a></figure>' >> new-images.html
+              echo '  </div>' >> new-images.html
+              echo '</div>' >> new-images.html
+              echo '<!-- ========== MOVE THIS BLOCK END ========== -->' >> new-images.html
             fi
           done
 
@@ -197,16 +193,14 @@ HTMLEOF
             echo "Generating service HTML for $filename"
 
             if [ -f "images-optimized/jpeg/full/$filename.jpg" ]; then
-              cat >> new-services.html << HTMLEOF
-<!-- ========== NEW SERVICE IMAGE: $filename ========== -->
-<!-- Copy this block to replace an existing service image -->
-<figure><picture>
-  <source srcset="images-optimized/avif/full/$filename.avif" type="image/avif">
-  <source srcset="images-optimized/webp/full/$filename.webp" type="image/webp">
-  <img class="octagon" src="images-optimized/jpeg/full/$filename.jpg" alt="[ADD DESCRIPTION]">
-</picture></figure>
-<!-- ========== END SERVICE IMAGE ========== -->
-HTMLEOF
+              echo "<!-- ========== NEW SERVICE IMAGE: $filename ========== -->" >> new-services.html
+              echo '<!-- Copy this block to replace an existing service image -->' >> new-services.html
+              echo '<figure><picture>' >> new-services.html
+              echo "  <source srcset=\"images-optimized/avif/full/$filename.avif\" type=\"image/avif\">" >> new-services.html
+              echo "  <source srcset=\"images-optimized/webp/full/$filename.webp\" type=\"image/webp\">" >> new-services.html
+              echo "  <img class=\"octagon\" src=\"images-optimized/jpeg/full/$filename.jpg\" alt=\"[ADD DESCRIPTION]\">" >> new-services.html
+              echo '</picture></figure>' >> new-services.html
+              echo '<!-- ========== END SERVICE IMAGE ========== -->' >> new-services.html
             fi
           done
 
@@ -222,14 +216,12 @@ HTMLEOF
             echo "Generating hero HTML for $filename"
 
             if [ -f "images-optimized/jpeg/full/$filename.jpg" ]; then
-              cat >> new-hero.html << HTMLEOF
-<!-- ========== NEW HERO SLIDE: $filename ========== -->
-<!-- Add this inside the .embla__container div -->
-<div class="embla__slide">
-  <img src="images-optimized/jpeg/full/$filename.jpg" alt="[ADD DESCRIPTION]">
-</div>
-<!-- ========== END HERO SLIDE ========== -->
-HTMLEOF
+              echo "<!-- ========== NEW HERO SLIDE: $filename ========== -->" >> new-hero.html
+              echo '<!-- Add this inside the .embla__container div -->' >> new-hero.html
+              echo '<div class="embla__slide">' >> new-hero.html
+              echo "  <img src=\"images-optimized/jpeg/full/$filename.jpg\" alt=\"[ADD DESCRIPTION]\">" >> new-hero.html
+              echo '</div>' >> new-hero.html
+              echo '<!-- ========== END HERO SLIDE ========== -->' >> new-hero.html
             fi
           done
 
