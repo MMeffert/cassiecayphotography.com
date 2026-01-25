@@ -17,7 +17,7 @@ on:
 
 jobs:
   process-images:
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-latest-8-cores
     if: "!contains(github.event.head_commit.message, '[skip ci]')"
 
     permissions:
