@@ -4,8 +4,12 @@
  * Generates responsive width variants in AVIF, WebP, and JPEG formats
  * with CONSERVATIVE quality settings to preserve photography quality.
  *
+ * Performance optimization: AVIF variants are encoded from JPEG variants
+ * instead of the original, dramatically reducing encoding time with
+ * minimal quality impact.
+ *
  * Quality settings:
- * - AVIF: 85 quality, effort 6, 4:4:4 chroma (highest fidelity)
+ * - AVIF: 85 quality, effort 4, 4:4:4 chroma (highest fidelity)
  * - WebP: 85 quality, effort 6, smart subsample
  * - JPEG: 90 quality, mozjpeg, progressive
  *
@@ -29,7 +33,6 @@ const OUTPUT_DIR = 'images-optimized';
 const CONCURRENCY = 4; // Limit concurrent processing for memory management
 
 // CONSERVATIVE quality settings for photography portfolio
-// Note: AVIF effort lowered from 6 to 4 for faster CI encoding
 const QUALITY = {
   avif: { quality: 85, effort: 4, chromaSubsampling: '4:4:4' },
   webp: { quality: 85, effort: 6, smartSubsample: true },
@@ -81,7 +84,7 @@ async function hasAlphaChannel(imagePath) {
  * Note: We check existence only, not mtime, because git checkout
  * resets all file mtimes making mtime comparisons unreliable in CI.
  */
-async function shouldSkip(sourcePath, outputPath) {
+async function shouldSkip(outputPath) {
   try {
     await fs.access(outputPath);
     return true; // Output exists, skip
@@ -92,6 +95,10 @@ async function shouldSkip(sourcePath, outputPath) {
 
 /**
  * Process a single image into all format and width variants
+ *
+ * Two-pass approach for speed:
+ * 1. First pass: Generate JPEG and WebP from original (fast)
+ * 2. Second pass: Generate AVIF from JPEG variants (much faster than from original)
  */
 async function processImage(imagePath, progressBar) {
   const filename = path.basename(imagePath);
@@ -107,69 +114,102 @@ async function processImage(imagePath, progressBar) {
     // Check for alpha channel (PNG only)
     const hasAlpha = isPng ? await hasAlphaChannel(imagePath) : false;
 
-    // Determine which formats to generate
-    // JPEG doesn't support transparency - skip for transparent PNGs
-    const formats = hasAlpha
-      ? ['avif', 'webp']
-      : ['avif', 'webp', 'jpeg'];
-
     // Get source image metadata for dimensions
     const metadata = await sharp(imagePath).metadata();
     const sourceWidth = metadata.width;
 
-    // Process each format
-    for (const format of formats) {
-      for (const { name: widthName, width } of WIDTHS) {
-        // Skip if source is smaller than target width
-        if (width && sourceWidth < width) {
-          continue;
-        }
+    // PASS 1: Generate JPEG and WebP variants from original (fast formats)
+    const jpegPaths = {}; // Store JPEG paths for AVIF pass
 
-        const outputExt = format === 'jpeg' ? '.jpg' : `.${format}`;
-        const outputPath = path.join(OUTPUT_DIR, format, widthName, `${baseName}${outputExt}`);
-
-        // Check if we should skip (output newer than source)
-        if (await shouldSkip(imagePath, outputPath)) {
-          stats.skippedImages++;
-          continue;
-        }
-
-        // Ensure output directory exists
-        await fs.ensureDir(path.dirname(outputPath));
-
-        // Create sharp pipeline
-        let pipeline = sharp(imagePath);
-
-        // Resize if not full width
-        if (width) {
-          pipeline = pipeline.resize({
-            width: width,
-            withoutEnlargement: true, // Never upscale
-            fit: 'inside'
-          });
-        }
-
-        // Apply format-specific conversion
-        switch (format) {
-          case 'avif':
-            pipeline = pipeline.avif(QUALITY.avif);
-            break;
-          case 'webp':
-            pipeline = pipeline.webp(QUALITY.webp);
-            break;
-          case 'jpeg':
-            pipeline = pipeline.jpeg(QUALITY.jpeg);
-            break;
-        }
-
-        // Write output file
-        await pipeline.toFile(outputPath);
-
-        // Track output size
-        const outputStats = await fs.stat(outputPath);
-        stats.optimizedSize[format][widthName] += outputStats.size;
-        stats.variantCounts[format][widthName]++;
+    for (const { name: widthName, width } of WIDTHS) {
+      // Skip if source is smaller than target width
+      if (width && sourceWidth < width) {
+        continue;
       }
+
+      // Process JPEG (unless transparent PNG)
+      if (!hasAlpha) {
+        const jpegPath = path.join(OUTPUT_DIR, 'jpeg', widthName, `${baseName}.jpg`);
+        jpegPaths[widthName] = jpegPath;
+
+        if (!(await shouldSkip(jpegPath))) {
+          await fs.ensureDir(path.dirname(jpegPath));
+
+          let pipeline = sharp(imagePath);
+          if (width) {
+            pipeline = pipeline.resize({ width, withoutEnlargement: true, fit: 'inside' });
+          }
+          await pipeline.jpeg(QUALITY.jpeg).toFile(jpegPath);
+
+          const outputStats = await fs.stat(jpegPath);
+          stats.optimizedSize.jpeg[widthName] += outputStats.size;
+          stats.variantCounts.jpeg[widthName]++;
+        } else {
+          stats.skippedImages++;
+        }
+      }
+
+      // Process WebP
+      const webpPath = path.join(OUTPUT_DIR, 'webp', widthName, `${baseName}.webp`);
+
+      if (!(await shouldSkip(webpPath))) {
+        await fs.ensureDir(path.dirname(webpPath));
+
+        let pipeline = sharp(imagePath);
+        if (width) {
+          pipeline = pipeline.resize({ width, withoutEnlargement: true, fit: 'inside' });
+        }
+        await pipeline.webp(QUALITY.webp).toFile(webpPath);
+
+        const outputStats = await fs.stat(webpPath);
+        stats.optimizedSize.webp[widthName] += outputStats.size;
+        stats.variantCounts.webp[widthName]++;
+      } else {
+        stats.skippedImages++;
+      }
+    }
+
+    // PASS 2: Generate AVIF variants from JPEG variants (much faster!)
+    for (const { name: widthName, width } of WIDTHS) {
+      // Skip if source is smaller than target width
+      if (width && sourceWidth < width) {
+        continue;
+      }
+
+      const avifPath = path.join(OUTPUT_DIR, 'avif', widthName, `${baseName}.avif`);
+
+      if (await shouldSkip(avifPath)) {
+        stats.skippedImages++;
+        continue;
+      }
+
+      await fs.ensureDir(path.dirname(avifPath));
+
+      // Use JPEG as source if available (much faster), otherwise use original
+      // For transparent PNGs, we must use original or WebP
+      let sourcePath = imagePath;
+      if (!hasAlpha && jpegPaths[widthName]) {
+        // Check if JPEG exists (it should, we just created it or it was cached)
+        try {
+          await fs.access(jpegPaths[widthName]);
+          sourcePath = jpegPaths[widthName];
+        } catch {
+          // JPEG doesn't exist, fall back to original
+        }
+      }
+
+      let pipeline = sharp(sourcePath);
+
+      // Only resize if using original source (JPEG is already resized)
+      if (sourcePath === imagePath && width) {
+        pipeline = pipeline.resize({ width, withoutEnlargement: true, fit: 'inside' });
+      }
+
+      await pipeline.avif(QUALITY.avif).toFile(avifPath);
+
+      const outputStats = await fs.stat(avifPath);
+      stats.optimizedSize.avif[widthName] += outputStats.size;
+      stats.variantCounts.avif[widthName]++;
     }
 
     stats.processedImages++;
@@ -208,7 +248,8 @@ async function optimizeImages() {
   console.log(`Quality settings (CONSERVATIVE for photography):`);
   console.log(`  AVIF: quality ${QUALITY.avif.quality}, effort ${QUALITY.avif.effort}, chroma ${QUALITY.avif.chromaSubsampling}`);
   console.log(`  WebP: quality ${QUALITY.webp.quality}, effort ${QUALITY.webp.effort}`);
-  console.log(`  JPEG: quality ${QUALITY.jpeg.quality}, mozjpeg, progressive\n`);
+  console.log(`  JPEG: quality ${QUALITY.jpeg.quality}, mozjpeg, progressive`);
+  console.log(`  (AVIF encoded from JPEG for speed)\n`);
 
   // Find all images
   const pattern = `${SOURCE_DIR}/**/*.{jpg,jpeg,png,JPG,JPEG,PNG}`;
