@@ -224,6 +224,39 @@
 </script>
 </head>
 <body class="onepage" data-bs-spy="scroll" data-bs-target=".navbar">
+<!--
+================================================================================
+                        EDITING GUIDE - Quick Navigation
+================================================================================
+
+Use Cmd+F to search for these markers:
+
+SECTIONS:
+  [EDIT:HERO]       - Hero slider images (homepage banner)
+  [EDIT:ABOUT]      - About me text and photo
+  [EDIT:PORTFOLIO]  - Photo gallery (76 images)
+  [EDIT:SERVICES]   - Service offerings and pricing
+  [EDIT:CONTACT]    - Contact form section
+
+SERVICES (search for these to jump directly):
+  [SERVICE:Full-Session]     - Full Session ($350)
+  [SERVICE:Wedding]          - Wedding/Event ($350/hr)
+  [SERVICE:Compact]          - Compact Session ($250)
+  [SERVICE:Senior]           - Senior portraits ($400)
+  [SERVICE:Fresh48]          - Fresh 48 hospital ($300)
+  [SERVICE:Newborn]          - Newborn session ($450)
+
+PORTFOLIO CATEGORIES:
+  Each photo has: class="portfolio-item CATEGORY"
+  Categories: family, newborn, senior, milestone, couples, wedding
+
+TO ADD NEW PHOTOS:
+  1. Upload to new-photos/ folder and push to GitHub
+  2. The workflow will process and add them automatically
+  3. Or search for [EDIT:PORTFOLIO] and add manually
+
+================================================================================
+-->
 <div class="content-wrapper">
   <nav class="navbar transparent absolute nav-wrapper-dark inverse-text navbar-expand-lg text-uppercase">
     <div class="container">
@@ -271,7 +304,7 @@
   </div>
   <!-- /.offcanvas -->
   <!-- ============================================================ -->
-  <!-- SECTION: HOME (Hero Slider) -->
+  <!-- SECTION: HOME (Hero Slider) [EDIT:HERO]                      -->
   <!-- ============================================================ -->
   <section id="home" class="pt-0 mt-0">
     <div class="hero-slider embla">
@@ -293,7 +326,7 @@
   </section>
   <!-- /section -->
   <!-- ============================================================ -->
-  <!-- SECTION: ABOUT ME -->
+  <!-- SECTION: ABOUT ME [EDIT:ABOUT]                               -->
   <!-- ============================================================ -->
   <section id="about">
     <div class="wrapper dark-wrapper inverse-text">
@@ -337,8 +370,8 @@
   </section>
   <!-- /section -->
       <!-- ============================================================ -->
-      <!-- SECTION: PORTFOLIO (Photo Gallery) -->
-      <!-- To add new photos: upload to new-photos/ folder -->
+      <!-- SECTION: PORTFOLIO (Photo Gallery) [EDIT:PORTFOLIO]          -->
+      <!-- To add new photos: upload to new-photos/ folder              -->
       <!-- ============================================================ -->
       <section id="portfolio">
       <div class="wrapper dark-wrapper inverse-text">
@@ -1549,7 +1582,7 @@
   </section>
   <!-- /section -->
   <!-- ============================================================ -->
-  <!-- SECTION: SERVICES -->
+  <!-- SECTION: SERVICES [EDIT:SERVICES]                            -->
   <!-- ============================================================ -->
   <section id="services">
     <div class="wrapper dark-wrapper inverse-text">
@@ -1559,6 +1592,7 @@
             <h2 class="section-title section-title-upper text-center">My Services</h2>
             <p class="text-center">Please contact me for bundle deals. You can also take advantage of a 10% discount when you book a second session within 6 months of a full price session. This discount is not applicable to seasonal mini sessions. <br><br> </p>
             <div class="space40"></div>
+            <!-- [SERVICE:Full-Session] -->
             <div class="row d-flex align-items-center">
               <div class="col-md-6 order-md-2 text-center">
                 <figure><picture>
@@ -1579,6 +1613,7 @@
             <!--/.row -->
             <div class="space20 d-none d-md-block"></div>
 			<div class="space50 d-md-none"></div>
+            <!-- [SERVICE:Wedding] -->
             <div class="row d-flex align-items-center">
               <div class="col-md-6 text-center">
                 <figure><picture>
@@ -1599,6 +1634,7 @@
             <!--/.row -->
             <div class="space20 d-none d-md-block"></div>
 			<div class="space50 d-md-none"></div>
+            <!-- [SERVICE:Compact] -->
             <div class="row d-flex align-items-center">
               <div class="col-md-6 order-md-2 text-center">
                 <figure><picture>
@@ -1616,9 +1652,10 @@
               </div>
               <!--/column --> 
             </div>
-            <!--/.row --> 
+            <!--/.row -->
               <div class="space20 d-none d-md-block"></div>
 			<div class="space50 d-md-none"></div>
+            <!-- [SERVICE:Senior] -->
             <div class="row d-flex align-items-center">
               <div class="col-md-6 text-center">
                 <figure><picture>
@@ -1639,6 +1676,7 @@
             <!--/.row -->
               <div class="space20 d-none d-md-block"></div>
 			<div class="space50 d-md-none"></div>
+            <!-- [SERVICE:Fresh48] -->
             <div class="row d-flex align-items-center">
               <div class="col-md-6 order-md-2 text-center">
                 <figure><picture>
@@ -1656,9 +1694,10 @@
               </div>
               <!--/column --> 
             </div>
-            <!--/.row --> 
+            <!--/.row -->
               <div class="space20 d-none d-md-block"></div>
 			<div class="space50 d-md-none"></div>
+            <!-- [SERVICE:Newborn] -->
             <div class="row d-flex align-items-center">
               <div class="col-md-6 text-center">
                 <figure><picture>
@@ -1688,7 +1727,7 @@
   </section>
   <!-- /section -->
   <!-- ============================================================ -->
-  <!-- SECTION: CONTACT FORM -->
+  <!-- SECTION: CONTACT FORM [EDIT:CONTACT]                         -->
   <!-- ============================================================ -->
   <section id="contact">
     <div class="wrapper image-wrapper bg-image inverse-text" data-image-src="images-optimized/jpeg/1800w/cassiecay-background3.jpg">
