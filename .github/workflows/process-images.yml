@@ -29,10 +29,10 @@ jobs:
 
     steps:
       - name: Checkout
-        uses: actions/checkout@v6
+        uses: actions/checkout@8e8c483db84b4bee98b60c0593521ed34d9990e8 # v6
 
       - name: Setup Node.js
-        uses: actions/setup-node@v6
+        uses: actions/setup-node@6044e13b5dc448c55e2357c09f80417699197238 # v6
         with:
           node-version: '20'
           cache: 'npm'
@@ -106,15 +106,7 @@ jobs:
             echo "Processing service image: $filename -> $new_filename (500x500 crop)"
 
             # Crop to 500x500 square using sharp
-            node -e "
-              const sharp = require('sharp');
-              sharp('$img')
-                .resize(500, 500, { fit: 'cover', position: 'attention' })
-                .jpeg({ quality: 90 })
-                .toFile('images/$new_filename')
-                .then(() => console.log('Cropped successfully'))
-                .catch(err => { console.error(err); process.exit(1); });
-            "
+            node scripts/crop-service-image.js "$img" "images/$new_filename"
 
             rm "$img"
             basename_no_ext="${new_filename%.*}"

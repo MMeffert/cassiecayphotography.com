@@ -5,6 +5,10 @@ import * as origins from 'aws-cdk-lib/aws-cloudfront-origins';
 import * as acm from 'aws-cdk-lib/aws-certificatemanager';
 import * as route53 from 'aws-cdk-lib/aws-route53';
 import * as targets from 'aws-cdk-lib/aws-route53-targets';
+import * as cloudwatch from 'aws-cdk-lib/aws-cloudwatch';
+import * as sns from 'aws-cdk-lib/aws-sns';
+import * as subscriptions from 'aws-cdk-lib/aws-sns-subscriptions';
+import * as actions from 'aws-cdk-lib/aws-cloudwatch-actions';
 import { Construct } from 'constructs';
 
 export interface StaticSiteStackProps extends cdk.StackProps {
@@ -16,6 +20,11 @@ export interface StaticSiteStackProps extends cdk.StackProps {
    * After migration, set to false and redeploy to attach the domain.
    */
   skipDomainSetup?: boolean;
+  /**
+   * Email address to receive CloudWatch alarm notifications.
+   * If not provided, alarms will be created without notifications.
+   */
+  alertEmail?: string;
 }
 
 export class StaticSiteStack extends cdk.Stack {
@@ -171,14 +180,14 @@ function handler(event) {
         {
           httpStatus: 404,
           responseHttpStatus: 404,
-          responsePagePath: '/index.html',
-          ttl: cdk.Duration.minutes(5),
+          responsePagePath: '/404.html',
+          ttl: cdk.Duration.hours(1),
         },
         {
           httpStatus: 403,
           responseHttpStatus: 404,
-          responsePagePath: '/index.html',
-          ttl: cdk.Duration.minutes(5),
+          responsePagePath: '/404.html',
+          ttl: cdk.Duration.hours(1),
         },
       ],
       priceClass: cloudfront.PriceClass.PRICE_CLASS_100, // US, Canada, Europe
@@ -220,6 +229,64 @@ function handler(event) {
           new targets.CloudFrontTarget(this.distribution)
         ),
       });
+    }
+
+    // CloudWatch Alarms for error monitoring
+    const alarmTopic = props.alertEmail ? new sns.Topic(this, 'AlarmTopic', {
+      topicName: 'cassiecayphoto-alarms',
+      displayName: 'Cassie Cay Photography Alerts',
+    }) : undefined;
+
+    if (alarmTopic && props.alertEmail) {
+      alarmTopic.addSubscription(
+        new subscriptions.EmailSubscription(props.alertEmail)
+      );
+    }
+
+    // 5xx Error Rate Alarm - triggers on server/origin errors
+    const error5xxAlarm = new cloudwatch.Alarm(this, 'Error5xxAlarm', {
+      alarmName: 'cassiecayphoto-5xx-errors',
+      alarmDescription: 'CloudFront 5xx error rate exceeded threshold',
+      metric: new cloudwatch.Metric({
+        namespace: 'AWS/CloudFront',
+        metricName: '5xxErrorRate',
+        dimensionsMap: {
+          DistributionId: this.distribution.distributionId,
+          Region: 'Global',
+        },
+        statistic: 'Average',
+        period: cdk.Duration.minutes(5),
+      }),
+      threshold: 1, // 1% error rate
+      evaluationPeriods: 2,
+      comparisonOperator: cloudwatch.ComparisonOperator.GREATER_THAN_THRESHOLD,
+      treatMissingData: cloudwatch.TreatMissingData.NOT_BREACHING,
+    });
+
+    // 4xx Error Rate Alarm - triggers on client errors (but not 404s from expected missing files)
+    const error4xxAlarm = new cloudwatch.Alarm(this, 'Error4xxAlarm', {
+      alarmName: 'cassiecayphoto-4xx-errors',
+      alarmDescription: 'CloudFront 4xx error rate exceeded threshold',
+      metric: new cloudwatch.Metric({
+        namespace: 'AWS/CloudFront',
+        metricName: '4xxErrorRate',
+        dimensionsMap: {
+          DistributionId: this.distribution.distributionId,
+          Region: 'Global',
+        },
+        statistic: 'Average',
+        period: cdk.Duration.minutes(5),
+      }),
+      threshold: 10, // 10% error rate (higher threshold since some 404s are expected)
+      evaluationPeriods: 2,
+      comparisonOperator: cloudwatch.ComparisonOperator.GREATER_THAN_THRESHOLD,
+      treatMissingData: cloudwatch.TreatMissingData.NOT_BREACHING,
+    });
+
+    // Add alarm actions if topic exists
+    if (alarmTopic) {
+      error5xxAlarm.addAlarmAction(new actions.SnsAction(alarmTopic));
+      error4xxAlarm.addAlarmAction(new actions.SnsAction(alarmTopic));
     }
 
     // Outputs
