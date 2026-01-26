@@ -21,15 +21,13 @@ const IMAGE_PATH = 'images-optimized/jpeg/full';
 const GEO_LOCATION = 'Madison, Wisconsin, USA';
 
 // Category mapping from filename prefix to descriptive caption
+// Only includes categories that actually exist in the portfolio
 const CATEGORY_MAP = {
-  'F': 'Family portrait',
-  'B': 'Bridal portrait',
-  'C': 'Corporate portrait',
   'E': 'Event',
-  'S': 'Senior portrait',
-  'W': 'Wedding',
-  'NB': 'Newborn',
+  'F': 'Family portrait',
+  'L': 'Lifestyle portrait',
   'M': 'Milestone',
+  'NB': 'Newborn',
   'senior': 'Senior portrait'
 };
 
@@ -87,8 +85,8 @@ function getPortfolioImages() {
   const files = readdirSync(imageDir);
 
   // Filter to only portfolio images (cassiecay-{CATEGORY}{NUMBER}.jpg)
-  // Categories: E (couples), F (family), M (milestone), NB (newborn), senior
-  const portfolioPattern = /^cassiecay-(E|F|M|NB|senior)\d+.*\.jpg$/i;
+  // Categories: E (event), F (family), L (lifestyle), M (milestone), NB (newborn), senior
+  const portfolioPattern = /^cassiecay-(E|F|L|M|NB|senior)\d+.*\.jpg$/i;
 
   return files.filter(f => portfolioPattern.test(f));
 }

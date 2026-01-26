@@ -330,13 +330,23 @@ async function optimizeImages() {
   console.log(`\nPractical payload (thumbnails + lightbox originals):`);
   console.log(`  ${formatBytes(practicalPayload)} vs original ${formatBytes(stats.originalSize)}`);
   console.log(`  Reduction: ${percentReduction(stats.originalSize, practicalPayload)}%`);
+
+  // Return error count for CI integration
+  return stats.errors.length;
 }
 
 // Export for potential programmatic use
 export { optimizeImages };
 
 // Run if executed directly
-optimizeImages().catch(error => {
-  console.error('Fatal error:', error);
-  process.exit(1);
-});
+optimizeImages()
+  .then(errorCount => {
+    if (errorCount > 0) {
+      console.error(`\n⚠️  Completed with ${errorCount} error(s)`);
+      process.exit(1);
+    }
+  })
+  .catch(error => {
+    console.error('Fatal error:', error);
+    process.exit(1);
+  });
