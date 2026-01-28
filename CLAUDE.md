@@ -51,3 +51,14 @@ aws s3 sync . s3://cassiecayphotography.com-site-content \
 
 - Domain: cassiecayphotography.com
 - DNS: Route 53 (in personal AWS account)
+
+## Google Analytics (GA4)
+
+| Setting | Value |
+|---------|-------|
+| Measurement ID | `G-TQDYZMGR2H` |
+| GA4 Property ID | 269447426 |
+| GCP Quota Project | `cassiecayphotographycom` |
+| Dashboard | https://analytics.google.com/analytics/web/#/a485983p269447426/reports/intelligenthome |
+
+Use `/analytics` skill to query GA4 data via API.
